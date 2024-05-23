@@ -1,6 +1,6 @@
 ```jsx
 <Person 
-  name="Jhonatan Paredes"
+  name="Jhonatan Salazar"
   title="Software Developer"
   company="Shopify"
 />
