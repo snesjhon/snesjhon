@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "md-to-pdf": "^5.2.4",
+    "puppeteer": "^24.30.0"
+  }
+}
