@@ -30,7 +30,7 @@ async function convertMarkdownToPdf(mdFile, pdfFile) {
   }
 }
 
-const mdFile = './issue-3.md';
-const pdfFile = './issue-3.pdf';
+const mdFile = '../../questions/001-twosum/001-study-guide.md';
+const pdfFile = './001-study-guide.pdf';
 
 convertMarkdownToPdf(mdFile, pdfFile);
