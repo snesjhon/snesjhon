@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Agent Repo Getter Output Schema",
+  "description": "Output format for a single Agent Repo Getter analyzing one repository",
+  "type": "object",
+  "required": ["repo", "status"],
+  "properties": {
+    "repo": {
+      "type": "string",
+      "description": "Repository in format 'owner/repo'"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["success", "failed"],
+      "description": "Status of the repo analysis"
+    },
+    "error": {
+      "type": "string",
+      "description": "Error message if status is 'failed'"
+    },
+    "relevant_files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "reason"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "File path relative to repo root"
+          },
+          "reason": {
+            "type": "string",
+            "description": "Why this file is relevant"
+          },
+          "lines_of_interest": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "description": "Specific line numbers of interest"
+          }
+        }
+      },
+      "description": "Relevant files found in this repository"
+    },
+    "similar_issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "number": {
+            "type": "number",
+            "description": "Issue number"
+          },
+          "title": {
+            "type": "string",
+            "description": "Issue title"
+          },
+          "state": {
+            "type": "string",
+            "enum": ["open", "closed"],
+            "description": "Issue state"
+          },
+          "resolution_summary": {
+            "type": "string",
+            "description": "How the issue was resolved (for closed issues)"
+          }
+        }
+      },
+      "description": "Similar issues found in this repo"
+    },
+    "integration_points": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "How this repo integrates with the source repo or relates to the issue"
+    },
+    "key_patterns": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Important patterns or practices found in this repository"
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Analysis Configuration Schema",
+  "description": "Configuration for multi-agent issue analysis",
+  "type": "object",
+  "required": ["issue_url", "working_directory"],
+  "properties": {
+    "issue_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Full GitHub issue URL (e.g., https://github.com/owner/repo/issues/123)"
+    },
+    "working_directory": {
+      "type": "string",
+      "description": "Directory to store analysis artifacts"
+    },
+    "max_related_repos": {
+      "type": "number",
+      "default": 5,
+      "description": "Maximum number of related repos to analyze"
+    },
+    "shallow_clone_depth": {
+      "type": "number",
+      "default": 1,
+      "description": "Git clone depth for related repos"
+    },
+    "include_closed_issues": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to search for similar closed issues"
+    },
+    "output_format": {
+      "type": "string",
+      "enum": ["markdown", "json", "both"],
+      "default": "markdown",
+      "description": "Format for final analysis output"
+    }
+  }
+}

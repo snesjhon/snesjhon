@@ -1,0 +1,98 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Agent Reporter Output Schema",
+  "description": "Output format for Agent Reporter analyzing GitHub issues",
+  "type": "object",
+  "required": [
+    "issue_id",
+    "repo",
+    "summary",
+    "related_repos",
+    "current_repo_context",
+    "keywords"
+  ],
+  "properties": {
+    "issue_id": {
+      "type": "string",
+      "description": "The GitHub issue number"
+    },
+    "repo": {
+      "type": "string",
+      "description": "Repository in format 'owner/repo'"
+    },
+    "summary": {
+      "type": "string",
+      "description": "Brief summary of the issue"
+    },
+    "error_messages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Error messages or stack traces from the issue"
+    },
+    "mentioned_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Files mentioned in the issue or comments"
+    },
+    "related_repos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["repo", "reason", "priority"],
+        "properties": {
+          "repo": {
+            "type": "string",
+            "description": "Repository in format 'owner/repo'"
+          },
+          "reason": {
+            "type": "string",
+            "description": "Why this repo is relevant"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["high", "medium", "low"],
+            "description": "Priority for analyzing this repo"
+          }
+        }
+      }
+    },
+    "current_repo_context": {
+      "type": "object",
+      "required": ["relevant_files"],
+      "properties": {
+        "relevant_files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Files in current repo relevant to the issue"
+        },
+        "similar_issues": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Similar issues in current repo (e.g., '#1234')"
+        },
+        "recent_changes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Recent commits affecting related code"
+        }
+      }
+    },
+    "keywords": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Keywords extracted from the issue for searching"
+    }
+  }
+}
