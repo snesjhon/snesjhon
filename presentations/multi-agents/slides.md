@@ -21,57 +21,67 @@ Building specialized AI agents that work together
 
 ---
 
-## What is an Agent?
+# What is an Agent?
 
-An agent is an AI system that can:
+---
+
+<style>
+img[alt~="center"] {
+  display: block;
+  margin: 0 auto;
+}
+</style>
+
+![w:640 center](./pass-butter.gif)
+
+---
+
+## An agent is an AI system that can:
 
 - Understand a goal or task
 - Make decisions about how to accomplish it
 - Use tools to interact with the world
 - Iterate until the task is complete
 
-Think: **AI + Tools + Autonomy**
+Think: **AI + Tools (MCP, Fetch, WebSearch) + Autonomy**
 
 ---
 
-## Agents in the Wild
+# Agents in the Wild
 
 ### Tools You're Already Using
 
-- **Cursor**: Code completion + context-aware edits
-- **ChatGPT**: Conversational interface + plugins/actions
-- **Claude**: Long-context reasoning + tool use
-
 All of these are **single-agent systems**
 
+- **ChatGPT (Web)**: Conversational interface + plugins/actions
+- **Claude (Web)**: Conversational interface + plugins/actions
+
+All of these are **multi-agent systems**
+
+- **Cursor**: Code completion + context-aware edits
+- **Claude CLI**: Long-context reasoning + tool use
+
+---
+
+![Unidirectional](./unidirectional.png "Optional title")
+
 ---
 
 ## The Single-Agent Problem
-
-### Context Switching
 
 One agent trying to do everything:
-
-- Writing code
-- Reviewing code
-- Finding bugs
-- Optimizing performance
-
-**Result**: Jack of all trades, master of none
-
----
-
-## The Single-Agent Problem
-
-### Lack of Specialization
-
-Generic prompts mean generic results:
 
 - Same reasoning approach for different tasks
 - No task-specific optimization
 - Can't maintain different "modes" of thinking
 
-**Result**: Mediocre output across all tasks
+### Jack of all trades, master of none
+
+Generic prompts → Generic results
+
+---
+
+# Build your own Custom Agents
 
 ---
 
