@@ -8,16 +8,44 @@ paginate: true
 
 Building specialized AI agents that work together
 
+<br />
+<br />
+
+> Jhonatan Salazar
+> <small><em> SacTech '25 </em></small>
+
 ---
 
 ## What We'll Cover
 
 1. What "Agents" actually are
-2. How we use agents today (Cursor, ChatGPT, Claude)
-3. Their limitations
-4. Building your own custom agents
-5. Specialized agents working independently
-6. The power of multi-agent flows
+2. How we use agents today & their limitations
+3. Building your own custom agents
+4. Specialized agents working independently
+5. The power of multi-agent flows
+
+---
+
+# What do Software Engineers actually do?
+
+---
+
+<style>
+img[alt~="center"] {
+  display: block;
+  margin: 0 auto;
+}
+</style>
+
+![w:600 center](./software-engineer.png)
+
+---
+
+![w:950](./software-engineer-2.png)
+
+---
+
+# Agents can help my team align rapidly
 
 ---
 
@@ -36,14 +64,14 @@ img[alt~="center"] {
 
 ---
 
-## An agent is an AI system that can:
+# An agent is an AI system that can:
 
 - Understand a goal or task
 - Make decisions about how to accomplish it
 - Use tools to interact with the world
 - Iterate until the task is complete
 
-Think: **AI + Tools (MCP, Fetch, WebSearch) + Autonomy**
+Think: **AI + Tools (Fetch, WebSearch, MCP) + Autonomy**
 
 ---
 
@@ -55,29 +83,35 @@ All of these are **single-agent systems**
 
 - **ChatGPT (Web)**: Conversational interface + plugins/actions
 - **Claude (Web)**: Conversational interface + plugins/actions
+- **Cursor**: Code completion + context-aware edits
 
 All of these are **multi-agent systems**
 
-- **Cursor**: Code completion + context-aware edits
-- **Claude CLI**: Long-context reasoning + tool use
+- **Claude Code**: Long-context reasoning + tool use
+- **Cursor (Agent Mode)**: Context-aware edits + tool use
 
 ---
 
-![Unidirectional](./unidirectional.png "Optional title")
+# Single-Agent Systems
+
+![Unidirectional](./unidirectional.png)
 
 ---
 
-## The Single-Agent Problem
+# The Single-Agent Problem
 
 One agent trying to do everything:
 
 - Same reasoning approach for different tasks
 - No task-specific optimization
-- Can't maintain different "modes" of thinking
+
+<br />
 
 ### Jack of all trades, master of none
 
-Generic prompts → Generic results
+---
+
+![w:1200 bg](./agent-problem.png)
 
 ---
 
