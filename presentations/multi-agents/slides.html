@@ -95,7 +95,11 @@
 <p>Create specialized agents with:</p>
 <ul>
 <li>Custom system prompts</li>
-<li>Specific tool sets</li>
+<li>Specific tool sets (Fetch, WebSearch, MCPs)
+<ul>
+<li>Can also restrict usage</li>
+</ul>
+</li>
 <li>Defined output formats</li>
 <li>Task-focused behavior</li>
 </ul>
@@ -103,78 +107,44 @@
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="16" data-paginate="true" data-theme="default" lang="en-US" data-marpit-pagination="16" style="--paginate:true;--theme:default;" data-marpit-pagination-total="26">
 <h2 id="building-custom-agents-1">Building Custom Agents</h2>
 <h3 id="example-creating-a-specialized-agent">Example: Creating a Specialized Agent</h3>
-<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-bash">/agent create context-gatherer
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-bash">/agent
 </code></pre>
 <p>Define its purpose:</p>
 <ul>
-<li>Searches codebase for relevant context</li>
-<li>Understands project structure</li>
-<li>Outputs structured summaries</li>
-<li>Focused only on information gathering</li>
+<li>You are an expert web developer and markdown specialist with deep expertise in semantic HTML5, CSS frameworks, and data visualization.</li>
+<li>Your primary responsibility is to convert markdown documents into well-structured, accessible, and beautifully styled HTML</li>
+<li>Use the Picnic CSS framework (<a href="https://picnicss.com/">https://picnicss.com/</a>).</li>
 </ul>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="17" data-paginate="true" data-theme="default" lang="en-US" data-marpit-pagination="17" style="--paginate:true;--theme:default;" data-marpit-pagination-total="26">
-<h2 id="specialized-agents-working-independently">Specialized Agents Working Independently</h2>
-<p>Each agent has a <strong>single responsibility</strong>:</p>
-<ol>
-<li><strong>Context Gatherer</strong>: Finds relevant code and docs</li>
-<li><strong>Repo Finder</strong>: Locates specific files and patterns</li>
-<li><strong>Analyzer</strong>: Deep analysis of code quality</li>
-</ol>
-<p>Each can be used standalone or together</p>
+<h1 id="demo">DEMO!</h1>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="18" data-paginate="true" data-theme="default" lang="en-US" data-marpit-pagination="18" style="--paginate:true;--theme:default;" data-marpit-pagination-total="26">
-<h2 id="the-context-gatherer">The Context Gatherer</h2>
-<p><strong>Purpose</strong>: Find relevant context for a task</p>
-<p><strong>Input</strong>: User query or task description<br />
-<strong>Process</strong>:</p>
-<ul>
-<li>Search codebase</li>
-<li>Identify relevant files</li>
-<li>Extract key information<br />
-<strong>Output</strong>: Structured context summary</li>
-</ul>
+<h1 id="okay-thats-cool-but-so-what">Okay, that's cool. But so what?!</h1>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="19" data-paginate="true" data-theme="default" lang="en-US" data-marpit-pagination="19" style="--paginate:true;--theme:default;" data-marpit-pagination-total="26">
-<h2 id="the-repo-finder">The Repo Finder</h2>
-<p><strong>Purpose</strong>: Locate specific files and patterns</p>
-<p><strong>Input</strong>: Search criteria (functions, classes, patterns)<br />
-<strong>Process</strong>:</p>
-<ul>
-<li>Navigate repository structure</li>
-<li>Pattern matching</li>
-<li>Dependency analysis<br />
-<strong>Output</strong>: File paths and code snippets</li>
-</ul>
+<h2 id="specialized-agents">Specialized Agents</h2>
+<p>Each agent has a <strong>single responsibility</strong>:</p>
+<ol>
+<li>
+<p><strong>Reporter</strong>: Analyze a GitHub issue deeply and provide comprehensive context about the problem, including identifying related repositories that should be examined for additional context.</p>
+</li>
+<li>
+<p><strong>Repo Finder</strong>: Given a specific repository and search context, clone it, analyze it for relevant files and patterns, and output your findings.</p>
+</li>
+<li>
+<p><strong>Analyzer</strong>: Synthesize all context from Agent Reporter and Agent Repo Getter to produce a comprehensive analysis of the GitHub issue. Your output will be the definitive resource for understanding the problem.</p>
+</li>
+</ol>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="20" data-paginate="true" data-theme="default" lang="en-US" data-marpit-pagination="20" style="--paginate:true;--theme:default;" data-marpit-pagination-total="26">
-<h2 id="the-analyzer">The Analyzer</h2>
-<p><strong>Purpose</strong>: Deep code analysis</p>
-<p><strong>Input</strong>: Code from Context Gatherer and Repo Finder<br />
-<strong>Process</strong>:</p>
-<ul>
-<li>Quality assessment</li>
-<li>Identify issues</li>
-<li>Suggest improvements<br />
-<strong>Output</strong>: Detailed analysis report</li>
-</ul>
-</section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="21" data-paginate="true" data-theme="default" lang="en-US" data-marpit-pagination="21" style="--paginate:true;--theme:default;" data-marpit-pagination-total="26">
-<h2 id="multi-agent-flow-in-action">Multi-Agent Flow in Action</h2>
+<h1 id="multi-agent-flow-in-action">Multi-Agent Flow in Action</h1>
 <h3 id="the-power-of-orchestration">The Power of Orchestration</h3>
-<pre is="marp-pre" data-auto-scaling="downscale-only"><code>User Query
-    ↓
-Context Gatherer (finds relevant code)
-    ↓
-Repo Finder (locates specific implementations)
-    ↓
-Analyzer (provides deep analysis)
-    ↓
-Comprehensive Result
-</code></pre>
+<p>Using Claude's <code>/command</code> we can build an orchestration prompt that allows us to coordinate how all of these individual agents should work together</p>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="22" data-paginate="true" data-theme="default" lang="en-US" data-marpit-pagination="22" style="--paginate:true;--theme:default;" data-marpit-pagination-total="26">
-<h2 id="multi-agent-flow-in-action-1">Multi-Agent Flow in Action</h2>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section data-paginate="true" data-theme="default" lang="en-US" data-marpit-pagination="21" style="--paginate:true;--theme:default;" data-marpit-pagination-total="26" data-marpit-advanced-background="background"><div data-marpit-advanced-background-container="true" data-marpit-advanced-background-direction="horizontal"><figure style="background-image:url(&quot;./multi-agent-flow.png&quot;);background-size:1200px auto;"></figure></div></section></foreignObject><foreignObject width="1280" height="720"><section id="21" data-paginate="true" data-theme="default" lang="en-US" data-marpit-pagination="21" style="--paginate:true;--theme:default;" data-marpit-pagination-total="26" data-marpit-advanced-background="content"></section>
+</foreignObject><foreignObject width="1280" height="720" data-marpit-advanced-background="pseudo"><section data-paginate="true" data-theme="default" lang="en-US" data-marpit-pagination="21" style="" data-marpit-pagination-total="26" data-marpit-advanced-background="pseudo"></section></foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="22" data-paginate="true" data-theme="default" lang="en-US" data-marpit-pagination="22" style="--paginate:true;--theme:default;" data-marpit-pagination-total="26">
+<h1 id="multi-agent-flow-in-action-1">Multi-Agent Flow in Action</h1>
 <h3 id="why-this-works">Why This Works</h3>
 <p>Each agent:</p>
 <ul>
@@ -185,16 +155,15 @@ Comprehensive Result
 <p><strong>Result</strong>: Better than any single agent could achieve</p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="23" data-paginate="true" data-theme="default" lang="en-US" data-marpit-pagination="23" style="--paginate:true;--theme:default;" data-marpit-pagination-total="26">
-<h2 id="demo-time">Demo Time</h2>
-<p>Let's see the multi-agent flow in action:</p>
-<ol>
-<li>Create three specialized agents</li>
-<li>Run them independently</li>
-<li>Orchestrate them together</li>
-<li>Compare vs single-agent approach</li>
-</ol>
+<h1 id="claude-commands">Claude Commands</h1>
+<p>Create an Orchestration Prompt this within <code>./claude/commands</code></p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-base">/analyze-issue https://github.com/TanStack/form/issues/1874
+</code></pre>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="24" data-paginate="true" data-theme="default" lang="en-US" data-marpit-pagination="24" style="--paginate:true;--theme:default;" data-marpit-pagination-total="26">
+<h1 id="demo--output">DEMO &amp; OUTPUT</h1>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="25" data-paginate="true" data-theme="default" lang="en-US" data-marpit-pagination="25" style="--paginate:true;--theme:default;" data-marpit-pagination-total="26">
 <h2 id="key-takeaways">Key Takeaways</h2>
 <ol>
 <li>Single agents have inherent limitations</li>
@@ -204,23 +173,8 @@ Comprehensive Result
 <li>You can start building today</li>
 </ol>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="25" data-paginate="true" data-theme="default" lang="en-US" data-marpit-pagination="25" style="--paginate:true;--theme:default;" data-marpit-pagination-total="26">
-<h2 id="getting-started">Getting Started</h2>
-<ol>
-<li>Try Claude's <code>/agent</code> command</li>
-<li>Start with one specialized agent</li>
-<li>Build more as you find use cases</li>
-<li>Experiment with orchestration</li>
-<li>Share what you learn</li>
-</ol>
-</section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="26" data-paginate="true" data-theme="default" lang="en-US" data-marpit-pagination="26" style="--paginate:true;--theme:default;" data-marpit-pagination-total="26">
 <h2 id="questions">Questions?</h2>
-<p><strong>Resources</strong>:</p>
-<ul>
-<li>Claude documentation: anthropic.com/docs</li>
-<li>Examples: [your repo link]</li>
-</ul>
 <p>Thank you!</p>
 </section>
 <script>!function(){"use strict";const t={h1:{proto:()=>HTMLHeadingElement,attrs:{role:"heading","aria-level":"1"},style:"display: block; font-size: 2em; margin-block-start: 0.67em; margin-block-end: 0.67em; margin-inline-start: 0px; margin-inline-end: 0px; font-weight: bold;"},h2:{proto:()=>HTMLHeadingElement,attrs:{role:"heading","aria-level":"2"},style:"display: block; font-size: 1.5em; margin-block-start: 0.83em; margin-block-end: 0.83em; margin-inline-start: 0px; margin-inline-end: 0px; font-weight: bold;"},h3:{proto:()=>HTMLHeadingElement,attrs:{role:"heading","aria-level":"3"},style:"display: block; font-size: 1.17em; margin-block-start: 1em; margin-block-end: 1em; margin-inline-start: 0px; margin-inline-end: 0px; font-weight: bold;"},h4:{proto:()=>HTMLHeadingElement,attrs:{role:"heading","aria-level":"4"},style:"display: block; margin-block-start: 1.33em; margin-block-end: 1.33em; margin-inline-start: 0px; margin-inline-end: 0px; font-weight: bold;"},h5:{proto:()=>HTMLHeadingElement,attrs:{role:"heading","aria-level":"5"},style:"display: block; font-size: 0.83em; margin-block-start: 1.67em; margin-block-end: 1.67em; margin-inline-start: 0px; margin-inline-end: 0px; font-weight: bold;"},h6:{proto:()=>HTMLHeadingElement,attrs:{role:"heading","aria-level":"6"},style:"display: block; font-size: 0.67em; margin-block-start: 2.33em; margin-block-end: 2.33em; margin-inline-start: 0px; margin-inline-end: 0px; font-weight: bold;"},span:{proto:()=>HTMLSpanElement},pre:{proto:()=>HTMLElement,style:"display: block; font-family: monospace; white-space: pre; margin: 1em 0; --marp-auto-scaling-white-space: pre;"}},e="data-marp-auto-scaling-wrapper",i="data-marp-auto-scaling-svg",n="data-marp-auto-scaling-container";class s extends HTMLElement{container;containerSize;containerObserver;svg;svgComputedStyle;svgPreserveAspectRatio="xMinYMid meet";wrapper;wrapperSize;wrapperObserver;constructor(){super();const t=t=>([e])=>{const{width:i,height:n}=e.contentRect;this[t]={width:i,height:n},this.updateSVGRect()};this.attachShadow({mode:"open"}),this.containerObserver=new ResizeObserver(t("containerSize")),this.wrapperObserver=new ResizeObserver(((...e)=>{t("wrapperSize")(...e),this.flushSvgDisplay()}))}static get observedAttributes(){return["data-downscale-only"]}connectedCallback(){this.shadowRoot.innerHTML=`\n<style>\n  svg[${i}] { display: block; width: 100%; height: auto; vertical-align: top; }\n  span[${n}] { display: table; white-space: var(--marp-auto-scaling-white-space, nowrap); width: max-content; }\n</style>\n<div ${e}>\n  <svg part="svg" ${i}>\n    <foreignObject><span ${n}><slot></slot></span></foreignObject>\n  </svg>\n</div>\n    `.split(/\n\s*/).join(""),this.wrapper=this.shadowRoot.querySelector(`div[${e}]`)??void 0;const t=this.svg;this.svg=this.wrapper?.querySelector(`svg[${i}]`)??void 0,this.svg!==t&&(this.svgComputedStyle=this.svg?window.getComputedStyle(this.svg):void 0),this.container=this.svg?.querySelector(`span[${n}]`)??void 0,this.observe()}disconnectedCallback(){this.svg=void 0,this.svgComputedStyle=void 0,this.wrapper=void 0,this.container=void 0,this.observe()}attributeChangedCallback(){this.observe()}flushSvgDisplay(){const{svg:t}=this;t&&(t.style.display="inline",requestAnimationFrame((()=>{t.style.display=""})))}observe(){this.containerObserver.disconnect(),this.wrapperObserver.disconnect(),this.wrapper&&this.wrapperObserver.observe(this.wrapper),this.container&&this.containerObserver.observe(this.container),this.svgComputedStyle&&this.observeSVGStyle(this.svgComputedStyle)}observeSVGStyle(t){const e=()=>{const i=(()=>{const e=t.getPropertyValue("--preserve-aspect-ratio");if(e)return e.trim();return`x${(({textAlign:t,direction:e})=>{if(t.endsWith("left"))return"Min";if(t.endsWith("right"))return"Max";if("start"===t||"end"===t){let i="rtl"===e;return"end"===t&&(i=!i),i?"Max":"Min"}return"Mid"})(t)}YMid meet`})();i!==this.svgPreserveAspectRatio&&(this.svgPreserveAspectRatio=i,this.updateSVGRect()),t===this.svgComputedStyle&&requestAnimationFrame(e)};e()}updateSVGRect(){let t=Math.ceil(this.containerSize?.width??0);const e=Math.ceil(this.containerSize?.height??0);void 0!==this.dataset.downscaleOnly&&(t=Math.max(t,this.wrapperSize?.width??0));const i=this.svg?.querySelector(":scope > foreignObject");if(i?.setAttribute("width",`${t}`),i?.setAttribute("height",`${e}`),this.svg&&(this.svg.setAttribute("viewBox",`0 0 ${t} ${e}`),this.svg.setAttribute("preserveAspectRatio",this.svgPreserveAspectRatio),this.svg.style.height=t<=0||e<=0?"0":""),this.container){const t=this.svgPreserveAspectRatio.toLowerCase();this.container.style.marginLeft=t.startsWith("xmid")||t.startsWith("xmax")?"auto":"0",this.container.style.marginRight=t.startsWith("xmi")?"auto":"0"}}}const r=(t,{attrs:e={},style:i})=>class extends t{constructor(...t){super(...t);for(const[t,i]of Object.entries(e))this.hasAttribute(t)||this.setAttribute(t,i);this._shadow()}static get observedAttributes(){return["data-auto-scaling"]}connectedCallback(){this._update()}attributeChangedCallback(){this._update()}_shadow(){if(!this.shadowRoot)try{this.attachShadow({mode:"open"})}catch(t){if(!(t instanceof Error&&"NotSupportedError"===t.name))throw t}return this.shadowRoot}_update(){const t=this._shadow();if(t){const e=i?`<style>:host { ${i} }</style>`:"";let n="<slot></slot>";const{autoScaling:s}=this.dataset;if(void 0!==s){n=`<marp-auto-scaling exportparts="svg:auto-scaling" ${"downscale-only"===s?"data-downscale-only":""}>${n}</marp-auto-scaling>`}t.innerHTML=e+n}}};let o;const a=Symbol();let l;const c="marpitSVGPolyfill:setZoomFactor,",d=Symbol(),h=Symbol();const g=()=>{const t="Apple Computer, Inc."===navigator.vendor,e=t?[u]:[],i={then:e=>(t?(async()=>{if(void 0===l){const t=document.createElement("canvas");t.width=10,t.height=10;const e=t.getContext("2d"),i=new Image(10,10),n=new Promise((t=>{i.addEventListener("load",(()=>t()))}));i.crossOrigin="anonymous",i.src="data:image/svg+xml;charset=utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2210%22%20height%3D%2210%22%20viewBox%3D%220%200%201%201%22%3E%3CforeignObject%20width%3D%221%22%20height%3D%221%22%20requiredExtensions%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxhtml%22%3E%3Cdiv%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxhtml%22%20style%3D%22width%3A%201px%3B%20height%3A%201px%3B%20background%3A%20red%3B%20position%3A%20relative%22%3E%3C%2Fdiv%3E%3C%2FforeignObject%3E%3C%2Fsvg%3E",await n,e.drawImage(i,0,0),l=e.getImageData(5,5,1,1).data[3]<128}return l})().then((t=>{null==e||e(t?[u]:[])})):null==e||e([]),i)};return Object.assign(e,i)};let p,m;function u(t){const e="object"==typeof t&&t.target||document,i="object"==typeof t?t.zoom:t;window[h]||(Object.defineProperty(window,h,{configurable:!0,value:!0}),document.body.style.zoom=1.0001,document.body.offsetHeight,document.body.style.zoom=1,window.addEventListener("message",(({data:t,origin:e})=>{if(e===window.origin)try{if(t&&"string"==typeof t&&t.startsWith(c)){const[,e]=t.split(","),i=Number.parseFloat(e);Number.isNaN(i)||(m=i)}}catch(t){console.error(t)}})));let n=!1;Array.from(e.querySelectorAll("svg[data-marpit-svg]"),(t=>{var e,s,r,o;t.style.transform||(t.style.transform="translateZ(0)");const a=i||m||t.currentScale||1;p!==a&&(p=a,n=a);const l=t.getBoundingClientRect(),{length:c}=t.children;for(let i=0;i<c;i+=1){const n=t.children[i];if(n.getScreenCTM){const t=n.getScreenCTM();if(t){const i=null!==(s=null===(e=n.x)||void 0===e?void 0:e.baseVal.value)&&void 0!==s?s:0,c=null!==(o=null===(r=n.y)||void 0===r?void 0:r.baseVal.value)&&void 0!==o?o:0,d=n.children.length;for(let e=0;e<d;e+=1){const s=n.children[e];if("SECTION"===s.tagName){const{style:e}=s;e.transformOrigin||(e.transformOrigin=`${-i}px ${-c}px`),e.transform=`scale(${a}) matrix(${t.a}, ${t.b}, ${t.c}, ${t.d}, ${t.e-l.left}, ${t.f-l.top}) translateZ(0.0001px)`;break}}}}}})),!1!==n&&Array.from(e.querySelectorAll("iframe"),(({contentWindow:t})=>{null==t||t.postMessage(`${c}${n}`,"null"===window.origin?"*":window.origin)}))}function v({once:t=!1,target:e=document}={}){const i=function(t=document){if(t[d])return t[d];let e=!0;const i=()=>{e=!1,delete t[d]};Object.defineProperty(t,d,{configurable:!0,value:i});let n=[],s=!1;(async()=>{try{n=await g()}finally{s=!0}})();const r=()=>{for(const e of n)e({target:t});s&&0===n.length||e&&window.requestAnimationFrame(r)};return r(),i}(e);return t?(i(),()=>{}):i}p=1,m=void 0;const w=Symbol(),b=(e=document)=>{if("undefined"==typeof window)throw new Error("Marp Core's browser script is valid only in browser context.");if(((e=document)=>{const i=window[a];i||customElements.define("marp-auto-scaling",s);for(const n of Object.keys(t)){const s=`marp-${n}`,a=t[n].proto();(o??(o=!!document.createElement("div",{is:"marp-auto-scaling"}).outerHTML.startsWith("<div is"),o))&&a!==HTMLElement?i||customElements.define(s,r(a,{style:t[n].style}),{extends:n}):(i||customElements.define(s,r(HTMLElement,t[n])),e.querySelectorAll(`${n}[is="${s}"]`).forEach((t=>{t.outerHTML=t.outerHTML.replace(new RegExp(`^<${n}`,"i"),`<${s}`).replace(new RegExp(`</${n}>$`,"i"),`</${s}>`)})))}window[a]=!0})(e),e[w])return e[w];const i=v({target:e}),n=()=>{i(),delete e[w]},l=Object.assign(n,{cleanup:n,update:()=>b(e)});return Object.defineProperty(e,w,{configurable:!0,value:l}),l},y=document.currentScript;b(y?y.getRootNode():document)}();

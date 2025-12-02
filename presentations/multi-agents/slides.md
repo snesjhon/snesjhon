@@ -126,7 +126,8 @@ One agent trying to do everything:
 Create specialized agents with:
 
 - Custom system prompts
-- Specific tool sets
+- Specific tool sets (Fetch, WebSearch, MCPs)
+  - Can also restrict usage
 - Defined output formats
 - Task-focused behavior
 
@@ -137,91 +138,50 @@ Create specialized agents with:
 ### Example: Creating a Specialized Agent
 
 ```bash
-/agent create context-gatherer
+/agent
 ```
 
 Define its purpose:
 
-- Searches codebase for relevant context
-- Understands project structure
-- Outputs structured summaries
-- Focused only on information gathering
+- You are an expert web developer and markdown specialist with deep expertise in semantic HTML5, CSS frameworks, and data visualization.
+- Your primary responsibility is to convert markdown documents into well-structured, accessible, and beautifully styled HTML
+- Use the Picnic CSS framework (https://picnicss.com/).
 
 ---
 
-## Specialized Agents Working Independently
+# DEMO!
+
+---
+
+# Okay, that's cool. But so what?!
+
+---
+
+## Specialized Agents
 
 Each agent has a **single responsibility**:
 
-1. **Context Gatherer**: Finds relevant code and docs
-2. **Repo Finder**: Locates specific files and patterns
-3. **Analyzer**: Deep analysis of code quality
+1. **Reporter**: Analyze a GitHub issue deeply and provide comprehensive context about the problem, including identifying related repositories that should be examined for additional context.
 
-Each can be used standalone or together
+2. **Repo Finder**: Given a specific repository and search context, clone it, analyze it for relevant files and patterns, and output your findings.
 
----
-
-## The Context Gatherer
-
-**Purpose**: Find relevant context for a task
-
-**Input**: User query or task description
-**Process**:
-
-- Search codebase
-- Identify relevant files
-- Extract key information
-  **Output**: Structured context summary
+3. **Analyzer**: Synthesize all context from Agent Reporter and Agent Repo Getter to produce a comprehensive analysis of the GitHub issue. Your output will be the definitive resource for understanding the problem.
 
 ---
 
-## The Repo Finder
-
-**Purpose**: Locate specific files and patterns
-
-**Input**: Search criteria (functions, classes, patterns)
-**Process**:
-
-- Navigate repository structure
-- Pattern matching
-- Dependency analysis
-  **Output**: File paths and code snippets
-
----
-
-## The Analyzer
-
-**Purpose**: Deep code analysis
-
-**Input**: Code from Context Gatherer and Repo Finder
-**Process**:
-
-- Quality assessment
-- Identify issues
-- Suggest improvements
-  **Output**: Detailed analysis report
-
----
-
-## Multi-Agent Flow in Action
+# Multi-Agent Flow in Action
 
 ### The Power of Orchestration
 
-```
-User Query
-    ↓
-Context Gatherer (finds relevant code)
-    ↓
-Repo Finder (locates specific implementations)
-    ↓
-Analyzer (provides deep analysis)
-    ↓
-Comprehensive Result
-```
+Using Claude's `/command` we can build an orchestration prompt that allows us to coordinate how all of these individual agents should work together
 
 ---
 
-## Multi-Agent Flow in Action
+![w:1200 bg](./multi-agent-flow.png)
+
+---
+
+# Multi-Agent Flow in Action
 
 ### Why This Works
 
@@ -235,14 +195,17 @@ Each agent:
 
 ---
 
-## Demo Time
+# Claude Commands
 
-Let's see the multi-agent flow in action:
+Create an Orchestration Prompt this within `./claude/commands`
 
-1. Create three specialized agents
-2. Run them independently
-3. Orchestrate them together
-4. Compare vs single-agent approach
+```base
+/analyze-issue https://github.com/TanStack/form/issues/1874
+```
+
+---
+
+# DEMO & OUTPUT
 
 ---
 
@@ -256,21 +219,6 @@ Let's see the multi-agent flow in action:
 
 ---
 
-## Getting Started
-
-1. Try Claude's `/agent` command
-2. Start with one specialized agent
-3. Build more as you find use cases
-4. Experiment with orchestration
-5. Share what you learn
-
----
-
 ## Questions?
-
-**Resources**:
-
-- Claude documentation: anthropic.com/docs
-- Examples: [your repo link]
 
 Thank you!
