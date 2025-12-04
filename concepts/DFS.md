@@ -40,5 +40,3 @@ BFS uses `level-by-level` in that it uses a `queue`
 ## [[Trees]]
 
 > A tree is a type of graph data structure composed of node and edges
-
-## something else

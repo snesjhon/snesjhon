@@ -98,6 +98,10 @@ All of these are **multi-agent systems**
 
 ---
 
+![w:1200 bg](./agent-problem.png)
+
+---
+
 # The Single-Agent Problem
 
 One agent trying to do everything:
@@ -108,10 +112,6 @@ One agent trying to do everything:
 <br />
 
 ### Jack of all trades, master of none
-
----
-
-![w:1200 bg](./agent-problem.png)
 
 ---
 
@@ -127,7 +127,7 @@ Create specialized agents with:
 
 - Custom system prompts
 - Specific tool sets (Fetch, WebSearch, MCPs)
-  - Can also restrict usage
+    - Can also restrict usage
 - Defined output formats
 - Task-focused behavior
 
@@ -153,10 +153,6 @@ Define its purpose:
 
 ---
 
-# Okay, that's cool. But so what?!
-
----
-
 ## Specialized Agents
 
 Each agent has a **single responsibility**:
@@ -169,6 +165,10 @@ Each agent has a **single responsibility**:
 
 ---
 
+# Okay, that's cool. But so what?!
+
+---
+
 # Multi-Agent Flow in Action
 
 ### The Power of Orchestration
@@ -178,6 +178,20 @@ Using Claude's `/command` we can build an orchestration prompt that allows us to
 ---
 
 ![w:1200 bg](./multi-agent-flow.png)
+
+---
+
+# Claude Commands
+
+Create an Orchestration Prompt this within `./claude/commands`
+
+```bash
+/analyze-issue https://github.com/TanStack/form/issues/1874
+```
+
+---
+
+# DEMO #2
 
 ---
 
@@ -195,17 +209,7 @@ Each agent:
 
 ---
 
-# Claude Commands
-
-Create an Orchestration Prompt this within `./claude/commands`
-
-```base
-/analyze-issue https://github.com/TanStack/form/issues/1874
-```
-
----
-
-# DEMO & OUTPUT
+![w:1200 bg](./multi-agent-flow-enhance.png)
 
 ---
 
