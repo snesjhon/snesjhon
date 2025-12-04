@@ -175,39 +175,44 @@ interface DepartmentExpenses {
   [departmentName: string]: number;
 }
 
-const aggregator = [];
 // TODO: Implement this recursive function (this is the main challenge!)
 // Hint: Use DFS to traverse all subdepartments
 // For each employee in each department, check all their expenses using checkExpenseEligibility()
 function calculateDepartmentExpenses(
   department: Department,
 ): DepartmentExpenses {
-  // brute force
-  let result: DepartmentExpenses = {};
-
+  let result = 0;
+  const departmentExpenses = {};
+  //    1
+  //   / \
+  //  2   3
+  // / \
+  // 4 5
+  //
+  //
   for (const employee of department.employees) {
     for (const expense of employee.expenses) {
       const eligibility = checkExpenseEligibility(expense);
       if (eligibility.auto_approved) {
-        const currentAmount = result[department.name];
-        result[department.name] = currentAmount
-          ? currentAmount + expense.amount
-          : expense.amount;
+        result += expense.amount;
       }
     }
   }
 
-  for (const subdepartment of department.subdepartments) {
-    const subresult = calculateDepartmentExpenses(subdepartment);
-    result[department.name] =
-      result[department.name] + subresult[subdepartment.name];
-    Object.assign(result, subresult);
+  for (const subdep of department.subdepartments) {
+    if (subdep.employees.length > 0) {
+      const output = calculateDepartmentExpenses(subdep);
+      const expense = output[subdep.name];
+      result += expense;
+      Object.assign(departmentExpenses, output);
+    }
   }
 
-  return result;
+  departmentExpenses[department.name] = result;
+
+  return departmentExpenses;
 }
 
-// Test case for Part Two
 const engineeringDept: Department = {
   name: "Engineering",
   employees: [
@@ -290,6 +295,10 @@ const engineeringDept: Department = {
 };
 
 console.log(calculateDepartmentExpenses(engineeringDept));
+
+// Test case for Part Two
+
+// console.log(calculateDepartmentExpenses(engineeringDept));
 
 // Expected output:
 // {
