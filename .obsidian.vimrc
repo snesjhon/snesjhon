@@ -1,1 +1,0 @@
-/Users/snesjhon/Developer/dotfiles/obsidian/obsidian.vimrc
