@@ -1,9 +1,3 @@
----
-id: Recursion
-aliases:
-  - Recursion
-tags: []
----
 
 # Recursion
 

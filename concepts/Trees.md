@@ -1,8 +1,3 @@
----
-id: Trees
-aliases: []
-tags: []
----
 
 A tree is a type of graph data structure composed of nodes and edges.
 

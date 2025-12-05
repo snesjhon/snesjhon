@@ -55,12 +55,8 @@ class TreeNode {
  * 5. Don't forget to check the current node itself!
  */
 function countVisibleNodes(node: TreeNode | null, maxSoFar: number): number {
-  // TODO: Implement your solution here
   //
   // QUESTION 1: What should we return when node is null?
-  //
-
-  // build out our base cases
   //
   if (!node) {
     return 0;
@@ -71,21 +67,17 @@ function countVisibleNodes(node: TreeNode | null, maxSoFar: number): number {
   //
   //
 
-  // const isLeaf = !node.left && !node.right;
   const isVisible = node.val >= maxSoFar;
-  const currentCount = isVisible ? 1 : 0;
+  if (isVisible) {
+    maxSoFar = node.val;
+  }
 
-  const newMax = Math.max(maxSoFar, node.val);
+  const currentNodeCount = isVisible ? 1 : 0;
 
-  const left = countVisibleNodes(node.left, newMax);
-  const right = countVisibleNodes(node.right, newMax);
-  //
-  // QUESTION 4: How do we combine the results from left and right subtrees?
-  //
+  const left = countVisibleNodes(node.left, maxSoFar);
+  const right = countVisibleNodes(node.right, maxSoFar);
 
-  return currentCount + left + right;
-
-  // return 0; // Replace with your implementation
+  return currentNodeCount + left + right;
 }
 
 // ============================================

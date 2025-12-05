@@ -1,8 +1,3 @@
----
-id: DFS
-aliases: []
-tags: []
----
 
 > DFS === "Going Deep First"
 
