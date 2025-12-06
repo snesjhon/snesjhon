@@ -1,3 +1,6 @@
+---
+description: Depth-First Search explores as far as possible along each branch before backtracking. It goes DEEP before going WIDE.
+---
 # Depth-First Search (DFS)
 
 #concept/algorithm #concept/trees #concept/graphs
