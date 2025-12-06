@@ -1,6 +1,9 @@
+---
+description: Tell me about a challenging bug you debugged
+---
 # Debugging Challenging Issues
 
-#interview-question #debugging
+#interview-question #experience/debugging 
 
 ## The Question
 

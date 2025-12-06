@@ -1,6 +1,6 @@
 # Performance Optimization for Large Merchants
 
-#experience/performance #experience/frontend #profiling
+#experience/performance #experience/frontend #experience/profiling
 #tech/tanstack-query #tech/react
 
 **Answers Interview Questions:**

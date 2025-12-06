@@ -1,16 +1,20 @@
+---
+description: Given an array of integers and a target value, find two numbers that add up to the target and return their indices.
+---
 # 001 - Two Sum
 
-#leetcode/easy #pattern/hash-map #concept/hash-maps #concept/arrays
-#progress/understood
+#pattern/hash-map #concept/hash-maps #concept/arrays 
 
 **Problem:** Given an array of integers and a target value, find two numbers that add up to the target and return their indices.
 
 **Related Concepts:**
+
 - [[hash-maps]] - Primary solution technique
 - [[two-pointers]] - Alternative for sorted arrays
 - [[arrays]] - Data structure
 
 **Related Problems:**
+
 - Two Sum II (sorted array) - Use two pointers
 - 3Sum - Extension to three numbers
 - 4Sum - Further extension
@@ -26,6 +30,7 @@ Explanation: nums[0] + nums[1] = 2 + 7 = 9
 ```
 
 **Constraints:**
+
 - 2 <= nums.length <= 10⁴
 - Exactly one solution exists
 - Cannot use same element twice
@@ -70,6 +75,7 @@ function twoSum(nums: number[], target: number): number[] {
 ```
 
 **How it Works:**
+
 - Check every possible pair
 - Outer loop picks first number
 - Inner loop picks second number
@@ -102,6 +108,7 @@ function twoSum(nums: number[], target: number): number[] {
 ```
 
 **How it Works:**
+
 1. Single pass through array
 2. For each number, calculate needed complement
 3. Check if complement exists in hash map
@@ -109,6 +116,7 @@ function twoSum(nums: number[], target: number): number[] {
 5. If not: store current number and index for future
 
 **Why It's Fast:**
+
 - Hash map lookup: O(1)
 - Single pass: O(n)
 - Total: O(n)
@@ -118,13 +126,14 @@ function twoSum(nums: number[], target: number): number[] {
 ## Comparison
 
 | Aspect           | Brute Force | Hash Map   |
-|------------------|-------------|------------|
+| ---------------- | ----------- | ---------- |
 | Time Complexity  | O(n²)       | O(n)       |
 | Space Complexity | O(1)        | O(n)       |
 | Passes           | 2 (nested)  | 1          |
 | Best for         | Learning    | Production |
 
 **Performance Difference:**
+
 - 100 elements: 10,000 ops vs 100 ops
 - 10,000 elements: 100M ops vs 10,000 ops
 
@@ -135,6 +144,7 @@ function twoSum(nums: number[], target: number): number[] {
 ### 1. The Complement Pattern
 
 This pattern appears in many problems:
+
 - Instead of searching for pairs, search for the "missing piece"
 - Applicable to many sum-based problems
 - Foundation for 3Sum, 4Sum, etc.
@@ -164,18 +174,19 @@ This pattern appears in many problems:
 ### Mistakes to Avoid:
 
 1. **Using same element twice**
-   ```typescript
-   // Wrong: might return same index twice
-   if (nums[i] + nums[i] === target)
 
-   // Right: check different indices
-   if (i !== j && nums[i] + nums[j] === target)
-   ```
+    ```typescript
+    // Wrong: might return same index twice
+    if (nums[i] + nums[i] === target)
+
+    // Right: check different indices
+    if (i !== j && nums[i] + nums[j] === target)
+    ```
 
 2. **Not handling duplicates correctly**
-   ```typescript
-   [3, 3], target = 6  // Should return [0, 1]
-   ```
+    ```typescript
+    [3, 3], target = 6  // Should return [0, 1]
+    ```
 
 ### Edge Cases:
 
@@ -189,19 +200,24 @@ This pattern appears in many problems:
 ## Practice Exercises
 
 ### Exercise 1: Variations
+
 1. Return all pairs (not just one) that sum to target
 2. Handle case where no solution exists
 3. Use regular object `{}` instead of `Map`
 
 ### Exercise 2: Optimization
+
 Improve brute force to have fewer iterations:
+
 ```typescript
 // Hint: start j from i + 1, not 0
 for (let j = i + 1; j < nums.length; j++)
 ```
 
 ### Exercise 3: Different Approach
+
 Solve using:
+
 1. Sorting + two pointers (O(n log n) time, O(1) space)
 2. Set instead of Map
 
@@ -210,18 +226,21 @@ Solve using:
 ## My Learning Journey
 
 **Phase 1: Foundation** ✅
+
 - ✅ Understand the problem
 - ✅ Implement brute force
 - ✅ Implement hash map solution
 - ✅ Analyze time/space complexity
 
 **Phase 2: Mastery** 🎯
+
 - Can implement from memory without hints
 - Explain the complement pattern clearly
 - Recognize when to apply this pattern
 - Understand tradeoffs between approaches
 
 **Next Steps:**
+
 1. Implement both solutions from memory
 2. Try Two Sum II (sorted array) - learn two pointers
 3. Try 3Sum - extends this pattern
@@ -236,6 +255,7 @@ Solve using:
 4. **Space-time tradeoff** - Sometimes using more space saves time
 
 **Real-world applications:**
+
 - Finding matching transactions in financial systems
 - Detecting duplicate entries
 - Caching and memoization
@@ -243,4 +263,4 @@ Solve using:
 
 ---
 
-**Remember:** Understanding *why* the hash map solution works is more important than memorizing the code!
+**Remember:** Understanding _why_ the hash map solution works is more important than memorizing the code!

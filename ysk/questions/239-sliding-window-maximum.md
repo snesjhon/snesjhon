@@ -1,7 +1,6 @@
 # 239 - Sliding Window Maximum
 
-#leetcode/hard #pattern/sliding-window #concept/sliding-window #concept/deque
-#progress/reviewing
+#pattern/sliding-window #concept/sliding-window #concept/deque
 
 **Problem:** Find the maximum element in each sliding window of size k.
 

@@ -1,8 +1,6 @@
 # 003 - Longest Substring Without Repeating Characters
 
-#leetcode/medium #pattern/sliding-window #pattern/two-pointers
-#concept/sliding-window #concept/hash-maps #concept/strings
-#progress/understood
+#pattern/sliding-window #pattern/two-pointers #concept/sliding-window #concept/hash-maps #concept/strings
 
 **Problem:** Given a string, find the length of the longest substring without repeating characters.
 

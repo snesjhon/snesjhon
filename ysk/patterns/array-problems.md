@@ -1,6 +1,6 @@
 # Array Problems
 
-#pattern-guide #learning-path #concept/arrays
+#concept/arrays
 
 Problems focused on array manipulation, traversal, and algorithms.
 

@@ -1,6 +1,6 @@
 # Sliding Window Problems
 
-#pattern-guide #learning-path #pattern/sliding-window
+#pattern/sliding-window
 
 All problems I've practiced using the sliding window pattern.
 

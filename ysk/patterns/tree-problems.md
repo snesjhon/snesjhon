@@ -3,7 +3,7 @@ description: Tree-based algorithm problems and traversal patterns.
 ---
 # Tree Problems
 
-#pattern-guide #learning-path #concept/trees
+#concept/trees
 
 Tree-based algorithm problems and traversal patterns.
 

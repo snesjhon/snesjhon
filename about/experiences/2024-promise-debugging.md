@@ -1,7 +1,6 @@
 # Promise Cancellation Debugging
 
-#experience #debugging #production #frontend
-#tech/react
+#experience/debugging #tech/react
 
 **Answers Interview Questions:**
 - [[debugging-challenges]] - Challenging debugging scenarios

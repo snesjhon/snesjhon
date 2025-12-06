@@ -1,7 +1,6 @@
 # 056 - Merge Intervals
 
-#leetcode/medium #pattern/intervals #concept/arrays #concept/sorting
-#progress/understood
+#pattern/intervals #concept/arrays #concept/sorting
 
 **Problem:** Given an array of intervals where `intervals[i] = [start_i, end_i]`, merge all overlapping intervals.
 

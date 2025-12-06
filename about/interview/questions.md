@@ -56,8 +56,6 @@ A curated collection of common interview questions mapped to my experiences.
 
 ## Questions to Ask Them
 
-#interview-questions-to-ask
-
 - What does success look like for this role in the first 6 months?
 - How is the engineering team structured? Who would I be working most closely with?
 - What's the onboarding process like for new engineers?

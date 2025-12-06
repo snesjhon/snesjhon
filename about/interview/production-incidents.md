@@ -1,6 +1,6 @@
 # Handling Production Incidents
 
-#interview-question #production #incidents
+#interview-question 
 
 ## The Question
 

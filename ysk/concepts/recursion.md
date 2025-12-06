@@ -1,9 +1,12 @@
 ---
 description: A function that calls itself to solve a problem by breaking it into smaller subproblems.
-tags:
-  - concept/algorithm
-  - concept/pattern
 ---
+# Recursion
+
+#concept/algorithm #concept/pattern
+
+A function that calls itself to solve a problem by breaking it into smaller subproblems.
+
 ## Core Idea
 
 If a problem can be broken down into smaller copies of itself, it's a recursive problem.

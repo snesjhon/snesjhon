@@ -1,7 +1,6 @@
 # 049 - Group Anagrams
 
-#leetcode/medium #pattern/hash-map #concept/hash-maps #concept/strings
-#progress/understood
+#pattern/hash-map #concept/hash-maps #concept/strings
 
 **Problem:** Given an array of strings, group all anagrams together.
 

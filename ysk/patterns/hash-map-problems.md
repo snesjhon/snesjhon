@@ -1,6 +1,6 @@
 # Hash Map Problems
 
-#pattern-guide #learning-path #pattern/hash-map
+#pattern/hash-map
 
 All problems using hash maps for efficient lookups and grouping.
 
