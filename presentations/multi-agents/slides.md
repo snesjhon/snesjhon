@@ -77,8 +77,6 @@ Think: **AI + Tools (Fetch, WebSearch, MCP) + Autonomy**
 
 # Agents in the Wild
 
-### Tools You're Already Using
-
 All of these are **single-agent systems**
 
 - **ChatGPT (Web)**: Conversational interface + plugins/actions
