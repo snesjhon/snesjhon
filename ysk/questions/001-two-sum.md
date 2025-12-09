@@ -1,9 +1,10 @@
 ---
 description: Given an array of integers and a target value, find two numbers that add up to the target and return their indices.
 ---
+
 # 001 - Two Sum
 
-#pattern/hash-map #concept/hash-maps #concept/arrays 
+#pattern/hash-map #concept/hash-maps #concept/arrays
 
 **Problem:** Given an array of integers and a target value, find two numbers that add up to the target and return their indices.
 
@@ -11,7 +12,7 @@ description: Given an array of integers and a target value, find two numbers tha
 
 - [[hash-maps]] - Primary solution technique
 - [[two-pointers]] - Alternative for sorted arrays
-- [[arrays]] - Data structure
+- arrays - Data structure
 
 **Related Problems:**
 
@@ -175,18 +176,18 @@ This pattern appears in many problems:
 
 1. **Using same element twice**
 
-    ```typescript
-    // Wrong: might return same index twice
-    if (nums[i] + nums[i] === target)
+   ```typescript
+   // Wrong: might return same index twice
+   if (nums[i] + nums[i] === target)
 
-    // Right: check different indices
-    if (i !== j && nums[i] + nums[j] === target)
-    ```
+   // Right: check different indices
+   if (i !== j && nums[i] + nums[j] === target)
+   ```
 
 2. **Not handling duplicates correctly**
-    ```typescript
-    [3, 3], target = 6  // Should return [0, 1]
-    ```
+   ```typescript
+   ([3, 3], (target = 6)); // Should return [0, 1]
+   ```
 
 ### Edge Cases:
 

@@ -5,11 +5,13 @@
 **Problem:** Given an array of strings, group all anagrams together.
 
 **Related Concepts:**
+
 - [[hash-maps]] - Grouping pattern
 - Sorting - Creating unique keys
-- [[arrays]] - Working with string arrays
+- arrays - Working with string arrays
 
 **Related Problems:**
+
 - [[001-two-sum]] - Hash map usage
 - Valid Anagram - Detecting single anagram pair
 - Find All Anagrams in String
@@ -63,6 +65,7 @@ All anagrams map to the same sorted key!
 ## Solution: Hash Map Grouping
 
 **Time:** O(n × k log k) | **Space:** O(n × k)
+
 - n = number of strings
 - k = maximum string length
 
@@ -91,7 +94,7 @@ function groupAnagrams(strs: string[]): string[][] {
 function groupAnagrams(strs: string[]): string[][] {
   const groups = new Map<string, string[]>();
 
-  strs.forEach(word => {
+  strs.forEach((word) => {
     const key = word.split("").sort().join("");
     const group = groups.get(key) || [];
     group.push(word);
@@ -147,11 +150,11 @@ function groupAnagrams(strs: string[]): string[][] {
     // Create character count signature
     const count = new Array(26).fill(0);
     for (const char of word) {
-      count[char.charCodeAt(0) - 'a'.charCodeAt(0)]++;
+      count[char.charCodeAt(0) - "a".charCodeAt(0)]++;
     }
 
     // Use count array as key
-    const key = count.join('#');
+    const key = count.join("#");
 
     if (!groups.has(key)) {
       groups.set(key, []);
@@ -164,6 +167,7 @@ function groupAnagrams(strs: string[]): string[][] {
 ```
 
 **Why this works:**
+
 ```
 "eat" → [1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0]
          ^a   ^e                                  ^t
@@ -177,10 +181,10 @@ function groupAnagrams(strs: string[]): string[][] {
 
 ## Comparison
 
-| Approach | Time | Space | Pros | Cons |
-|----------|------|-------|------|------|
-| Sorting | O(n×k log k) | O(n×k) | Simple, intuitive | Slower |
-| Count Array | O(n×k) | O(n×k) | Faster | More complex |
+| Approach    | Time         | Space  | Pros              | Cons         |
+| ----------- | ------------ | ------ | ----------------- | ------------ |
+| Sorting     | O(n×k log k) | O(n×k) | Simple, intuitive | Slower       |
+| Count Array | O(n×k)       | O(n×k) | Faster            | More complex |
 
 For interviews: **Sorting is usually fine** and easier to explain!
 
@@ -208,8 +212,8 @@ for (let i = 0; i < strs.length; i++) {
 ```typescript
 // ❌ Won't work in JavaScript
 const groups = new Map();
-groups.set([1,0,1], ["eat"]); // Array as key!
-groups.get([1,0,1]); // undefined! Different array reference
+groups.set([1, 0, 1], ["eat"]); // Array as key!
+groups.get([1, 0, 1]); // undefined! Different array reference
 ```
 
 **Fix:** Convert array to string: `key.join('#')`
@@ -217,7 +221,7 @@ groups.get([1,0,1]); // undefined! Different array reference
 ### Mistake 3: Forgetting Empty String
 
 ```typescript
-Input: [""]
+Input: [""];
 // Key for "" is also ""
 // Should return: [[""]]
 ```
@@ -248,6 +252,7 @@ This pattern works for many grouping problems!
 ### 2. Creating Unique Keys
 
 Two approaches to create keys:
+
 - **Canonical form**: Sort to create standard representation
 - **Signature**: Create unique identifier (like character counts)
 
@@ -264,12 +269,14 @@ Both must ensure: same group → same key
 ## Pattern Recognition
 
 This grouping pattern appears in:
+
 - **Frequency analysis** - group by character counts
 - **Classification** - group by properties
 - **Deduplication** - group duplicates
 - **Bucketing** - partition into categories
 
 **Keywords:**
+
 - "Group..."
 - "Categorize..."
 - "Partition by..."
@@ -289,17 +296,20 @@ This grouping pattern appears in:
 ## My Learning Journey
 
 **Understanding** ✅
+
 - ✅ Grasp sorted key concept
 - ✅ Know grouping pattern
 - ✅ Understand time complexity
 - ✅ Can optimize with character counts
 
 **Implementation** ✅
+
 - ✅ Can code from scratch
 - ✅ Handle edge cases
 - ✅ Explain both approaches
 
 **Pattern Recognition** 🎯
+
 - Apply grouping to other problems
 - Recognize when to create keys
 - Optimize key generation

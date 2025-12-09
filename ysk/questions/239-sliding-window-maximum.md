@@ -5,11 +5,13 @@
 **Problem:** Find the maximum element in each sliding window of size k.
 
 **Related Concepts:**
+
 - [[sliding-window]] - Advanced variable window
-- [[arrays]] - Window over array
+- arrays - Window over array
 - Deque - Monotonic decreasing deque
 
 **Related Problems:**
+
 - [[003-longest-substring]] - Basic sliding window
 - Min Stack - Similar monotonic structure
 - Sliding Window Median
@@ -40,16 +42,19 @@ Window  1  3  -1  -3  5 [3  6  7] → max = 7
 For each window of size k, we need the maximum value.
 
 **Naive approach:**
+
 - For each window position: scan k elements
 - Time: O(n × k) ← Too slow for large inputs
 
 **Better approach:**
+
 - Maintain maximum as window slides
 - Time: O(n) ← Can we achieve this?
 
 ### Key Insight: Monotonic Deque
 
 Keep a deque of indices where:
+
 - Elements are in decreasing order of value
 - Front of deque = index of current maximum
 - Remove indices outside current window
@@ -131,11 +136,13 @@ Final: [3,3,5,5,6,7]
 ### Deque Invariant
 
 **Deque maintains:**
+
 1. Indices in increasing order (left to right)
 2. Values in decreasing order (left to right)
 3. All indices within current window
 
 **Why decreasing values?**
+
 ```
 If nums[j] < nums[i] and j < i:
   → nums[j] will NEVER be maximum while i is in window
@@ -224,6 +231,7 @@ while (nums[deque[...]] > nums[i]) // should be <
 A deque maintaining elements in monotonic (increasing or decreasing) order.
 
 **Applications:**
+
 - Sliding window maximum/minimum
 - Next greater element
 - Stock span problem
@@ -231,6 +239,7 @@ A deque maintaining elements in monotonic (increasing or decreasing) order.
 ### 2. Why O(n)?
 
 Each element is:
+
 - Added to deque once: O(n)
 - Removed from deque at most once: O(n)
 - Total: O(2n) = O(n)
@@ -239,15 +248,15 @@ Each element is:
 
 ```typescript
 // JavaScript array as deque:
-deque.push(x);      // Add to back
-deque.pop();        // Remove from back
-deque.unshift(x);   // Add to front
-deque.shift();      // Remove from front
+deque.push(x); // Add to back
+deque.pop(); // Remove from back
+deque.unshift(x); // Add to front
+deque.shift(); // Remove from front
 
 // For this problem:
-deque.push(i);      // Add new index
-deque.pop();        // Remove smaller from back
-deque.shift();      // Remove old from front
+deque.push(i); // Add new index
+deque.pop(); // Remove smaller from back
+deque.shift(); // Remove old from front
 ```
 
 ---
@@ -255,12 +264,14 @@ deque.shift();      // Remove old from front
 ## Pattern Recognition
 
 **Use monotonic deque when:**
+
 - Sliding window min/max
 - "Next greater/smaller element"
 - Maintaining min/max over range
 - Can eliminate elements that won't be answer
 
 **Keywords:**
+
 - "Sliding window..."
 - "Maximum/minimum in range..."
 - "Next greater..."
@@ -278,17 +289,20 @@ deque.shift();      // Remove old from front
 ## My Learning Journey
 
 **Understanding** 🔄
+
 - ✅ Grasp monotonic deque concept
 - ✅ Know why O(n) works
 - ✅ Understand why we remove smaller elements
 - 🎯 Need more practice to internalize
 
 **Implementation** 🔄
+
 - ✅ Can code with reference
 - 🎯 Need practice from scratch
 - 🎯 Tricky boundary conditions
 
 **Mastery** 🎯
+
 - Practice without hints
 - Apply to similar problems
 - Recognize pattern quickly

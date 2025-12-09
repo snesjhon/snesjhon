@@ -21,12 +21,14 @@ Window size: 3
 ```
 
 Instead of recalculating sum each time, just:
+
 - Remove leftmost element
 - Add rightmost element
 
 ## Window Types
 
 ### 1. Fixed-Size Window
+
 Window size stays constant, slides through array.
 
 ```typescript
@@ -52,6 +54,7 @@ function maxSum(arr: number[], k: number): number {
 ```
 
 ### 2. Variable-Size Window
+
 Window expands and contracts based on conditions.
 
 ```typescript
@@ -79,6 +82,7 @@ function lengthOfLongestSubstring(s: string): number {
 ## When to Use Sliding Window
 
 Look for these keywords/patterns:
+
 - "Longest substring..."
 - "Maximum sum subarray..."
 - "Minimum window..."
@@ -89,6 +93,7 @@ Look for these keywords/patterns:
 ## Two-Pointer vs Sliding Window
 
 **Sliding Window** is actually a specialized form of [[two-pointers]]:
+
 - Both pointers usually move in same direction (left to right)
 - Window represents range between pointers
 - Focus on optimizing subarray/substring operations
@@ -96,12 +101,15 @@ Look for these keywords/patterns:
 ## Common Patterns
 
 ### Pattern 1: Fixed Window Maximum/Minimum
+
 Find max/min sum of k consecutive elements.
 
 ### Pattern 2: Variable Window with Constraint
+
 Find longest/shortest subarray meeting a condition.
 
 ### Pattern 3: Window with Hash Map
+
 Track frequency of elements in current window.
 
 ```typescript
@@ -138,7 +146,7 @@ for (let right = 0; right < n; right++) {
 
 - [[two-pointers]] - Sliding window is a specialized form
 - [[hash-maps]] - Often used together for tracking window contents
-- [[arrays]] - Primary data structure
+- arrays - Primary data structure
 
 ## Questions Using Sliding Window
 

@@ -5,11 +5,13 @@
 **Problem:** Given an array of intervals where `intervals[i] = [start_i, end_i]`, merge all overlapping intervals.
 
 **Related Concepts:**
-- [[arrays]] - Working with 2D arrays
+
+- arrays - Working with 2D arrays
 - Sorting - Key to simplifying the problem
 - Greedy algorithms - Local decisions lead to global solution
 
 **Related Problems:**
+
 - Insert Interval
 - Meeting Rooms
 - Meeting Rooms II
@@ -70,6 +72,7 @@ Result: [1, 5] ← They merge!
 ### Key Insight #1: When Do Intervals Overlap?
 
 Think about when they **DON'T** overlap first:
+
 - `[a, b]` completely before `[c, d]`: `b < c`
 - `[c, d]` completely before `[a, b]`: `d < a`
 
@@ -80,6 +83,7 @@ Or more simply (if sorted): **`b >= c`**
 ### Key Insight #2: Sorting Makes It Easy
 
 **Without sorting:**
+
 ```
 [[8,10], [1,3], [2,6], [15,18]]
      ↓
@@ -87,6 +91,7 @@ You'd have to compare each with every other one! O(n²)
 ```
 
 **With sorting by start time:**
+
 ```
 [[1,3], [2,6], [8,10], [15,18]]
    ↓
@@ -94,6 +99,7 @@ Only check if current overlaps with the most recent merged interval!
 ```
 
 **Why sorting works:**
+
 - After sorting, intervals are in start-time order
 - Only need to check if current overlaps with most recent
 - If current doesn't overlap with most recent, it won't overlap with earlier ones
@@ -264,23 +270,29 @@ lastMerged[1] = ...  // ← This mutates result array ✓ Actually OK!
 When your solution fails:
 
 ### 1. Check Sorting
+
 ```typescript
 console.log("After sort:", intervals);
 // Should be in ascending order by start time
 ```
 
 ### 2. Check Overlap Logic
+
 ```typescript
 console.log(`current=[${current}], last=[${lastMerged}]`);
 console.log(`${current[0]} <= ${lastMerged[1]}?`, current[0] <= lastMerged[1]);
 ```
 
 ### 3. Check Merge Logic
+
 ```typescript
-console.log(`Merging to: [${lastMerged[0]}, ${Math.max(lastMerged[1], current[1])}]`);
+console.log(
+  `Merging to: [${lastMerged[0]}, ${Math.max(lastMerged[1], current[1])}]`,
+);
 ```
 
 ### 4. Test Edge Cases
+
 - Empty array: `[]`
 - Single interval: `[[1,3]]`
 - All overlapping: `[[1,3],[2,4],[3,5]]` → `[[1,5]]`
@@ -300,6 +312,7 @@ Sorted = only compare with last merged = O(n)
 ### Aha #2: In-Place Update is OK
 
 We can modify `result[result.length - 1]` directly:
+
 ```typescript
 const lastMerged = result[result.length - 1]; // reference!
 lastMerged[1] = ...  // modifies result array
@@ -310,6 +323,7 @@ This is intentional and efficient!
 ### Aha #3: Touching Intervals Merge
 
 `[1,3]` and `[3,5]` should merge to `[1,5]`:
+
 - That's why we use `<=` not `<`
 - Adjacent intervals with no gap should merge
 
@@ -318,11 +332,13 @@ This is intentional and efficient!
 ## Pattern Recognition
 
 This pattern appears in:
+
 - **Calendar/scheduling problems** - meetings, events
 - **Range merging** - IP ranges, time slots
 - **Interval queries** - databases, caching
 
 **Keywords to watch for:**
+
 - "Merge overlapping..."
 - "Combine intervals..."
 - "Schedule/meetings..."
@@ -333,16 +349,19 @@ This pattern appears in:
 ## Related Interval Problems
 
 ### Meeting Rooms
+
 - **Question:** Can you attend all meetings?
 - **Approach:** Sort, check if any overlap
 - **Easier than merge** - just detection
 
 ### Insert Interval
+
 - **Question:** Insert new interval and merge
 - **Approach:** Similar logic, but insert first
 - **Same pattern** - sorting + merging
 
 ### Meeting Rooms II
+
 - **Question:** Minimum rooms needed
 - **Approach:** Sort, use heap/priority queue
 - **Harder** - needs different data structure
@@ -352,11 +371,13 @@ This pattern appears in:
 ## Complexity Analysis
 
 **Time Complexity:** O(n log n)
+
 - Sorting: O(n log n)
 - Merging: O(n) - single pass
 - Total: O(n log n) ← dominated by sort
 
 **Space Complexity:** O(n)
+
 - Result array: O(n) worst case (no merges)
 - Sorting space: O(log n) to O(n) depending on algorithm
 - Total: O(n)
@@ -366,17 +387,20 @@ This pattern appears in:
 ## My Learning Journey
 
 **Understanding** ✅
+
 - ✅ Grasp overlap condition
 - ✅ Know why sorting helps
 - ✅ Understand greedy approach
 - ✅ Can identify edge cases
 
 **Implementation** ✅
+
 - ✅ Can code from scratch
 - ✅ Handle all edge cases
 - ✅ Debug when tests fail
 
 **Pattern Recognition** 🎯
+
 - Apply to meeting rooms problems
 - Recognize interval patterns
 - Optimize related problems

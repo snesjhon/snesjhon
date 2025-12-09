@@ -11,6 +11,7 @@ Instead of nested loops checking all pairs, use two pointers that move based on 
 ## Common Patterns
 
 ### Pattern 1: Opposite Ends (Converging)
+
 Pointers start at both ends and move toward each other.
 
 ```typescript
@@ -23,18 +24,21 @@ function twoSum(nums: number[], target: number): number[] {
     const sum = nums[left] + nums[right];
 
     if (sum === target) return [left, right];
-    if (sum < target) left++;      // Need larger sum
-    else right--;                   // Need smaller sum
+    if (sum < target)
+      left++; // Need larger sum
+    else right--; // Need smaller sum
   }
 }
 ```
 
 **When to use:**
+
 - Array is sorted (or can be sorted)
 - Looking for pairs that meet criteria
 - Problems involving "closest to target"
 
 ### Pattern 2: Same Direction (Fast & Slow)
+
 Both pointers move in same direction at different speeds.
 
 ```typescript
@@ -54,11 +58,13 @@ function removeDuplicates(nums: number[]): number {
 ```
 
 **When to use:**
+
 - In-place array modifications
 - Removing elements without extra space
 - Partitioning arrays
 
 ### Pattern 3: Sliding Window
+
 Both pointers move right, maintaining a window (see [[sliding-window]]).
 
 ```typescript
@@ -82,12 +88,14 @@ function lengthOfLongestSubstring(s: string): number {
 ```
 
 **When to use:**
+
 - Subarrays/substrings with conditions
 - "Longest" or "shortest" substring problems
 
 ## When to Use Two Pointers
 
 ### Key Indicators:
+
 - Array/string is sorted (or can be sorted)
 - Need to find pairs/triplets
 - In-place modifications required
@@ -95,6 +103,7 @@ function lengthOfLongestSubstring(s: string): number {
 - Problems with "two" or "pair" in description
 
 ### Problem Types:
+
 - Pair sum problems
 - Removing duplicates
 - Palindrome checking
@@ -106,16 +115,19 @@ function lengthOfLongestSubstring(s: string): number {
 Sometimes you can solve the same problem with either approach:
 
 **Two Pointers:**
+
 - ✅ O(1) space
 - ✅ Works on sorted arrays
 - ❌ Requires sorting if not sorted (O(n log n))
 
 **Hash Map:**
+
 - ✅ O(n) time on unsorted
 - ✅ No sorting needed
 - ❌ O(n) space
 
 Example: Two Sum
+
 - Unsorted array → Hash map is better
 - Sorted array → Two pointers is better
 
@@ -166,14 +178,14 @@ while (left < right) {
 ## Related Concepts
 
 - [[sliding-window]] - Specialized two-pointer technique
-- [[arrays]] - Primary data structure
+- arrays - Primary data structure
 - [[hash-maps]] - Alternative approach for some problems
 
 ## Questions Using Two Pointers
 
 - Two Sum II (sorted array)
 - [[003-longest-substring]] - Sliding window variant
-- [[remove-duplicates]] - Fast and slow pointers
+- remove-duplicates - Fast and slow pointers
 - Container with most water
 - Three sum problem
 

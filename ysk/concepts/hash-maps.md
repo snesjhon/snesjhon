@@ -13,25 +13,25 @@ Hash maps (also called hash tables, dictionaries, or maps) store key-value pairs
 ```typescript
 // Map object (preferred for most cases)
 const map = new Map<string, number>();
-map.set('key', 42);
-map.get('key');        // 42
-map.has('key');        // true
-map.delete('key');
+map.set("key", 42);
+map.get("key"); // 42
+map.has("key"); // true
+map.delete("key");
 
 // Object (for simple string keys)
 const obj: Record<string, number> = {};
-obj['key'] = 42;
+obj["key"] = 42;
 
 // Set (for unique values only, no key-value pairs)
 const set = new Set<number>();
 set.add(42);
-set.has(42);           // true
+set.has(42); // true
 ```
 
 ## Time Complexity
 
 | Operation | Average | Worst Case |
-|-----------|---------|------------|
+| --------- | ------- | ---------- |
 | Insert    | O(1)    | O(n)       |
 | Lookup    | O(1)    | O(n)       |
 | Delete    | O(1)    | O(n)       |
@@ -41,6 +41,7 @@ set.has(42);           // true
 ## When to Use Hash Maps
 
 ### Perfect For:
+
 - Counting occurrences/frequency
 - Looking up values quickly
 - Detecting duplicates
@@ -72,6 +73,7 @@ for (let i = 0; i < n; i++) {
 ## Common Patterns
 
 ### 1. Frequency Counter
+
 ```typescript
 const freq = new Map<string, number>();
 for (const char of str) {
@@ -80,6 +82,7 @@ for (const char of str) {
 ```
 
 ### 2. Grouping
+
 ```typescript
 const groups = new Map<string, string[]>();
 for (const word of words) {
@@ -90,6 +93,7 @@ for (const word of words) {
 ```
 
 ### 3. Seen/Visited Tracking
+
 ```typescript
 const seen = new Set<string>();
 for (const item of items) {
@@ -99,6 +103,7 @@ for (const item of items) {
 ```
 
 ### 4. Index Mapping
+
 ```typescript
 const indexMap = new Map<number, number>();
 nums.forEach((num, i) => indexMap.set(num, i));
@@ -107,6 +112,7 @@ nums.forEach((num, i) => indexMap.set(num, i));
 ## Space-Time Tradeoff
 
 Hash maps often enable a space-time tradeoff:
+
 - **Trade space** (storing extra data in hash map)
 - **For time** (faster lookups)
 
@@ -115,24 +121,27 @@ Example: O(n²) → O(n) by using O(n) extra space
 ## Map vs Object vs Set
 
 ### Use Map when:
+
 - Keys are not strings
 - Need to preserve insertion order
 - Frequently adding/removing entries
 - Need size property
 
 ### Use Object when:
+
 - Simple string keys
 - Working with JSON
 - Need to use object syntax
 
 ### Use Set when:
+
 - Only need to track unique values
 - Don't need key-value pairs
 - Checking existence is main operation
 
 ## Related Concepts
 
-- [[arrays]] - Often used together
+- arrays - Often used together
 - [[two-pointers]] - Alternative to some hash map solutions
 - [[sliding-window]] - Sometimes combined with hash maps
 
@@ -140,7 +149,7 @@ Example: O(n²) → O(n) by using O(n) extra space
 
 - [[001-two-sum]] - Classic complement pattern
 - [[049-group-anagrams]] - Grouping pattern
-- [[347-top-k-frequent-elements]] - Frequency counter
+- 347-top-k-frequent-elements - Frequency counter
 - [[003-longest-substring]] - Sliding window with hash map
 
 ## My Understanding

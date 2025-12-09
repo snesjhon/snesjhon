@@ -11,6 +11,7 @@ All problems using hash maps for efficient lookups and grouping.
 ## Pattern Overview
 
 Hash maps provide O(1) lookups enabling:
+
 - Fast "have I seen this?" checks
 - Frequency counting
 - Grouping related items
@@ -22,6 +23,7 @@ Hash maps provide O(1) lookups enabling:
 ## Mastery Levels
 
 ### ✅ Understood & Confident
+
 - [[001-two-sum]] - Complement pattern
   - **Pattern**: Store seen numbers, check for complement
   - **Key insight**: target - current = complement
@@ -33,11 +35,13 @@ Hash maps provide O(1) lookups enabling:
   - Can implement from scratch ✓
 
 ### 🔄 Practicing
+
 - [[003-longest-substring]] - Tracking seen characters
   - **Pattern**: Set to track duplicates in window
   - Combined with sliding window ✓
 
 ### 📝 To Practice
+
 - Two Sum II (sorted array - use two pointers instead)
 - 3Sum
 - 4Sum
@@ -50,6 +54,7 @@ Hash maps provide O(1) lookups enabling:
 ## Common Hash Map Patterns
 
 ### Pattern 1: Complement/Difference
+
 **Find pairs that meet condition**
 
 ```typescript
@@ -69,6 +74,7 @@ for (let i = 0; i < nums.length; i++) {
 **Used in:** [[001-two-sum]]
 
 ### Pattern 2: Frequency Counter
+
 **Count occurrences**
 
 ```typescript
@@ -82,6 +88,7 @@ for (const item of items) {
 **Used in:** Top K Frequent, most frequent element problems
 
 ### Pattern 3: Grouping
+
 **Group items by common property**
 
 ```typescript
@@ -102,6 +109,7 @@ return [...groups.values()];
 **Used in:** [[049-group-anagrams]]
 
 ### Pattern 4: Seen/Visited Tracking
+
 **Detect duplicates or cycles**
 
 ```typescript
@@ -124,17 +132,20 @@ return false;
 ## Map vs Object vs Set
 
 ### Use Map When:
+
 - Keys are not strings
 - Need insertion order
 - Frequently adding/removing
 - Need `.size` property
 
 ### Use Object When:
+
 - Simple string keys
 - Working with JSON
 - Fixed structure
 
 ### Use Set When:
+
 - Only tracking existence
 - No key-value pairs needed
 - Duplicate detection
@@ -149,6 +160,7 @@ return false;
 **To Learn:** 6+
 
 ### Skills Checklist
+
 - ✅ Understand O(1) lookup property
 - ✅ Know Map vs Object vs Set
 - ✅ Can apply complement pattern
@@ -161,17 +173,19 @@ return false;
 ## Common Mistakes I've Made
 
 ### 1. Using Wrong Data Structure
+
 ```typescript
 // ❌ Array as key won't work
 const map = new Map();
-map.set([1,0,1], value);
-map.get([1,0,1]); // undefined! Different reference
+map.set([1, 0, 1], value);
+map.get([1, 0, 1]); // undefined! Different reference
 
 // ✅ Convert to string
-map.set([1,0,1].join('#'), value);
+map.set([1, 0, 1].join("#"), value);
 ```
 
 ### 2. Forgetting to Initialize
+
 ```typescript
 // ❌ Error if key doesn't exist
 freq.set(char, freq.get(char) + 1);
@@ -181,6 +195,7 @@ freq.set(char, (freq.get(char) || 0) + 1);
 ```
 
 ### 3. Not Checking Existence First
+
 ```typescript
 // ❌ Might access undefined
 const value = map.get(key).property;
@@ -196,14 +211,17 @@ if (map.has(key)) {
 ## Space-Time Tradeoffs
 
 **Hash map approach:**
+
 - ✅ O(n) time
 - ❌ O(n) space
 
 **Two pointer approach** (if sorted):
+
 - ✅ O(1) space
 - ❌ O(n log n) time (sorting)
 
 **When to choose which:**
+
 - Array already sorted → two pointers
 - Array unsorted + can't modify → hash map
 - Need O(n) time → hash map
@@ -214,6 +232,7 @@ if (map.has(key)) {
 ## Pattern Recognition
 
 **Think hash map when:**
+
 - "Find pair that sums to..."
 - "Group by..."
 - "Count frequency..."
@@ -222,26 +241,29 @@ if (map.has(key)) {
 - Can optimize from O(n²)
 
 **Quick test:**
+
 - Need fast lookup? ✓
 - Checking "seen before"? ✓
 - Counting occurrences? ✓
 - Grouping items? ✓
-→ Probably hash map!
+  → Probably hash map!
 
 ---
 
 ## Related Patterns
 
 Often combined with:
+
 - [[sliding-window]] - Track window contents
 - [[two-pointers]] - Alternative for some problems
-- [[arrays]] - Primary data structure
+- arrays - Primary data structure
 
 ---
 
 ## Next Steps
 
 ### To Master:
+
 1. ✅ Understand all 4 patterns
 2. ✅ Solve 3+ problems per pattern
 3. 🔄 Know when to use vs two pointers
@@ -249,6 +271,7 @@ Often combined with:
 5. 🎯 Code from memory in < 10 min
 
 ### Immediate Goals:
+
 - [ ] Solve Top K Frequent Elements
 - [ ] Practice 3Sum (combines hash map + two pointers)
 - [ ] Solve Contains Duplicate variations
