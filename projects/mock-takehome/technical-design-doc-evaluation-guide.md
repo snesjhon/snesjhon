@@ -34,10 +34,10 @@ Don't read linearly - **skim strategically** in this order:
 
 ### Step 2: Map the Constraints (2 min)
 
-Look for the **constraint triangle**:
-- **Time:** Hard deadline or flexible timeline?
-- **Resources:** Team size, budget, expertise
-- **Scope:** Must-haves vs nice-to-haves
+==Look for the **constraint triangle**:==
+- ==**Time:** Hard deadline or flexible timeline?==
+- ==**Resources:** Team size, budget, expertise==
+- ==**Scope:** Must-haves vs nice-to-haves==
 
 **Red flags:**
 - "We can do everything fast, cheap, and perfect"
