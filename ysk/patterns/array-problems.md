@@ -18,7 +18,7 @@ Problems focused on array manipulation, traversal, and algorithms.
 
 ### 🔄 Practicing
 
-- [[003-longest-substring]] - String as array of characters
+- [[longest-substring-study-guide]] - String as array of characters
 - [[239-sliding-window-maximum]] - Window over array
 
 ---

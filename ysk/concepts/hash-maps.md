@@ -150,7 +150,7 @@ Example: O(n²) → O(n) by using O(n) extra space
 - [[001-two-sum]] - Classic complement pattern
 - [[049-group-anagrams]] - Grouping pattern
 - 347-top-k-frequent-elements - Frequency counter
-- [[003-longest-substring]] - Sliding window with hash map
+- [[longest-substring-study-guide]] - Sliding window with hash map
 
 ## My Understanding
 

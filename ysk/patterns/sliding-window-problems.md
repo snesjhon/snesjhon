@@ -26,7 +26,7 @@ Sliding window maintains a range `[left, right]` that:
 ## Mastery Levels
 
 ### ✅ Understood & Confident
-- [[003-longest-substring]] - Variable window with Set/Map
+- [[longest-substring-study-guide]] - Variable window with Set/Map
   - **Pattern**: Expand right, contract when invalid (duplicate found)
   - **Key skill**: Knowing when to shrink window
   - Can implement from scratch ✓
@@ -84,7 +84,7 @@ for (let right = 0; right < arr.length; right++) {
 }
 ```
 
-**Example:** [[003-longest-substring]]
+**Example:** [[longest-substring-study-guide]]
 
 ---
 
@@ -104,7 +104,7 @@ for (let right = 0; right < arr.length; right++) {
 }
 ```
 
-**Used in:** [[003-longest-substring]]
+**Used in:** [[longest-substring-study-guide]]
 
 ### Pattern 2: Window with Monotonic Deque
 ```typescript

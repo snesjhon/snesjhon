@@ -184,7 +184,7 @@ while (left < right) {
 ## Questions Using Two Pointers
 
 - Two Sum II (sorted array)
-- [[003-longest-substring]] - Sliding window variant
+- [[longest-substring-study-guide]] - Sliding window variant
 - remove-duplicates - Fast and slow pointers
 - Container with most water
 - Three sum problem

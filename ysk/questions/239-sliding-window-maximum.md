@@ -12,7 +12,7 @@
 
 **Related Problems:**
 
-- [[003-longest-substring]] - Basic sliding window
+- [[longest-substring-study-guide]] - Basic sliding window
 - Min Stack - Similar monotonic structure
 - Sliding Window Median
 

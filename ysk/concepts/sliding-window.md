@@ -150,7 +150,7 @@ for (let right = 0; right < n; right++) {
 
 ## Questions Using Sliding Window
 
-- [[003-longest-substring]] ⭐ Classic variable window
+- [[longest-substring-study-guide]] ⭐ Classic variable window
 - [[239-sliding-window-maximum]] 🔥 Advanced with deque
 - Fixed window maximum sum problems
 - Minimum window substring

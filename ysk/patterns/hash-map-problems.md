@@ -36,7 +36,7 @@ Hash maps provide O(1) lookups enabling:
 
 ### 🔄 Practicing
 
-- [[003-longest-substring]] - Tracking seen characters
+- [[longest-substring-study-guide]] - Tracking seen characters
   - **Pattern**: Set to track duplicates in window
   - Combined with sliding window ✓
 
@@ -125,7 +125,7 @@ for (const item of items) {
 return false;
 ```
 
-**Used in:** [[003-longest-substring]], Contains Duplicate
+**Used in:** [[longest-substring-study-guide]], Contains Duplicate
 
 ---
 

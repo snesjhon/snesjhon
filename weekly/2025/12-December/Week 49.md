@@ -1,8 +1,45 @@
+## Mon, Dec 1
+
+- [ ] Phone Interview
+- [ ] Try Obsidian out
+- [ ] CSV Import design
+
+---
+
+- Phone interview went great
+- Crunch time
+
+---
+
+## Tue, Dec 3
+
+Learning more and more about the algorithms.
+
+It's funny, a lot of the times when I'm in this kind of loop I've gone through so many rabbit holes that I begin to doubt myself.
+
+But at the same time I reflect (after a bunch of studying) that "Hey, maybe I know a thing or two"
+
+> Onwards and upwards
+
+---
+
+> If I flatten all the data into a single array and loop through it once, would I do the same amount of work?
+
+That makes sense. Whatever the structure is, if I `.flatten` this array, would I make the same amount of work
+
+Tis came up within one of the [[dfs]] problems,and it makes sense that I would be able to write this in multiple `for of` loops, because _we're only visiting the data once_
+
+It would be different if we were visiting the data multiple times, but we're not. If we visited the data multiple times then we would be writing this in `O(N^2)`
+
+---
+
+## Wed, Dec 4
+
 Going to talk about my experience in preparation for many future questions
 
-## A complex feature you built end-to-end (emphasize full-stack work)
+### A complex feature you built end-to-end (emphasize full-stack work)
 
-### Front End
+#### Front End
 
 - One of my biggest accomplishment was during the migration towards Unified Analytics. Our legacy analytics platform was showing its signs of aging, firstly noted through Component infrastructure. We had many "sections" (aka Marketing, Product, Home) and each of these had "extended" our component (in a sense) they were still using our component, but they were writing so much logic on top of it, that it might as well have been their own custom component
 - Our approach was two fold
@@ -10,7 +47,7 @@ Going to talk about my experience in preparation for many future questions
   - Establish a "migration path" for each section. If you were starting from scratch how would you deal with implementing our components
 - Adoption was slow initially and we had a lot of questions regarding how certain data structures/models would fit within our "source of truth system" but we handled them case by case. What we learned though allowed us to assure that bigger "sections" or "1st party" adopters would have less of a headache when it came time to migrate their system
 
-## Backend
+#### Backend
 
 - We didn't necessarily know when _every_ report was going to be migrated to this new system. A blindspot for me was that I wasn't privy to any of the status of data migration at this time, so we did our best to assure that when the data was ready for a specific migration to happen we were ready for this on the front-end side.
 - However, one big backend piece of this was to assure that our system was orchestrated in a way that our endpoints were able to have this "hybrid" mode. Knowing that we weren't going to be able to migrate _every_ report we had to support a single report endpoint allowing for both legacy and non-legacy reports. This took a lot of coordination because the new front-end wasn't made for this. We were under the assumption all reports would be ready for this. So creating new endpoint with the right legacy and non-legacy data was essential
@@ -28,7 +65,7 @@ Going to talk about my experience in preparation for many future questions
   - How did you roll out the improvement safely?
 ```
 
-### What performance issue or technical debt did you identify?
+#### What performance issue or technical debt did you identify?
 
 - Identifying performance gaps, specifically in the front-end, comes down to seeing the picture in multiple levels of customers. You are not going to see the same kind of performance for the small customers vs the larger customer vs the massive.
 - We saw multiple performance gains just by understanding our underlying (pre-chosen) technology Tanstack Query. Working with Claude was a game-changer tbh, it's like validating multiple ideas, never implementing, but validating.
@@ -54,7 +91,7 @@ Problem-solving:
 - Balancing technical debt vs. new features
 ```
 
-### A time you debugged a challenging issue
+#### A time you debugged a challenging issue
 
 - Error logging can be a pain when it doesn't give you any hints into why the Error happened in the first place. Debugging can only happen when you have a good understanding of where to look. It's never great to see an "issue" that needs solving and the best thing you have to go on is "Error was aborted", was does that even mean. You go through the same couple of ideas
   1.  Try to repro
@@ -63,13 +100,13 @@ Problem-solving:
   4.  Go through the latest releases and see if anything is related
 - If all of those fail, then you're kinda left to wonder how we go here. One such scenario was a front-end issue where we were not properly resolving our promises, we were calling them, putting them on the stack, but weren't resolving because of a multitude of reasons. So the first step in my game plan was to identify and batch them. Which of these came from where, and see what _actually_ deserved our attention and which were noise. Turns out, a lot of it was noise, because naturally when a user quickly enters the browser and then navigates away, we don't have enough time to cancel these promises. So to me, we ignored a certain amount of noise which then reduced the amount of overall "errors" we needed to handle
 
-### Balancing technical debt vs. new features
+#### Balancing technical debt vs. new features
 
 #experience
 
 ---
 
-### Questions
+#### Questions
 
 - What does success look like for this role in the first 6 months?
 - How is the engineering team structured? Who would I be working most closely with?

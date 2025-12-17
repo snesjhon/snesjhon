@@ -1,4 +1,4 @@
-# 003 - Longest Substring Without Repeating Characters
+# Longest Substring Without Repeating Characters
 
 #pattern/sliding-window #pattern/two-pointers #concept/sliding-window #concept/hash-maps #concept/strings
 
