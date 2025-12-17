@@ -1,43 +1,23 @@
-// Find the length of the longest substring of a given string without repeating characters.
-//
-// Input: abccabcabcc
-//
-// Output: 3
-//
-// Explanation: The longest substrings are abc and cab, both of length 3.
-//
-// Input: aaaabaaa
-//
-// Output: 2
-//
-// Explanation: ab is the longest substring, with a length of 2.
+// Let's continue on finding the sum of subarrays. This time given a positive integer array nums, we want to find the length of the shortest subarray such that the subarray sum is at least target. Recall the same example with input nums = [1, 4, 1, 7, 3, 0, 2, 5] and target = 10, then the smallest window with the sum >= 10 is [7, 3] with length 2. So the output is 2.
 
-function longestSubString(s: string) {
-  let hash = new Map();
+// We'll assume for this problem that it's guaranteed target will not exceed the sum of all elements in nums.
+
+function shortest(nums: number[], target: number) {
+  let output = nums.length;
   let i = 0;
-  let output = 0;
+  let sum = 0;
 
-  for (let j = 0; j < s.length; j++) {
-    const currentStr = s.charAt(j);
-    const hashValue = hash.get(currentStr) ?? 0;
-
-    hash.set(currentStr, hashValue + 1);
-
-    while (hash.get(currentStr) > 1) {
-      // our invariant is no longer true so decrement
-      const hashItem = hash.get(s.charAt(i));
-      if (hashItem - 1 === 0) {
-        hash.delete(s.charAt(i));
-      } else {
-        hash.set(currentStr, hashItem - 1);
-      }
+  for (let j = 0; j < nums.length; j++) {
+    sum += nums[j];
+    while (sum >= target) {
+      output = Math.min(output, j - i + 1);
+      sum -= nums[i];
       i++;
     }
-    console.log({ output, hash });
-    output = Math.max(output, hash.size);
   }
-
   return output;
 }
 
-console.log(longestSubString("pwwkew"));
+console.log(shortest([1, 6, 8], 8)); //1
+console.log(shortest([1, 4, 1, 7, 3, 0, 2, 5], 10)); // 2
+console.log(shortest([6, 6, 6, 6, 6, 6, 6], 19)); // 4
