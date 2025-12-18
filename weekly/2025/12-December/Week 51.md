@@ -1,3 +1,23 @@
+## Thu, Dec 18
+
+something I've been thinking about lately is the optimum way of learning new systems
+
+### Pefix sums
+
+Learning about prefix sums is kinda of a mind boggle thing initially as it was explained, but once you get over what the algorithm is trying to do, it becomes kinda fun to think through: 
+
+''''
+Instead of checking every possible subarray (slow!), we use prefix sums with a clever trick. As we build our running total, we ask: 
+
+**"Have I seen a prefix sum before that would make the current subarray equal my target?"** 
+
+Specifically, if our current sum is 8 and we want a target of 7, we check if we've previously seen a sum of 1 (because 8 - 1 = 7). If we have seen 1 at some earlier position, it means the subarray between that position and now sums to exactly 7.
+'''
+
+
+
+
+---
 ## Wed, Dec 17
 
 ### Moving faster
@@ -22,7 +42,6 @@ For **SHORTEST** valid windows, shrink while **VALID** (`while (sum >= target)`)
 
 >[!Note]
 >ALWAYS EXPAND FIRST AND THEN SHRINK
-
 
 
 ---
