@@ -2,7 +2,7 @@
 
 something I've been thinking about lately is the optimum way of learning new systems
 
-### Pefix sums
+### Prefix sums
 
 Learning about prefix sums is kinda of a mind boggle thing initially as it was explained, but once you get over what the algorithm is trying to do, it becomes kinda fun to think through: 
 
