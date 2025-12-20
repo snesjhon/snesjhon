@@ -1,23 +1,49 @@
-// Let's continue on finding the sum of subarrays. This time given a positive integer array nums, we want to find the length of the shortest subarray such that the subarray sum is at least target. Recall the same example with input nums = [1, 4, 1, 7, 3, 0, 2, 5] and target = 10, then the smallest window with the sum >= 10 is [7, 3] with length 2. So the output is 2.
+// three sum problem
+//
 
-// We'll assume for this problem that it's guaranteed target will not exceed the sum of all elements in nums.
+class Solution {
+  threeSum(nums: number[]): number[][] {
+    // we're going to sort this array
+    nums.sort();
+    const output: number[][] = [];
 
-function shortest(nums: number[], target: number) {
-  let output = nums.length;
-  let i = 0;
-  let sum = 0;
+    // we're going to pick a "fixed" initial value;
+    // it's till - 2, since we're looking for triplets
+    for (let i = 0; i < nums.length - 2; i++) {
+      // this is a duplicate so continue
+      if (i > 0 && nums[i] === nums[i - 1]) {
+        continue;
+      }
+      // since we have a fixed value at `i` then we start finding their 'complement' in +1
+      let left = i + 1;
+      let right = nums.length - 1;
 
-  for (let j = 0; j < nums.length; j++) {
-    sum += nums[j];
-    while (sum >= target) {
-      output = Math.min(output, j - i + 1);
-      sum -= nums[i];
-      i++;
+      while (left < right) {
+        const sum = nums[i] + nums[left] + nums[right];
+        if (sum > 0) {
+          right--;
+        } else if (sum < 0) {
+          left++;
+        } else {
+          output.push([nums[i], nums[left], nums[right]]);
+
+          while (left < right && nums[left] === nums[left + 1]) {
+            left++;
+          }
+
+          while (left < right && nums[right] === nums[right - 1]) {
+            right--;
+          }
+
+          right--;
+          left++;
+        }
+      }
     }
+    return output;
   }
-  return output;
 }
 
-console.log(shortest([1, 6, 8], 8)); //1
-console.log(shortest([1, 4, 1, 7, 3, 0, 2, 5], 10)); // 2
-console.log(shortest([6, 6, 6, 6, 6, 6, 6], 19)); // 4
+const sol = new Solution();
+console.log(sol.threeSum([-1, 0, 1, 2, -1, -4, -1, 2, 1]));
+// console.log(sol.threeSum([-1, -1, -1, -4, 0, 1,  1,  2,  2]));
