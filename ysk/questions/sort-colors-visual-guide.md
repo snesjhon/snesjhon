@@ -351,14 +351,14 @@ graph LR
 ```mermaid
 flowchart TD
     subgraph "When we find a 2"
-        A["nums[i] = 2"] --> B[Swap with nums[right]]
+        A["nums[i] = 2"] --> B["Swap with nums[right]"]
         B --> C{What did we get<br/>from right?}
         C -->|Unknown!| D["Could be 0, 1, or 2"]
         D --> E["MUST check it<br/>DON'T increment i"]
     end
 
     subgraph "When we find a 0"
-        F["nums[i] = 0"] --> G[Swap with nums[left]]
+        F["nums[i] = 0"] --> G["Swap with nums[left]"]
         G --> H{What did we get<br/>from left?}
         H -->|Known!| I["Must be 0 or 1<br/>(left region is sorted)"]
         I --> J["Safe to increment i"]
@@ -377,7 +377,7 @@ flowchart TD
     Start([Start: left=0, i=0, right=n-1]) --> Loop{i <= right?}
 
     Loop -->|No| Done([Done! Array sorted])
-    Loop -->|Yes| Check{nums[i]?}
+    Loop -->|Yes| Check{"nums[i]?"}
 
     Check -->|0| Swap0["swap(nums[left], nums[i])"]
     Swap0 --> Inc0["left++<br/>i++"]
