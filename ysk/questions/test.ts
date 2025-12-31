@@ -12,7 +12,19 @@ class TreeNode {
   }
 }
 
-function maxDepth(): number {}
+function maxDepth(root: TreeNode | null): number {
+  function dfs(node: TreeNode | null): number {
+    if (node == null) return 0;
+
+    const left = dfs(node.left);
+    const right = dfs(node.right);
+
+    return Math.max(left, right) + 1;
+  }
+
+  // this is inclusive vs exclusive. If we count ourselves, then return dfs, if it's exclusive then remove the root node
+  return root !== null ? dfs(root) - 1 : 0;
+}
 
 // Test Cases
 console.log("Test Case 1 - Balanced tree [3,9,20,null,null,15,7]");
