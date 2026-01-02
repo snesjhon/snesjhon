@@ -66,10 +66,10 @@ graph LR
 - String immutability handling
 
 **Key Problems**:
-- Reverse array
-- Remove duplicates
-- Valid palindrome
-- Merge sorted arrays
+- [x] Reverse array
+- [x] Remove duplicates
+- [x] Valid palindrome
+- [x] Merge sorted arrays
 
 **Why First**: Most fundamental structure. You need comfort here before anything else.
 
