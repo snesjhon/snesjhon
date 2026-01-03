@@ -86,10 +86,10 @@ graph LR
 - Fast duplicate detection
 
 **Key Problems**:
-- Two sum
-- Contains duplicate
-- Valid anagram
-- First unique character
+- [x] Two sum
+- [x] Contains duplicate
+- [x] Valid anagram
+- [x] First unique character
 
 **Why Now**: Essential tool you'll use EVERYWHERE. Learn it early so it's second nature.
 
