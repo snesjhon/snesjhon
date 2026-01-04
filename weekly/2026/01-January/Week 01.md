@@ -1,3 +1,27 @@
+## Sat, Jan 03
+
+For #concept/two-pointers  I got a bit confused about whether I should do `<` vs `<=`
+
+### Quick Debugging Strategy
+
+When in doubt, trace through these three cases in order:
+
+```ts
+// 1. Empty
+[]
+
+// 2. Single element (the killer test case!)
+[x]
+
+// 3. Two elements  
+[x, y]
+```
+
+If your loop doesn't handle the single-element case correctly, you almost certainly need `<=`.
+
+**Rule of thumb**: In two-pointer problems where pointers move toward each other and you're processing ALL elements, default to `<=` unless you have a specific reason not to.
+
+---
 ## Fri, Jan 02
 Decided to switch back to Freeform as I think I was getting too riced up in trying to make the DSA setup work within obsidian, but the sketches aren't really part of things I want to keep. I should instead focus on getting the algorithm and then thinking about other ways of mapping these learnings back
 

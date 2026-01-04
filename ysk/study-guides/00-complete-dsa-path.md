@@ -106,8 +106,8 @@ graph LR
 - Optimization thinking
 
 **Key Problems**:
-- Container with most water
-- 3Sum
+- [x] Container with most water
+- [x] 3Sum
 - Remove element
 - Sort colors
 
