@@ -1,3 +1,9 @@
+## Sun, Jan 04
+
+Our `Frequency.size` guarantees Unique items, as long as we increment and decrement from the `Map` thus allowing us to update the `maximum`
+
+
+---
 ## Sat, Jan 03
 
 For #concept/two-pointers  I got a bit confused about whether I should do `<` vs `<=`

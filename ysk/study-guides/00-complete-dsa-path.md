@@ -108,8 +108,9 @@ graph LR
 **Key Problems**:
 - [x] Container with most water
 - [x] 3Sum
-- Remove element
-- Sort colors
+- [x] Remove element
+- [ ] Sort colors
+- This one still stumped me initially, I had to resort to visual guide, but I mostly go it, will come back
 
 **Why Now**: First real "technique" - teaches you that problems have patterns beyond brute force.
 
@@ -126,10 +127,10 @@ graph LR
 - Substring/subarray patterns
 
 **Key Problems**:
-- Max sum subarray of size K
-- Longest substring without repeating chars
-- Minimum window substring
-- Permutation in string
+- [ ] Max sum subarray of size K
+- [ ] Longest substring without repeating chars
+- [ ] Minimum window substring
+- [ ] Permutation in string
 
 **Why Now**: Natural extension of two pointers. Solidifies the idea that technique matters.
 
@@ -146,10 +147,10 @@ graph LR
 - Edge case handling (null checks)
 
 **Key Problems**:
-- Reverse linked list
-- Merge two sorted lists
-- Detect cycle
-- Remove Nth node from end
+- [ ] Reverse linked list
+- [ ] Merge two sorted lists
+- [ ] Detect cycle
+- [ ] Remove Nth node from end
 
 **Why Now**: First non-array structure. Teaches pointer thinking which is crucial for trees/graphs later.
 
@@ -166,10 +167,10 @@ graph LR
 - Pairing/matching problems
 
 **Key Problems**:
-- Valid parentheses
-- Min stack
-- Implement queue using stacks
-- Daily temperatures
+- [ ] Valid parentheses
+- [ ] Min stack
+- [ ] Implement queue using stacks
+- [ ] Daily temperatures
 
 **Why Now**: These patterns appear everywhere. Also critical for understanding recursion call stack.
 
@@ -186,11 +187,11 @@ graph LR
 - Trust the recursion
 
 **Key Problems**:
-- Fibonacci
-- Factorial
-- Reverse string recursively
-- Generate parentheses
-- Subsets
+- [ ] Fibonacci
+- [ ] Factorial
+- [ ] Reverse string recursively
+- [ ] Generate parentheses
+- [ ] Subsets
 
 **Why Now**: CRITICAL checkpoint. You cannot progress without recursion. Take your time here.
 
@@ -207,10 +208,10 @@ graph LR
 - Log(n) complexity benefits
 
 **Key Problems**:
-- Binary search
-- Search in rotated sorted array
-- Find minimum in rotated sorted array
-- Search 2D matrix
+- [ ] Binary search
+- [ ] Search in rotated sorted array
+- [ ] Find minimum in rotated sorted array
+- [ ] Search 2D matrix
 
 **Why Now**: First logarithmic algorithm. Introduces the idea that clever algorithms beat brute force.
 
