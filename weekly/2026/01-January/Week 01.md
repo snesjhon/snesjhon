@@ -2,7 +2,6 @@
 
 Our `Frequency.size` guarantees Unique items, as long as we increment and decrement from the `Map` thus allowing us to update the `maximum`
 
-
 ---
 ## Sat, Jan 03
 
@@ -29,6 +28,7 @@ If your loop doesn't handle the single-element case correctly, you almost certai
 
 ---
 ## Fri, Jan 02
+
 Decided to switch back to Freeform as I think I was getting too riced up in trying to make the DSA setup work within obsidian, but the sketches aren't really part of things I want to keep. I should instead focus on getting the algorithm and then thinking about other ways of mapping these learnings back
 
 On the other hand [[00-complete-dsa-path#Days 5-7 Hash Maps & Hash Sets]] portion went great. In fact I was able to get all of them pretty quickly, albeit some took longer than others. 

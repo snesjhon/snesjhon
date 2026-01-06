@@ -109,7 +109,7 @@ graph LR
 - [x] Container with most water
 - [x] 3Sum
 - [x] Remove element
-- [ ] Sort colors
+- [x] Sort colors
 - This one still stumped me initially, I had to resort to visual guide, but I mostly go it, will come back
 
 **Why Now**: First real "technique" - teaches you that problems have patterns beyond brute force.
@@ -127,8 +127,8 @@ graph LR
 - Substring/subarray patterns
 
 **Key Problems**:
-- [ ] Max sum subarray of size K
-- [ ] Longest substring without repeating chars
+- [x] Max sum subarray of size K
+- [x] Longest substring without repeating chars
 - [ ] Minimum window substring
 - [ ] Permutation in string
 
