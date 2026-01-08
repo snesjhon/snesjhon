@@ -116,7 +116,7 @@ graph LR
 
 ---
 
-### Days 11-14: Sliding Window ⭐ **YOU ARE HERE**
+### Days 11-14: Sliding Window
 
 **Duration**: 3-4 days (full-time)
 
@@ -147,8 +147,8 @@ graph LR
 - Edge case handling (null checks)
 
 **Key Problems**:
-- [ ] Reverse linked list
-- [ ] Merge two sorted lists
+- [x] Reverse linked list
+- [x] Merge two sorted lists
 - [ ] Detect cycle
 - [ ] Remove Nth node from end
 
