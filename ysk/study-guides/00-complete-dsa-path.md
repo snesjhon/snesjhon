@@ -129,8 +129,8 @@ graph LR
 **Key Problems**:
 - [x] Max sum subarray of size K
 - [x] Longest substring without repeating chars
-- [ ] Minimum window substring
-- [ ] Permutation in string
+- [x] Minimum window substring
+- [x] Permutation in string
 
 **Why Now**: Natural extension of two pointers. Solidifies the idea that technique matters.
 
