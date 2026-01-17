@@ -665,14 +665,9 @@ Even at full-time pace, complex topics need time to sink in. Don't rush DP just 
 
 ## 🔄 Where You Are Right Now
 
-**Your current position**: Days 11-14 - Sliding Window ⭐
-
-**Current progress**: ~2 weeks into the journey (you're doing great!)
+**Your current position**: Stacks & Queues - Sliding Window ⭐
 
 **What's ahead**:
-
-- Next up: Linked Lists (3-4 days)
-- Then: Stack & Queue (2-3 days)
 - Critical milestone: Recursion (1-2 weeks) - Take your time here!
 - Graphs & topological sort: Weeks 8-11 (~1.5-2 months from now)
 
