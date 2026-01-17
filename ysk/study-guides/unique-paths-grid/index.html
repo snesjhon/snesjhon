@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unique Paths - Build It Yourself</title>
+  <style>
+    /* ===== PROVIDED STYLES (do not modify) ===== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f5f5f5;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+
+    .container { max-width: 900px; margin: 0 auto; }
+
+    h1 { margin-bottom: 0.5rem; }
+    .subtitle { color: #666; margin-bottom: 2rem; }
+
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .card h2 { margin-bottom: 1rem; font-size: 1.1rem; }
+
+    .controls {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .input-group label { font-size: 0.875rem; color: #666; }
+
+    input[type="number"] {
+      width: 70px;
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+
+    button {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.875rem;
+    }
+
+    .btn-primary { background: #3b82f6; color: white; }
+    .btn-primary:hover { background: #2563eb; }
+    .btn-secondary { background: #e5e7eb; color: #374151; }
+
+    .result {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: #f0fdf4;
+      border-radius: 4px;
+      font-size: 1.25rem;
+    }
+
+    .result.error { background: #fef2f2; color: #991b1b; }
+
+    .test-case {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .test-case:last-child { border-bottom: none; }
+    .pass { color: #16a34a; }
+    .fail { color: #dc2626; }
+
+    .instructions {
+      background: #fffbeb;
+      border-left: 4px solid #f59e0b;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      font-size: 0.875rem;
+    }
+
+    .instructions code {
+      background: #fef3c7;
+      padding: 0.125rem 0.25rem;
+      border-radius: 2px;
+    }
+
+    /* ===== YOUR STYLES GO HERE ===== */
+    /*
+     * TODO: Style the grid container and cells
+     *
+     * Requirements:
+     * - #grid should display as a grid layout
+     * - .cell should be a square (e.g., 50x50px)
+     * - .cell.start should have a blue-ish background
+     * - .cell.end should have a green-ish background
+     * - Show the cell value centered
+     * - Optional: add hover effects, transitions
+     */
+
+    #grid {
+      /* Your grid container styles */
+    }
+
+    .cell {
+      /* Your cell styles */
+    }
+
+    .cell.start {
+      /* Start cell (top-left) */
+    }
+
+    .cell.end {
+      /* End cell (bottom-right) */
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Unique Paths</h1>
+    <p class="subtitle">Build the grid UI and implement the DP algorithm</p>
+
+    <!-- Instructions -->
+    <div class="card">
+      <div class="instructions">
+        <strong>Your Tasks:</strong>
+        <ol style="margin-top: 0.5rem; margin-left: 1.25rem;">
+          <li>Style the <code>#grid</code> and <code>.cell</code> elements (CSS)</li>
+          <li>Implement <code>renderGrid(n, m)</code> to create the grid DOM</li>
+          <li>Implement <code>uniquePaths(n, m)</code> to solve the algorithm</li>
+          <li>Implement <code>solve()</code> to connect UI with algorithm</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="card">
+      <h2>Configuration</h2>
+      <div class="controls">
+        <div class="input-group">
+          <label for="rows">Rows (n)</label>
+          <input type="number" id="rows" value="3" min="1" max="10">
+        </div>
+        <div class="input-group">
+          <label for="cols">Columns (m)</label>
+          <input type="number" id="cols" value="4" min="1" max="10">
+        </div>
+        <button class="btn-primary" onclick="solve()">Solve</button>
+        <button class="btn-secondary" onclick="runTests()">Run Tests</button>
+      </div>
+      <div id="result" class="result" style="display: none;"></div>
+    </div>
+
+    <!-- Grid Visualization -->
+    <div class="card">
+      <h2>DP Table</h2>
+      <div id="grid">
+        <!-- Grid cells will be rendered here -->
+        <p style="color: #999;">Implement renderGrid() to display the grid</p>
+      </div>
+    </div>
+
+    <!-- Test Results -->
+    <div class="card">
+      <h2>Test Cases</h2>
+      <div id="test-results">
+        <p style="color: #999;">Click "Run Tests" to verify your solution</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ===== PROVIDED CODE (do not modify) =====
+
+    const TEST_CASES = [
+      { n: 1, m: 1, expected: 1 },
+      { n: 2, m: 2, expected: 2 },
+      { n: 3, m: 3, expected: 6 },
+      { n: 3, m: 4, expected: 10 },
+      { n: 3, m: 7, expected: 28 },
+      { n: 1, m: 5, expected: 1 },
+      { n: 5, m: 1, expected: 1 },
+      { n: 5, m: 5, expected: 70 },
+    ];
+
+    function runTests() {
+      const resultsEl = document.getElementById('test-results');
+      resultsEl.innerHTML = '';
+
+      let passed = 0;
+      TEST_CASES.forEach(({ n, m, expected }, i) => {
+        const result = uniquePaths(n, m);
+        const isPass = result === expected;
+        if (isPass) passed++;
+
+        const div = document.createElement('div');
+        div.className = 'test-case';
+        div.innerHTML = `
+          <span class="${isPass ? 'pass' : 'fail'}">${isPass ? '✓' : '✗'}</span>
+          <span>uniquePaths(${n}, ${m})</span>
+          <span style="margin-left: auto;">
+            Expected: <strong>${expected}</strong> | Got: <strong>${result}</strong>
+          </span>
+        `;
+        resultsEl.appendChild(div);
+      });
+
+      const summary = document.createElement('div');
+      summary.style.marginTop = '1rem';
+      summary.style.fontWeight = 'bold';
+      summary.innerHTML = `Passed: ${passed}/${TEST_CASES.length}`;
+      resultsEl.appendChild(summary);
+    }
+
+    // ===== YOUR CODE GOES HERE =====
+
+    /**
+     * TODO 1: Implement the unique paths algorithm
+     *
+     * Given n rows and m columns, return the number of unique paths
+     * from top-left (0,0) to bottom-right (n-1, m-1).
+     * You can only move right or down.
+     *
+     * Hint: Use dynamic programming
+     * - Base case: first row and first column are all 1s
+     * - Recurrence: dp[i][j] = dp[i-1][j] + dp[i][j-1]
+     *
+     * @param {number} n - number of rows
+     * @param {number} m - number of columns
+     * @returns {number} - total unique paths
+     */
+    function uniquePaths(n, m) {
+      // TODO: Implement this function
+      return 0;
+    }
+
+    /**
+     * TODO 2: Render the grid with DP values
+     *
+     * Create the grid DOM structure inside #grid element.
+     * Each cell should:
+     * - Have class "cell"
+     * - Have class "start" if it's (0,0)
+     * - Have class "end" if it's (n-1, m-1)
+     * - Display the DP value (number of paths to reach that cell)
+     *
+     * Hint:
+     * - Use CSS Grid (grid-template-columns)
+     * - Create a 2D DP array first, then render
+     *
+     * @param {number} n - number of rows
+     * @param {number} m - number of columns
+     * @param {number[][]} dp - the filled DP table (optional, for display)
+     */
+    function renderGrid(n, m, dp) {
+      const gridEl = document.getElementById('grid');
+      // TODO: Implement this function
+      // Clear existing content: gridEl.innerHTML = '';
+      // Set grid columns: gridEl.style.gridTemplateColumns = `repeat(${m}, ...)`;
+      // Create cells with appropriate classes and values
+    }
+
+    /**
+     * TODO 3: Connect the UI to your algorithm
+     *
+     * This function is called when the "Solve" button is clicked.
+     * It should:
+     * 1. Read n and m from the input fields
+     * 2. Call uniquePaths(n, m) to get the result
+     * 3. Call renderGrid(n, m, dp) to visualize the DP table
+     * 4. Display the result in #result element
+     */
+    function solve() {
+      const n = parseInt(document.getElementById('rows').value) || 3;
+      const m = parseInt(document.getElementById('cols').value) || 4;
+
+      // TODO: Implement this function
+      // 1. Calculate the result
+      // 2. Render the grid
+      // 3. Show the result
+
+      const resultEl = document.getElementById('result');
+      resultEl.style.display = 'block';
+      resultEl.textContent = `Implement solve() to see the result`;
+    }
+
+    // Initialize on page load (optional)
+    // document.addEventListener('DOMContentLoaded', () => solve());
+  </script>
+</body>
+</html>

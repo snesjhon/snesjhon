@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unique Paths - Solution</title>
+  <style>
+    /* ===== PROVIDED STYLES (do not modify) ===== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f5f5f5;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+
+    .container { max-width: 900px; margin: 0 auto; }
+
+    h1 { margin-bottom: 0.5rem; }
+    .subtitle { color: #666; margin-bottom: 2rem; }
+
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .card h2 { margin-bottom: 1rem; font-size: 1.1rem; }
+
+    .controls {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .input-group label { font-size: 0.875rem; color: #666; }
+
+    input[type="number"] {
+      width: 70px;
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+
+    button {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.875rem;
+    }
+
+    .btn-primary { background: #3b82f6; color: white; }
+    .btn-primary:hover { background: #2563eb; }
+    .btn-secondary { background: #e5e7eb; color: #374151; }
+
+    .result {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: #f0fdf4;
+      border-radius: 4px;
+      font-size: 1.25rem;
+    }
+
+    .result.error { background: #fef2f2; color: #991b1b; }
+
+    .test-case {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .test-case:last-child { border-bottom: none; }
+    .pass { color: #16a34a; }
+    .fail { color: #dc2626; }
+
+    .instructions {
+      background: #dcfce7;
+      border-left: 4px solid #16a34a;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      font-size: 0.875rem;
+    }
+
+    .instructions code {
+      background: #bbf7d0;
+      padding: 0.125rem 0.25rem;
+      border-radius: 2px;
+    }
+
+    /* ===== SOLUTION STYLES ===== */
+
+    #grid {
+      display: inline-grid;
+      gap: 2px;
+      background: #d1d5db;
+      padding: 2px;
+      border-radius: 6px;
+    }
+
+    .cell {
+      width: 50px;
+      height: 50px;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #374151;
+      transition: transform 0.15s, background 0.15s;
+    }
+
+    .cell:hover {
+      transform: scale(1.05);
+      z-index: 1;
+    }
+
+    .cell.start {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .cell.end {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Unique Paths - Solution</h1>
+    <p class="subtitle">Reference implementation</p>
+
+    <!-- Instructions -->
+    <div class="card">
+      <div class="instructions">
+        <strong>This is the solution file.</strong> Compare your implementation in <code>index.html</code> with this one.
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="card">
+      <h2>Configuration</h2>
+      <div class="controls">
+        <div class="input-group">
+          <label for="rows">Rows (n)</label>
+          <input type="number" id="rows" value="3" min="1" max="10">
+        </div>
+        <div class="input-group">
+          <label for="cols">Columns (m)</label>
+          <input type="number" id="cols" value="4" min="1" max="10">
+        </div>
+        <button class="btn-primary" onclick="solve()">Solve</button>
+        <button class="btn-secondary" onclick="runTests()">Run Tests</button>
+      </div>
+      <div id="result" class="result" style="display: none;"></div>
+    </div>
+
+    <!-- Grid Visualization -->
+    <div class="card">
+      <h2>DP Table</h2>
+      <div id="grid"></div>
+    </div>
+
+    <!-- Test Results -->
+    <div class="card">
+      <h2>Test Cases</h2>
+      <div id="test-results">
+        <p style="color: #999;">Click "Run Tests" to verify the solution</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ===== PROVIDED CODE =====
+
+    const TEST_CASES = [
+      { n: 1, m: 1, expected: 1 },
+      { n: 2, m: 2, expected: 2 },
+      { n: 3, m: 3, expected: 6 },
+      { n: 3, m: 4, expected: 10 },
+      { n: 3, m: 7, expected: 28 },
+      { n: 1, m: 5, expected: 1 },
+      { n: 5, m: 1, expected: 1 },
+      { n: 5, m: 5, expected: 70 },
+    ];
+
+    function runTests() {
+      const resultsEl = document.getElementById('test-results');
+      resultsEl.innerHTML = '';
+
+      let passed = 0;
+      TEST_CASES.forEach(({ n, m, expected }, i) => {
+        const result = uniquePaths(n, m);
+        const isPass = result === expected;
+        if (isPass) passed++;
+
+        const div = document.createElement('div');
+        div.className = 'test-case';
+        div.innerHTML = `
+          <span class="${isPass ? 'pass' : 'fail'}">${isPass ? '✓' : '✗'}</span>
+          <span>uniquePaths(${n}, ${m})</span>
+          <span style="margin-left: auto;">
+            Expected: <strong>${expected}</strong> | Got: <strong>${result}</strong>
+          </span>
+        `;
+        resultsEl.appendChild(div);
+      });
+
+      const summary = document.createElement('div');
+      summary.style.marginTop = '1rem';
+      summary.style.fontWeight = 'bold';
+      summary.innerHTML = `Passed: ${passed}/${TEST_CASES.length}`;
+      resultsEl.appendChild(summary);
+    }
+
+    // ===== SOLUTION CODE =====
+
+    /**
+     * SOLUTION: Unique paths algorithm using bottom-up DP
+     */
+    function uniquePaths(n, m) {
+      // Create DP table
+      const dp = Array.from({ length: n }, () => Array(m).fill(0));
+
+      // Base cases: first row and first column are all 1s
+      for (let i = 0; i < n; i++) dp[i][0] = 1;
+      for (let j = 0; j < m; j++) dp[0][j] = 1;
+
+      // Fill the table
+      for (let i = 1; i < n; i++) {
+        for (let j = 1; j < m; j++) {
+          dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+        }
+      }
+
+      return dp[n - 1][m - 1];
+    }
+
+    /**
+     * SOLUTION: Build the DP table and return it for rendering
+     */
+    function buildDPTable(n, m) {
+      const dp = Array.from({ length: n }, () => Array(m).fill(0));
+
+      for (let i = 0; i < n; i++) dp[i][0] = 1;
+      for (let j = 0; j < m; j++) dp[0][j] = 1;
+
+      for (let i = 1; i < n; i++) {
+        for (let j = 1; j < m; j++) {
+          dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+        }
+      }
+
+      return dp;
+    }
+
+    /**
+     * SOLUTION: Render the grid with DP values
+     */
+    function renderGrid(n, m, dp) {
+      const gridEl = document.getElementById('grid');
+      gridEl.innerHTML = '';
+      gridEl.style.gridTemplateColumns = `repeat(${m}, 50px)`;
+
+      for (let i = 0; i < n; i++) {
+        for (let j = 0; j < m; j++) {
+          const cell = document.createElement('div');
+          cell.className = 'cell';
+
+          if (i === 0 && j === 0) cell.classList.add('start');
+          if (i === n - 1 && j === m - 1) cell.classList.add('end');
+
+          cell.textContent = dp[i][j];
+          gridEl.appendChild(cell);
+        }
+      }
+    }
+
+    /**
+     * SOLUTION: Connect UI to algorithm
+     */
+    function solve() {
+      const n = parseInt(document.getElementById('rows').value) || 3;
+      const m = parseInt(document.getElementById('cols').value) || 4;
+
+      // Build DP table
+      const dp = buildDPTable(n, m);
+
+      // Render grid
+      renderGrid(n, m, dp);
+
+      // Show result
+      const result = dp[n - 1][m - 1];
+      const resultEl = document.getElementById('result');
+      resultEl.style.display = 'block';
+      resultEl.textContent = `Total unique paths: ${result}`;
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', () => solve());
+  </script>
+</body>
+</html>

@@ -3,6 +3,7 @@
 ## Philosophy
 
 This curriculum is designed with **pedagogical progression** in mind:
+
 - **Early topics** build problem-solving intuition with simpler structures
 - **Middle topics** introduce algorithmic thinking and complexity
 - **Late topics** combine everything into advanced problem-solving
@@ -16,6 +17,7 @@ Each phase has a purpose beyond just "learning a data structure."
 **Full-time study**: 6-7 hours/day, 6-7 days/week (~42-49 hours/week)
 
 This is significantly faster than part-time study (10-15 hours/week), but learning still needs time to sink in. The timelines below reflect:
+
 - ✅ More hours = faster progression
 - ⚠️ Complex topics (recursion, DP, graphs) need processing time regardless of hours spent
 - 💡 Spaced repetition and practice matter more than raw hours
@@ -43,14 +45,16 @@ graph LR
 **Goal**: Build foundational problem-solving intuition with linear structures.
 
 **Timeline at full-time pace**:
+
 - Simple topics (arrays, hash maps, two pointers): 2-4 days each
 - Complex topics (recursion, backtracking): 1-2 weeks
 - Total: 3-5 weeks (vs 8-12 weeks part-time)
 
 ### Why Start Here?
+
 - Arrays/strings are intuitive (you can visualize them)
 - Teaches loop thinking and index manipulation
-- Low cognitive overhead - focus on *problem-solving* not *data structure complexity*
+- Low cognitive overhead - focus on _problem-solving_ not _data structure complexity_
 - Builds confidence with early wins
 
 ---
@@ -60,12 +64,14 @@ graph LR
 **Duration**: 3-5 days (full-time)
 
 **What You Learn**:
+
 - Index manipulation
 - Iteration patterns (forward, backward, both)
 - In-place modifications
 - String immutability handling
 
 **Key Problems**:
+
 - [x] Reverse array
 - [x] Remove duplicates
 - [x] Valid palindrome
@@ -80,12 +86,14 @@ graph LR
 **Duration**: 2-3 days (full-time)
 
 **What You Learn**:
+
 - O(1) lookup power
 - Trading space for time
 - Frequency counting patterns
 - Fast duplicate detection
 
 **Key Problems**:
+
 - [x] Two sum
 - [x] Contains duplicate
 - [x] Valid anagram
@@ -100,12 +108,14 @@ graph LR
 **Duration**: 2-3 days (full-time)
 
 **What You Learn**:
+
 - Multiple iteration variables
 - Converging/diverging patterns
 - In-place array manipulation
 - Optimization thinking
 
 **Key Problems**:
+
 - [x] Container with most water
 - [x] 3Sum
 - [x] Remove element
@@ -121,12 +131,14 @@ graph LR
 **Duration**: 3-4 days (full-time)
 
 **What You Learn**:
+
 - Window state management
 - Expand/contract logic
 - Optimization of brute force
 - Substring/subarray patterns
 
 **Key Problems**:
+
 - [x] Max sum subarray of size K
 - [x] Longest substring without repeating chars
 - [x] Minimum window substring
@@ -141,16 +153,18 @@ graph LR
 **Duration**: 3-4 days (full-time)
 
 **What You Learn**:
+
 - Pointer manipulation
 - Node-based thinking
 - Reference vs value
 - Edge case handling (null checks)
 
 **Key Problems**:
+
 - [x] Reverse linked list
 - [x] Merge two sorted lists
-- [ ] Detect cycle
-- [ ] Remove Nth node from end
+- [x] Detect cycle
+- [x] Remove Nth node from end
 
 **Why Now**: First non-array structure. Teaches pointer thinking which is crucial for trees/graphs later.
 
@@ -161,16 +175,18 @@ graph LR
 **Duration**: 2-3 days (full-time)
 
 **What You Learn**:
+
 - LIFO vs FIFO thinking
 - When order matters
 - Auxiliary data structures
 - Pairing/matching problems
 
 **Key Problems**:
-- [ ] Valid parentheses
-- [ ] Min stack
-- [ ] Implement queue using stacks
-- [ ] Daily temperatures
+
+- [x] Valid parentheses
+- [x] Min stack
+- [x] Implement queue using stacks
+- [x] Daily temperatures
 
 **Why Now**: These patterns appear everywhere. Also critical for understanding recursion call stack.
 
@@ -181,12 +197,14 @@ graph LR
 **Duration**: 1-2 weeks (full-time) - Don't rush this!
 
 **What You Learn**:
+
 - Breaking problems into subproblems
 - Base case thinking
 - Call stack mental model
 - Trust the recursion
 
 **Key Problems**:
+
 - [ ] Fibonacci
 - [ ] Factorial
 - [ ] Reverse string recursively
@@ -202,12 +220,14 @@ graph LR
 **Duration**: 4-5 days (full-time)
 
 **What You Learn**:
+
 - Divide and conquer thinking
 - Search space reduction
 - Template-based problem solving
 - Log(n) complexity benefits
 
 **Key Problems**:
+
 - [ ] Binary search
 - [ ] Search in rotated sorted array
 - [ ] Find minimum in rotated sorted array
@@ -235,6 +255,7 @@ graph LR
 **Goal**: Master hierarchical structures and graph algorithms. Develop pattern recognition.
 
 **Timeline at full-time pace**:
+
 - Trees/Heaps: 1-2 weeks total
 - Graphs: 2-3 weeks (most important section)
 - Backtracking: 1 week
@@ -242,6 +263,7 @@ graph LR
 - Total: 5-8 weeks (vs 12-16 weeks part-time)
 
 ### Why This Phase?
+
 - Trees introduce hierarchical thinking (prerequisite for graphs)
 - Graphs are the most complex structure - need strong foundation first
 - Dynamic programming requires seeing overlapping subproblems
@@ -254,12 +276,14 @@ graph LR
 **Duration**: 4-6 days (full-time)
 
 **What You Learn**:
+
 - Hierarchical data structures
 - Tree traversals (pre/in/post-order)
 - Recursive tree thinking
 - Level-order traversal (BFS intro)
 
 **Key Problems**:
+
 - Max depth of binary tree
 - Same tree
 - Invert binary tree
@@ -275,12 +299,14 @@ graph LR
 **Duration**: 3-4 days (full-time)
 
 **What You Learn**:
+
 - Ordered structures
 - BST property
 - In-order traversal gives sorted order
 - Validation patterns
 
 **Key Problems**:
+
 - Validate BST
 - Kth smallest element in BST
 - Lowest common ancestor in BST
@@ -295,12 +321,14 @@ graph LR
 **Duration**: 3-4 days (full-time)
 
 **What You Learn**:
+
 - Maintaining order dynamically
 - K-way problems
 - Top K patterns
 - O(log n) insertions
 
 **Key Problems**:
+
 - Kth largest element
 - Top K frequent elements
 - Merge K sorted lists
@@ -315,12 +343,14 @@ graph LR
 **Duration**: 4-6 days (full-time)
 
 **What You Learn**:
+
 - Graph representation (adjacency list/matrix)
 - Directed vs undirected
 - Weighted vs unweighted
 - Identifying graph problems
 
 **Key Problems**:
+
 - Number of islands
 - Clone graph
 - Number of connected components
@@ -335,12 +365,14 @@ graph LR
 **Duration**: 4-6 days (full-time)
 
 **What You Learn**:
+
 - Depth-first exploration
 - Backtracking in graphs
 - Cycle detection
 - Path finding
 
 **Key Problems**:
+
 - All paths from source to target
 - Course schedule (detect cycle)
 - Number of provinces
@@ -355,12 +387,14 @@ graph LR
 **Duration**: 4-6 days (full-time)
 
 **What You Learn**:
+
 - Breadth-first exploration
 - Shortest path in unweighted graphs
 - Level-by-level processing
 - Multi-source BFS
 
 **Key Problems**:
+
 - Binary tree level order
 - Shortest path in binary matrix
 - Rotting oranges
@@ -375,12 +409,14 @@ graph LR
 **Duration**: 4-6 days (full-time)
 
 **What You Learn**:
+
 - Topological sort (DFS + BFS approaches)
 - Union Find / Disjoint Set
 - Minimum spanning tree
 - Shortest path (Dijkstra, Bellman-Ford)
 
 **Key Problems**:
+
 - Course schedule II (topological sort)
 - Network delay time (Dijkstra)
 - Redundant connection (Union Find)
@@ -395,12 +431,14 @@ graph LR
 **Duration**: 5-7 days (full-time)
 
 **What You Learn**:
+
 - State space tree exploration
 - Pruning strategies
 - Constraint satisfaction
 - Combinatorial generation
 
 **Key Problems**:
+
 - Combinations
 - Permutations
 - N-Queens
@@ -416,12 +454,14 @@ graph LR
 **Duration**: 1-2 weeks (full-time) - This is hard, take your time!
 
 **What You Learn**:
+
 - Overlapping subproblems
 - Memoization vs tabulation
 - State definition
 - Recurrence relations
 
 **Key Problems**:
+
 - Climbing stairs
 - House robber
 - Coin change
@@ -437,12 +477,14 @@ graph LR
 **Duration**: 1-2 weeks (full-time) - Still hard!
 
 **What You Learn**:
+
 - Multi-dimensional state
 - Grid DP
 - String DP
 - Optimization
 
 **Key problems**:
+
 - Unique paths
 - Longest common subsequence
 - Edit distance
@@ -474,29 +516,34 @@ graph LR
 ### Week 14+: Advanced Topics
 
 **Greedy Algorithms**:
+
 - Interval scheduling
 - Jump game
 - Gas station
 - Partition labels
 
 **Tries**:
+
 - Implement trie
 - Word search II
 - Design add and search words
 
 **Advanced DP**:
+
 - Knapsack variations
 - DP on trees
 - Bitmask DP
 - DP with optimization
 
 **Advanced Graph**:
+
 - Strongly connected components
 - Bridges and articulation points
 - Minimum cut
 - Network flow
 
 **System Design**:
+
 - LRU Cache
 - LFU Cache
 - Design Twitter
@@ -562,11 +609,11 @@ graph TB
 
 ## 🎯 Milestones & Expectations
 
-| Phase | Duration (Full-time) | Duration (Part-time) | Problems Solved | LeetCode Level | Interview Ready |
-|-------|---------------------|---------------------|----------------|----------------|-----------------|
-| **Novice** | 3-5 weeks | 8-12 weeks | 60-80 | Easy (80%+) | Internships |
-| **Studied** | 5-8 weeks | 12-16 weeks | 150-200 | Medium (60-70%) | Mid-level roles |
-| **Expert** | Ongoing | Ongoing | 300+ | Hard (30-40%) | Senior roles |
+| Phase       | Duration (Full-time) | Duration (Part-time) | Problems Solved | LeetCode Level  | Interview Ready |
+| ----------- | -------------------- | -------------------- | --------------- | --------------- | --------------- |
+| **Novice**  | 3-5 weeks            | 8-12 weeks           | 60-80           | Easy (80%+)     | Internships     |
+| **Studied** | 5-8 weeks            | 12-16 weeks          | 150-200         | Medium (60-70%) | Mid-level roles |
+| **Expert**  | Ongoing              | Ongoing              | 300+            | Hard (30-40%)   | Senior roles    |
 
 **At 6-7 hours/day (full-time)**, you can reach "Studied" level in **2-3 months** vs 5-7 months part-time.
 
@@ -575,18 +622,23 @@ graph TB
 ## 💡 Key Principles
 
 ### 1. **Depth over Breadth**
+
 Spend 3-7 days truly mastering simple topics, 1-2 weeks for complex ones (recursion, DP). Don't rush.
 
 ### 2. **Spaced Repetition**
+
 Revisit earlier topics. After learning graphs, go back and solve tree problems - they'll seem trivial.
 
 ### 3. **Build, Don't Memorize**
+
 Understand WHY each technique works. The pattern recognition comes naturally.
 
 ### 4. **Progressive Difficulty**
+
 Each topic is slightly harder than the last, but builds on previous knowledge.
 
 ### 5. **Trust the Process** (Full-time pace)
+
 - Weeks 1-3: "This seems manageable"
 - Weeks 4-6: "This is getting hard" (Recursion + Trees)
 - Weeks 7-10: "This is really challenging" (Graphs + DFS/BFS)
@@ -618,17 +670,20 @@ Even at full-time pace, complex topics need time to sink in. Don't rush DP just 
 **Current progress**: ~2 weeks into the journey (you're doing great!)
 
 **What's ahead**:
+
 - Next up: Linked Lists (3-4 days)
 - Then: Stack & Queue (2-3 days)
 - Critical milestone: Recursion (1-2 weeks) - Take your time here!
 - Graphs & topological sort: Weeks 8-11 (~1.5-2 months from now)
 
 **Your learning pace**: Full-time study (6-7 hours/day)
+
 - You mentioned it's going slower than expected - **this is normal**!
 - Quality > speed. Understanding deeply now saves time later.
 - The timeline assumes thorough mastery, not just "completion"
 
 **Recommendation**:
+
 - Finish Sliding Window thoroughly before moving on
 - Don't rush through Recursion (Week 4-5) - it's the foundation for graphs
 - Review Arrays/Hash Maps periodically - they're used everywhere

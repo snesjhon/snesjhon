@@ -1,3 +1,14 @@
+## Fri, Jan 16
+
+#### Greedy Approach`
+
+#concept/greedy-approach 
+
+- Greedy approach means making the locally optimal choice at each step, hoping it leads to a globally optimal solution.
+
+
+
+---
 ## Tue, Jan 13
 
 Took time today to look back through the first couple of sections and really nail down some easy problems. 
