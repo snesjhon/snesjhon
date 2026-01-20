@@ -205,7 +205,7 @@ graph LR
 
 **Key Problems**:
 
-- [ ] Fibonacci
+- [x] Fibonacci
 - [ ] Factorial
 - [ ] Reverse string recursively
 - [ ] Generate parentheses
