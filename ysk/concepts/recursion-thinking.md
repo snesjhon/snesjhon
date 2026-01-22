@@ -350,7 +350,7 @@ function reverse(s: string, acc = ""): string {
 
 These patterns are best understood through practice. See:
 
-- [[022-generate-parentheses/study-guide]] — Tree recursion with constrained choices (backtracking)
+- [[ysk/study-guides/022-generate-parentheses/study-guide]] — Tree recursion with constrained choices (backtracking)
 - [[078-subsets]] — Tree recursion with include/exclude choices
 
 ---
