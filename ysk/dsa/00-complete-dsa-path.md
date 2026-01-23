@@ -206,9 +206,9 @@ graph LR
 **Key Problems**:
 
 - [x] Fibonacci
-- [ ] Factorial
-- [ ] Reverse string recursively
-- [ ] Generate parentheses
+- [x] Factorial
+- [x] Reverse string recursively
+- [x] Generate parentheses
 - [ ] Subsets
 
 **Why Now**: CRITICAL checkpoint. You cannot progress without recursion. Take your time here.

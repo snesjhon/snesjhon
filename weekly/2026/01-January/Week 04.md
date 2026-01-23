@@ -1,3 +1,12 @@
+## Fri, Jan 23
+
+Subsets (LC #78) - Medium but fundamental
+[[ysk/study-guides/078-subsets/mental-model|78-subsets]]
+- in tackling this issue I ended up with a fundamental problem I hadn't really considered. 
+- When pushing to an array we _push_ a `Reference` so, in scenarios where we want to store the `current` value we have to assure that we're pushing copies of the values, not `REFERENCES` of said value or we'll be overriding them
+
+
+---
 ## Tue, Jan 20
 
 Essential Easy Recursion Problems
