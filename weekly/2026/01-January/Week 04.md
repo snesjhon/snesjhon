@@ -6,6 +6,17 @@ Subsets (LC #78) - Medium but fundamental
 - When pushing to an array we _push_ a `Reference` so, in scenarios where we want to store the `current` value we have to assure that we're pushing copies of the values, not `REFERENCES` of said value or we'll be overriding them
 
 
+Great question! To solidify the backtracking pattern  you just learned, I'd recommend LeetCode 784 - Letter Case Permutation. It's perfect because it uses the exact same pattern but is simpler in one way (only 2 choices per position instead of 3-4).                  
+
+1. LeetCode 78 - Subsets - Include/exclude each element
+   (2 choices per position)                              
+2. LeetCode 77 - Combinations - Choose k numbers from 1 to n                                                  
+3. LeetCode 39 - Combination Sum - Same element can be reused (like this problem!) 
+4. LeetCode 46 - Permutations - Classic backtracking   
+  with "used" tracking                                   
+
+
+
 ---
 ## Tue, Jan 20
 

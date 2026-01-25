@@ -209,7 +209,7 @@ graph LR
 - [x] Factorial
 - [x] Reverse string recursively
 - [x] Generate parentheses
-- [ ] Subsets
+- [x] Subsets
 
 **Why Now**: CRITICAL checkpoint. You cannot progress without recursion. Take your time here.
 

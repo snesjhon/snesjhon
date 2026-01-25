@@ -1,6 +1,6 @@
 # Generate Parentheses - Solution Guide
 
-> **Prerequisites:** Read [mental-model.md](mental-model.md) first to build your intuition about the problem.
+> **Prerequisites:** Read [mental-model.md](ysk/study-guides/022-generate-parentheses/mental-model.md) first to build your intuition about the problem.
 
 ## Problem Statement
 
