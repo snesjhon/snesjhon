@@ -10,11 +10,15 @@
 
 </div>
 
-# Hello, I'm Jhonatan 🇵🇪
+# Hello, I'm Jhonatan 👾
 
 <strong>
-📍 Sacramento | Software & AI Engineer | NVIM Enthusiast
+
+📍 Sacramento | 💾 Software & AI Engineer | ⌨️ NVIM Enthusiast
+
 </strong>
+
+<br />
 
 ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
 ![React](https://img.shields.io/badge/-React-61DAFB?style=flat-square&logo=react&logoColor=black)
