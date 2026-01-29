@@ -1,3 +1,5 @@
+<div align="center">
+
 ```
 
      ███████╗ ███╗   ██╗ ███████╗ ███████╗      ██╗ ██╗  ██╗  ██████╗  ███╗   ██╗
@@ -12,18 +14,19 @@
 
 ```
 
-## 👾 Player Profile
+</div>
 
 **Jhonatan Salazar** • Software Developer
-_Building web experiences like it's 1991_
 
 **▸ Level:** 30
-**▸ Location:** 🌎
-**▸ Current Quest:** Crafting pixel-perfect interfaces
-**▸ Favorite Weapon:** TypeScript
-**▸ Philosophy:** Ship beats perfect
 
-## 🕹️ Tech Stack (Power-Ups Collected)
+**▸ Location:** 🌎
+
+**▸ Current Quest:** Crafting pixel-perfect interfaces
+
+**▸ Favorite Weapon:** TypeScript
+
+**▸ Philosophy:** Ship beats perfect
 
 ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
 ![React](https://img.shields.io/badge/-React-61DAFB?style=flat-square&logo=react&logoColor=black)
@@ -32,7 +35,9 @@ _Building web experiences like it's 1991_
 ![JavaScript](https://img.shields.io/badge/-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
 
 **HP:** ████████████████████░░ 90%
+
 **MP:** ██████████████░░░░░░░░ 70%
+
 **XP:** ███████████████████░░░ 95% to next level
 
 **Status:** 🟢 Open to quests (collaborations)
@@ -40,6 +45,8 @@ _Building web experiences like it's 1991_
 [![Twitter](https://img.shields.io/badge/-Twitter-1DA1F2?style=flat-square&logo=twitter&logoColor=white)](https://twitter.com/yourusername)
 [![LinkedIn](https://img.shields.io/badge/-LinkedIn-0A66C2?style=flat-square&logo=linkedin&logoColor=white)](https://linkedin.com/in/yourprofile)
 [![Website](https://img.shields.io/badge/-Website-FF6B6B?style=flat-square&logo=google-chrome&logoColor=white)](https://yourwebsite.com)
+
+---
 
 <div align="center">
 
