@@ -29,6 +29,36 @@
 - AlgoViz
 - AlgoJit
 
+## Data Structures & Algorithms Journey
+
+Currently on a focused path to master fundamental CS concepts through daily practice and building educational tools.
+
+<table>
+<tr>
+<td width="50%">
+
+**What I'm Working On**
+
+- Daily LeetCode problems (targeting patterns)
+- Building **AlgoViz** - Visual algorithm simulator
+- Building **AlgoJit** - Spaced repetition for DSA
+- Deep diving into common patterns
+
+</td>
+<td width="50%">
+
+**Focus Areas**
+
+- Arrays & Hashmaps ████████████░░░░
+- Two Pointers ██████████░░░░░░
+- Sliding Window ████████░░░░░░░░
+- Trees & Graphs ██████░░░░░░░░░░
+- Dynamic Programming ████░░░░░░░░░░░░
+
+</td>
+</tr>
+</table>
+
 ## Connect
 
 [![Twitter](https://img.shields.io/badge/-Twitter-1DA1F2?style=flat-square&logo=twitter&logoColor=white)](https://twitter.com/yourusername)
