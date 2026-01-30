@@ -31,33 +31,44 @@
 
 ## Data Structures & Algorithms Journey
 
-Currently on a focused path to master fundamental CS concepts through daily practice and building educational tools.
+Building strong mental models through daily practice and creating visual learning tools.
 
-<table>
-<tr>
-<td width="50%">
+**Active Practice**
+- Daily LeetCode problems with pattern recognition
+- Generating study guides that break down problems into core mental models
+- Building **AlgoViz** - Visual algorithm simulator to see concepts in action
+- Building **AlgoJit** - Spaced repetition system for DSA retention
 
-**What I'm Working On**
+**Study Guides by Pattern**
 
-- Daily LeetCode problems (targeting patterns)
-- Building **AlgoViz** - Visual algorithm simulator
-- Building **AlgoJit** - Spaced repetition for DSA
-- Deep diving into common patterns
+**Sliding Window**
+- [Longest Substring Without Repeating Characters](./ysk/study-guides/003-longest-substring/longest-substring-study-guide.md)
+- [Minimum Window Substring](./ysk/study-guides/076-minimum-window-substring/study-guide.md)
 
-</td>
-<td width="50%">
+**Stack & Monotonic Stack**
+- [Daily Temperatures](./ysk/study-guides/739-daily-temperatures/study-guide.md)
+- [Remove K Digits](./ysk/study-guides/402-remove-k-digits/study-guide.md)
+- [Longest Valid Parentheses](./ysk/study-guides/032-longest-valid-parentheses/study-guide.md)
 
-**Focus Areas**
+**Backtracking**
+- [Generate Parentheses](./ysk/study-guides/022-generate-parentheses/study-guide.md) • [Mental Model](./ysk/study-guides/022-generate-parentheses/mental-model.md)
+- [Permutations](./ysk/study-guides/046-permutations/mental-model.md)
+- [Decode String](./ysk/study-guides/394-decode-string/study-guide.md)
 
-- Arrays & Hashmaps ████████████░░░░
-- Two Pointers ██████████░░░░░░
-- Sliding Window ████████░░░░░░░░
-- Trees & Graphs ██████░░░░░░░░░░
-- Dynamic Programming ████░░░░░░░░░░░░
+**Dynamic Programming**
+- [Climbing Stairs](./ysk/study-guides/070-climbing-stairs/study-guide.md)
+- [Unique Paths Grid](./ysk/study-guides/unique-paths-grid/study-guide.md)
 
-</td>
-</tr>
-</table>
+**Linked Lists**
+- [Reverse Linked List II](./ysk/study-guides/092-reverse-linked-list-ii/study-guide.md)
+- [Linked List Layers Guide](./ysk/study-guides/linked-list-layers-guide.md)
+
+**Graphs & Topological Sort**
+- [Topological Sort](./ysk/study-guides/topograph/study-guide.md)
+- [Graph Fundamentals](./ysk/dsa/01-graph-fundamentals.md)
+- [DFS Traversal](./ysk/dsa/04-graph-traversal-dfs.md) • [BFS Traversal](./ysk/dsa/05-graph-traversal-bfs.md)
+
+**Approach:** Each study guide distills problems into strong analogies and mental models. The goal is deep understanding over rote memorization.
 
 ## Connect
 
