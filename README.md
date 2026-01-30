@@ -42,12 +42,6 @@ I'm Building strong mental models through daily practice and creating visual lea
 
 **Approach:** Each study guide distills problems into strong analogies and mental models. The goal is deep understanding over rote memorization.
 
-## Connect
-
-[![Twitter](https://img.shields.io/badge/-Twitter-1DA1F2?style=flat-square&logo=twitter&logoColor=white)](https://twitter.com/yourusername)
-[![LinkedIn](https://img.shields.io/badge/-LinkedIn-0A66C2?style=flat-square&logo=linkedin&logoColor=white)](https://linkedin.com/in/yourprofile)
-[![Website](https://img.shields.io/badge/-Website-FF6B6B?style=flat-square&logo=google-chrome&logoColor=white)](https://yourwebsite.com)
-
 ---
 
 <div align="center">
