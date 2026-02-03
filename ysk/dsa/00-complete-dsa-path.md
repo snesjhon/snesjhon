@@ -1,5 +1,11 @@
 # Complete DSA Learning Path: Novice → Expert
 
+> 📌 **Part of the [Master Interview Preparation Guide](../interview-prep/00-master-interview-guide.md)**
+>
+> This is the **DSA-focused** component of your interview prep. For the complete picture including System Design, Behavioral prep, and job search strategy, see the [Master Guide](../interview-prep/00-master-interview-guide.md).
+
+---
+
 ## Philosophy
 
 This curriculum is designed with **pedagogical progression** in mind:
@@ -14,13 +20,18 @@ Each phase has a purpose beyond just "learning a data structure."
 
 ## ⏱️ Timeline Assumptions
 
-**Full-time study**: 6-7 hours/day, 6-7 days/week (~42-49 hours/week)
+**Integrated Study Approach**: This DSA path is meant to be studied alongside [System Design](../system-design/00-complete-system-design-path.md).
 
-This is significantly faster than part-time study (10-15 hours/week), but learning still needs time to sink in. The timelines below reflect:
+**Time Allocation**:
+- **Full-time**: 18-24 hours/week on DSA (60% of total study time)
+- **Part-time**: 9-12 hours/week on DSA (60% of total study time)
+- **Remaining time**: Dedicated to System Design study
 
-- ✅ More hours = faster progression
+The timelines below assume:
+- ✅ You're following the integrated schedule in the [Master Interview Guide](../interview-prep/00-master-interview-guide.md)
+- ✅ You're studying both DSA and System Design in parallel from Week 1
 - ⚠️ Complex topics (recursion, DP, graphs) need processing time regardless of hours spent
-- 💡 Spaced repetition and practice matter more than raw hours
+- 💡 Quality practice > raw hours. Focus on understanding patterns deeply.
 
 ---
 
