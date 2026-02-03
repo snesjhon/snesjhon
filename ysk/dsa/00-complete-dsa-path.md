@@ -228,10 +228,22 @@ graph LR
 
 **Key Problems**:
 
-- [ ] Binary search
-- [ ] Search in rotated sorted array
-- [ ] Find minimum in rotated sorted array
-- [ ] Search 2D matrix
+**Foundation (Start Here)**:
+- [x] [704. Binary Search](https://leetcode.com/problems/binary-search/) - Classic implementation
+- [x] [35. Search Insert Position](https://leetcode.com/problems/search-insert-position/) - Understanding boundaries
+- [ ] [278. First Bad Version](https://leetcode.com/problems/first-bad-version/) - Pattern variation
+
+**Rotated Arrays**:
+- [x] [153. Find Minimum in Rotated Sorted Array](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/) - No duplicates
+- [ ] [33. Search in Rotated Sorted Array](https://leetcode.com/problems/search-in-rotated-sorted-array/) - Target search
+
+**2D Matrix**:
+- [ ] [74. Search a 2D Matrix](https://leetcode.com/problems/search-a-2d-matrix/) - Row & column sorted
+- [ ] [240. Search a 2D Matrix II](https://leetcode.com/problems/search-a-2d-matrix-ii/) - Advanced variation
+
+**Bonus (If time permits)**:
+- [ ] [69. Sqrt(x)](https://leetcode.com/problems/sqrtx/) - Binary search on answer
+- [ ] [374. Guess Number Higher or Lower](https://leetcode.com/problems/guess-number-higher-or-lower/) - Interactive binary search
 
 **Why Now**: First logarithmic algorithm. Introduces the idea that clever algorithms beat brute force.
 
