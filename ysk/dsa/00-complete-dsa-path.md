@@ -254,12 +254,20 @@ graph LR
 
 **2D Matrix**:
 
-- [ ] [74. Search a 2D Matrix](https://leetcode.com/problems/search-a-2d-matrix/) - Row & column sorted
-- [ ] [240. Search a 2D Matrix II](https://leetcode.com/problems/search-a-2d-matrix-ii/) - Advanced variation
+- [ ] [74. Search a 2D Matrix](https://leetcode.com/problems/search-a-2d-matrix/) - Treat as flattened sorted array
+
+**Binary Search Boundaries**:
+
+- [ ] [34. Find First and Last Position of Element in Sorted Array](https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/) - Finding range boundaries
+
+**Binary Search on Answer**:
+
+- [ ] [69. Sqrt(x)](https://leetcode.com/problems/sqrtx/) - Search for square root
+- [ ] [875. Koko Eating Bananas](https://leetcode.com/problems/koko-eating-bananas/) - Minimize eating speed
 
 **Bonus (If time permits)**:
 
-- [ ] [69. Sqrt(x)](https://leetcode.com/problems/sqrtx/) - Binary search on answer
+- [ ] [162. Find Peak Element](https://leetcode.com/problems/find-peak-element/) - Binary search on unsorted array
 - [ ] [374. Guess Number Higher or Lower](https://leetcode.com/problems/guess-number-higher-or-lower/) - Interactive binary search
 
 **Why Now**: First logarithmic algorithm. Introduces the idea that clever algorithms beat brute force.
