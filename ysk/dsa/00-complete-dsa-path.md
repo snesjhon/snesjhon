@@ -23,11 +23,13 @@ Each phase has a purpose beyond just "learning a data structure."
 **Integrated Study Approach**: This DSA path is meant to be studied alongside [System Design](../system-design/00-complete-system-design-path.md).
 
 **Time Allocation**:
+
 - **Full-time**: 18-24 hours/week on DSA (60% of total study time)
 - **Part-time**: 9-12 hours/week on DSA (60% of total study time)
 - **Remaining time**: Dedicated to System Design study
 
 The timelines below assume:
+
 - ✅ You're following the integrated schedule in the [Master Interview Guide](../interview-prep/00-master-interview-guide.md)
 - ✅ You're studying both DSA and System Design in parallel from Week 1
 - ⚠️ Complex topics (recursion, DP, graphs) need processing time regardless of hours spent
@@ -240,19 +242,23 @@ graph LR
 **Key Problems**:
 
 **Foundation (Start Here)**:
+
 - [x] [704. Binary Search](https://leetcode.com/problems/binary-search/) - Classic implementation
 - [x] [35. Search Insert Position](https://leetcode.com/problems/search-insert-position/) - Understanding boundaries
 - [ ] [278. First Bad Version](https://leetcode.com/problems/first-bad-version/) - Pattern variation
 
 **Rotated Arrays**:
+
 - [x] [153. Find Minimum in Rotated Sorted Array](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/) - No duplicates
 - [ ] [33. Search in Rotated Sorted Array](https://leetcode.com/problems/search-in-rotated-sorted-array/) - Target search
 
 **2D Matrix**:
+
 - [ ] [74. Search a 2D Matrix](https://leetcode.com/problems/search-a-2d-matrix/) - Row & column sorted
 - [ ] [240. Search a 2D Matrix II](https://leetcode.com/problems/search-a-2d-matrix-ii/) - Advanced variation
 
 **Bonus (If time permits)**:
+
 - [ ] [69. Sqrt(x)](https://leetcode.com/problems/sqrtx/) - Binary search on answer
 - [ ] [374. Guess Number Higher or Lower](https://leetcode.com/problems/guess-number-higher-or-lower/) - Interactive binary search
 
@@ -676,9 +682,9 @@ Even at full-time pace, complex topics need time to sink in. Don't rush DP just 
 1. **Don't skip around**: The order matters
 2. **Spend recommended time**: Rushing leads to gaps
 3. **Practice consistently**: 6 focused hours/day > 12 distracted hours
-   - Take breaks every 90 minutes
-   - Quality study time matters more than quantity
-   - Some days will feel slower - that's the learning process
+    - Take breaks every 90 minutes
+    - Quality study time matters more than quantity
+    - Some days will feel slower - that's the learning process
 4. **Review regularly**: Revisit old topics every week
 5. **Build projects**: Implement data structures from scratch
 6. **Join communities**: Discuss problems, learn from others
@@ -691,6 +697,7 @@ Even at full-time pace, complex topics need time to sink in. Don't rush DP just 
 **Your current position**: Stacks & Queues - Sliding Window ⭐
 
 **What's ahead**:
+
 - Critical milestone: Recursion (1-2 weeks) - Take your time here!
 - Graphs & topological sort: Weeks 8-11 (~1.5-2 months from now)
 
