@@ -2,371 +2,391 @@
 
 ## The Broken Bookshelf Analogy
 
-Understanding this problem is like **finding a book on a broken bookshelf that someone tried to fix**.
+Understanding this problem is like finding a specific book on a bookshelf that got knocked over and rotated.
 
-Imagine a bookshelf where books are arranged by page count (1, 5, 10, 15, 20, 25, 30). One day, the shelf breaks in the middle. Someone picks up the right half and puts it on the left side, creating: **[20, 25, 30, 1, 5, 10, 15]**.
+**How the analogy maps to the problem:**
+- **The bookshelf** → Our sorted array that got rotated
+- **Books arranged by page count** → Numbers in ascending order
+- **The shelf got knocked and rotated** → Array rotation at some pivot point
+- **Finding a book with specific page count** → Finding the target value
+- **Checking sections efficiently** → Binary search approach
+- **The break point** → Where the rotation happened (where order breaks)
 
-The books are still in sorted order within each section, but there's a **rotation point** where the shelf was broken.
+## Understanding the Analogy (No Code Yet!)
 
-### Why This Analogy Works
+### The Setup
 
-**The core insight:** A rotated sorted array is like two sorted bookshelves glued together at the break point.
+Imagine you have a bookshelf with books organized perfectly by page count from left to right: 50, 100, 150, 200, 250, 300, 350 pages.
 
-**Perfect mappings:**
-- Sorted array → Books arranged by page count
-- Rotation → Someone moved the right half to the left after the shelf broke
-- Binary search → Checking the middle book and deciding which half-shelf to search
-- Target → The specific book you're looking for
-- Sorted half → The section of shelf that's still properly ordered
+One day, someone accidentally knocks the shelf, causing some books from the left side to rotate to the right side. Now your shelf looks like: 250, 300, 350, 50, 100, 150, 200.
 
-**Why this analogy and not others:**
+You need to find a book with a specific page count, but you can't just scan every book (that would be too slow). You need to be smart about which section of the shelf to search.
 
-The bookshelf analogy is superior because:
-- **Physical intuition:** You can instantly see which half-shelf is properly ordered by checking if the leftmost book is smaller than the rightmost
-- **Natural constraints:** It's obvious that at least one half must be in order (the break only happened once)
-- **Edge case clarity:** Single-book shelves, two-book shelves, books that aren't rotated at all—all make perfect sense
-- **The "aha moment":** If the middle book tells you which half is sorted, you can immediately check if your target book fits in that sorted range!
+**The key insight:** Even though the shelf is rotated, BOTH sides still have their own internal order:
+- Left section: 250, 300, 350 (still ascending!)
+- Right section: 50, 100, 150, 200 (still ascending!)
 
-## Building from the Ground Up
+There's just ONE place where the order breaks—where the rotation happened (between 350 and 50).
 
-### The Simplest Case: Two Books on a Shelf
+### How It Works
 
-**Shelf: [3, 1] - Looking for book with 3 pages**
+When you're standing in front of your rotated bookshelf, you can look at the MIDDLE book and make an intelligent decision about which half to search.
 
-Let's trace this step-by-step:
+Here's the brilliant realization: **At least ONE half of the shelf will always be properly sorted** (no break point in it).
 
-1. **Check the middle position**
-   - Left position: 0 (book: 3 pages)
-   - Right position: 1 (book: 1 page)
-   - Middle position: 0 (book: 3 pages)
+Let's say you pick up the middle book and examine it. You can determine:
 
-2. **Is this our book?**
-   - Middle book has 3 pages ✓
-   - Found it! Return position 0
+1. **Is the LEFT half properly sorted?** Compare the leftmost book with the middle book. If leftmost < middle, the left half is sorted without any rotation break.
 
-**Shelf: [3, 1] - Looking for book with 1 page**
+2. **Is the RIGHT half properly sorted?** Compare the middle book with the rightmost book. If middle < rightmost, the right half is sorted without any rotation break.
 
-1. **Check the middle position**
-   - Middle position: 0 (book: 3 pages)
-   - Not our book (we want 1 page)
+Once you identify which half is properly sorted, you can use normal logic:
+- **If the sorted half could contain your target** (target falls within its range), search that half
+- **Otherwise**, the target MUST be in the other half (even though it contains the break point)
 
-2. **Which half-shelf is sorted?**
-   - Leftmost book (pos 0): 3 pages
-   - Middle book (pos 0): 3 pages
-   - Left half is "sorted" (3 ≤ 3) ✓
+This is powerful because you're cutting your search space in HALF each time, just like regular binary search, but you're being smart about handling the rotation.
 
-3. **Is our target on the sorted left half?**
-   - We want 1 page
-   - Left range: [3, 3)
-   - Is 3 ≤ 1 < 3? No
-   - Our book must be on the right half!
+### Why This Approach
 
-4. **Search the right half**
-   - New left position: 1
-   - Position 1 has book with 1 page ✓
-   - Found it!
+Think about it this way: the rotation creates two sorted "zones" on the shelf. When you pick the middle book, one of these things is ALWAYS true:
 
-### Adding Complexity: Seven Books on a Broken Shelf
+- **Scenario A:** The middle book is in the first zone (higher numbers). The left half is purely in this zone (properly sorted), while the right half crosses into the second zone (contains the break).
 
-**Shelf: [4, 5, 6, 7, 0, 1, 2] - Looking for book with 0 pages**
+- **Scenario B:** The middle book is in the second zone (lower numbers). The right half is purely in this zone (properly sorted), while the left half would cross backwards into the first zone (impossible, so left must be sorted).
 
-```mermaid
-graph TD
-    A["Full Shelf<br/>[4,5,6,7,0,1,2]<br/>L=0, R=6, M=3"] --> B["Middle book: 7 pages<br/>Target: 0 pages<br/>Not a match"]
-    B --> C{"Which half is sorted?"}
-    C --> D["Left half check:<br/>shelf[0]=4 ≤ shelf[3]=7<br/>YES! Left is sorted"]
-    D --> E{"Is target in<br/>sorted left half?<br/>4 ≤ 0 < 7?"}
-    E -->|No| F["Search right half<br/>[0,1,2]<br/>L=4, R=6"]
-    F --> G["Middle: pos 5<br/>Book: 1 page<br/>Not a match"]
-    G --> H{"Which half is sorted?"}
-    H --> I["Left half check:<br/>shelf[4]=0 ≤ shelf[5]=1<br/>YES! Left is sorted"]
-    I --> J{"Is target in<br/>sorted left half?<br/>0 ≤ 0 < 1?"}
-    J -->|Yes| K["Search left half<br/>[0]<br/>L=4, R=4"]
-    K --> L["Middle: pos 4<br/>Book: 0 pages<br/>FOUND! ✓"]
+By identifying which half is properly sorted, you can make a confident decision about where to search next.
 
-    style L fill:#9f9
-    style E fill:#ffd
-    style J fill:#ffd
-```
+### Simple Example Through the Analogy
 
-**Trace through the search:**
+**Bookshelf:** [250, 300, 350, 50, 100, 150, 200]
+**Looking for:** 100 pages
 
-| Step | Left | Right | Mid | Book at Mid | Which Half Sorted? | Target in Sorted Half? | Action |
-|------|------|-------|-----|-------------|-------------------|----------------------|--------|
-| 1 | 0 | 6 | 3 | 7 | Left (4≤7) | 4≤0<7? No | Search right |
-| 2 | 4 | 6 | 5 | 1 | Left (0≤1) | 0≤0<1? Yes | Search left |
-| 3 | 4 | 4 | 4 | 0 | - | Found! | Return 4 |
+**Step 1: Check the middle book**
+- Position 3 (middle of 0-6): 50 pages
+- Leftmost book: 250 pages
+- Rightmost book: 200 pages
 
-## What Just Happened?
+**Step 2: Which half is properly sorted?**
+- Is left half sorted? 250 ≤ 50? NO! Left half contains the break point.
+- Is right half sorted? 50 ≤ 200? YES! Right half is properly sorted (50, 100, 150, 200).
 
-At every step, we checked the middle book and asked two critical questions:
+**Step 3: Could the target be in the sorted half?**
+- Target is 100 pages
+- Right half ranges from 50 to 200 pages
+- Does 100 fall in [50, 200]? YES!
 
-1. **"Which half-shelf is still in proper order?"**
-   - If leftmost book ≤ middle book → left half is sorted
-   - Otherwise → right half is sorted
+**Step 4: Search the right half**
+- New search space: [100, 150, 200] (positions 4-6)
+- Middle: 150 pages
+- Is right half sorted? 150 ≤ 200? YES!
+- Does 100 fall in [150, 200]? NO! Must be in left portion.
 
-2. **"Does my target book belong in the sorted range?"**
-   - If yes → search the sorted half
-   - If no → search the other half (it must be there!)
+**Step 5: Search the left portion**
+- New search space: [100] (position 4)
+- Middle: 100 pages
+- Found it! Return position 4.
 
-The genius: **at least one half is always in order** after a single rotation. By identifying the sorted half, we can use our knowledge of book ordering to eliminate half the shelf, just like regular binary search!
+Now you understand HOW to solve the problem. Let's translate this to code.
 
-## Why Checking "Left ≤ Middle" Identifies the Sorted Half
+---
 
-Think about what happens when you break a shelf and rotate it:
+## Building the Algorithm Step-by-Step
 
-**Original shelf:** [1, 5, 10, 15, 20, 25, 30]
+Now we'll translate each part of our bookshelf mental model into code.
 
-**Break after position 4 and rotate:**
-- Right section [20, 25, 30] moves to the front
-- Result: [20, 25, 30, 1, 5, 10, 15]
+### Step 1: Set Up the Search Boundaries
 
-Now pick any middle position:
-- **Middle at position 1 (book 25):** Left book (20) ≤ Middle (25) → Left half sorted ✓
-- **Middle at position 4 (book 1):** Left book (20) > Middle (1) → Left half NOT sorted, so right half is sorted ✓
+**In our analogy:** We need to know where our bookshelf starts and ends.
 
-The break point creates exactly one "cliff" where a larger book sits to the left of a smaller book. When your middle position is:
-- **Before the cliff:** Left side goes upward smoothly (sorted)
-- **After the cliff:** Right side goes upward smoothly (sorted)
-
-You'll never have both halves unsorted because there's only one break!
-
-## Why Check if Target Fits in the Sorted Range?
-
-Once you know which half-shelf is sorted, you can use the same logic as finding a book on a normal shelf:
-
-**Sorted left half: [4, 5, 6, 7]**
-- If you want book with 5 pages: 4 ≤ 5 < 7? Yes! → Check left half
-- If you want book with 0 pages: 4 ≤ 0 < 7? No! → Must be on right half
-
-**Sorted right half: [1, 5, 10, 15]**
-- If you want book with 10 pages: 1 < 10 ≤ 15? Yes! → Check right half
-- If you want book with 20 pages: 1 < 20 ≤ 15? No! → Must be on left half
-
-The sorted half gives you **guaranteed boundaries**. The unsorted half is still sorted too—just in a different segment—so if the target doesn't fit in the known sorted range, it *must* be in the other half.
-
-## Common Misconceptions
-
-### ❌ "I should find the rotation point first, then do binary search"
-
-**Why it's wrong:**
-
-Looking for book with 0 pages in [4, 5, 6, 7, 0, 1, 2]:
-- Finding rotation point: Check positions until you find 7→0 drop (4 comparisons)
-- Then binary search on [0, 1, 2]: (2 comparisons)
-- **Total: 6 comparisons minimum**
-
-**Counterexample in analogy:**
-Why walk along the entire shelf to find where it broke, then search? You're doing *two* searches instead of one!
-
-### ✅ "Use the sorted half to guide my search at each step"
-
-**Why it's right:**
-
-Same shelf [4, 5, 6, 7, 0, 1, 2], looking for 0 pages:
-- Step 1: Middle is 7, left is sorted [4,5,6,7], 0 not in range → search right
-- Step 2: Middle is 1, left is sorted [0,1], 0 in range → search left
-- Step 3: Found at position 4
-- **Total: 3 comparisons**
-
-You're using the break to your advantage! Each step eliminates half the shelf.
-
-### ❌ "If middle book > right book, the rotation is in the right half"
-
-**Why it's misleading:**
-
-Shelf: [6, 7, 1, 2, 3, 4, 5]
-- Middle book (position 3): 2 pages
-- Right book (position 6): 5 pages
-- Middle < Right, but rotation point is between positions 1 and 2!
-
-**The confusion:**
-Thinking about "where the rotation is" distracts from the actual task: finding your book. You don't need to find the break point—you just need to know which half is sorted *right now*.
-
-### ✅ "Identify the sorted half, check if target fits there"
-
-**Why it's right:**
-
-Same shelf [6, 7, 1, 2, 3, 4, 5], looking for 7 pages:
-- Left book (6) ≤ Middle (2)? No → Right half is sorted [2,3,4,5]
-- Is 7 in range [2,5]? No → Search left half
-- New middle: position 0, book 6
-- Left (6) ≤ Middle (6)? Yes → Left half sorted [6,6]
-- Is 7 in [6,6)? No → Search right half
-- Position 1: Found 7! ✓
-
-You never needed to know where the rotation was. You just followed the sorted sections.
-
-## Try It Yourself
-
-**Shelf: [15, 20, 25, 30, 1, 5, 10] - Find book with 5 pages**
-
-Trace through the search yourself:
-
-1. What's the middle position? What book is there?
-2. Which half-shelf is sorted? (Check if left ≤ middle)
-3. Does 5 pages fit in the sorted range?
-4. Which half should you search next?
-5. Repeat until found!
-
-<details>
-<summary>Click to see answer</summary>
-
-| Step | L | R | M | Book[M] | Left ≤ Mid? | Sorted Half | Target in Range? | Next |
-|------|---|---|---|---------|-------------|-------------|------------------|------|
-| 1 | 0 | 6 | 3 | 30 | 15≤30 ✓ | Left [15,30] | 15≤5<30? No | Right |
-| 2 | 4 | 6 | 5 | 5 | 1≤5 ✓ | Left [1,5] | 1≤5<5? Yes | Left |
-| 3 | 4 | 4 | 4 | 1 | - | Found? No | Right |
-| 4 | 5 | 4 | - | - | L>R | Exit | - | - |
-
-Wait, this doesn't work! Let me retrace...
-
-Actually step 2 should be:
-| 2 | 4 | 6 | 5 | 5 | - | **FOUND!** | Return 5 | - |
-
-Found the book with 5 pages at position 5!
-
-</details>
-
-## The Algorithm in Plain English
-
-**Using our broken bookshelf framework:**
-
-1. **Start with the full shelf range**
-   - Note the leftmost position and rightmost position
-
-2. **For each search iteration:**
-   - Check the middle position's book
-   - If it's the book we want → Done! Return the position
-
-3. **Determine which half-shelf is properly sorted:**
-   - Compare the leftmost book's pages to the middle book's pages
-   - If leftmost ≤ middle → left half is sorted
-   - Otherwise → right half is sorted
-
-4. **Check if our target book fits in the sorted half's range:**
-   - If left half is sorted: does our book fit between [leftmost, middle)?
-   - If right half is sorted: does our book fit between (middle, rightmost]?
-
-5. **Search the appropriate half:**
-   - If target fits in sorted range → search that half
-   - If target doesn't fit → search the other half
-
-6. **Repeat until shelf range is exhausted**
-   - If we run out of positions to check → book isn't on the shelf (return -1)
-
-**The key insight:** We never leave the bookshelf analogy. At every step, we're just checking which section is in order and whether our book would fit there based on page counts.
-
-## Complete Solution
-
+**In code:**
 ```typescript
 function search(nums: number[], target: number): number {
-    // Setup our shelf boundaries
-    let leftShelf = 0;
-    let rightShelf = nums.length - 1;
+    let left = 0;                    // Leftmost position on shelf
+    let right = nums.length - 1;     // Rightmost position on shelf
+}
+```
 
-    while (leftShelf <= rightShelf) {
-        // Check the middle book
-        const middlePos = Math.floor((leftShelf + rightShelf) / 2);
-        const middleBook = nums[middlePos];
+**Why:** These pointers represent the current section of the shelf we're examining. We'll adjust them as we narrow down our search.
 
-        // Found our book!
-        if (middleBook === target) return middlePos;
+### Step 2: Keep Searching Until We Find the Book or Run Out of Space
 
-        // Which half-shelf is properly sorted?
-        const leftBook = nums[leftShelf];
-        const rightBook = nums[rightShelf];
+**Adding to our code:**
+```typescript
+function search(nums: number[], target: number): number {
+    let left = 0;
+    let right = nums.length - 1;
 
-        if (leftBook <= middleBook) {
-            // Left half-shelf is sorted: [leftBook ... middleBook]
-            // Does our target book fit in this sorted range?
-            if (leftBook <= target && target < middleBook) {
-                // Yes! Our book is on the left half-shelf
-                rightShelf = middlePos - 1;
-            } else {
-                // No! Our book must be on the right half-shelf
-                leftShelf = middlePos + 1;
-            }
-        } else {
-            // Right half-shelf is sorted: [middleBook ... rightBook]
-            // Does our target book fit in this sorted range?
-            if (middleBook < target && target <= rightBook) {
-                // Yes! Our book is on the right half-shelf
-                leftShelf = middlePos + 1;
-            } else {
-                // No! Our book must be on the left half-shelf
-                rightShelf = middlePos - 1;
-            }
+    while (left <= right) {
+        // Keep searching as long as there's space to check
+    }
+
+    return -1;  // Book not found on the shelf
+}
+```
+
+**Why:** The while loop continues as long as we have a valid section to search. When `left > right`, we've exhausted all possibilities.
+
+### Step 3: Find the Middle Book
+
+**In our analogy:** Pick up the book in the middle of our current section to make a decision.
+
+**Adding to our code:**
+```typescript
+function search(nums: number[], target: number): number {
+    let left = 0;
+    let right = nums.length - 1;
+
+    while (left <= right) {
+        const mid = Math.floor((left + right) / 2);  // Middle position
+
+        // Check if this is the book we're looking for
+        if (nums[mid] === target) {
+            return mid;  // Found it!
         }
     }
 
-    // Searched the whole shelf, book not found
     return -1;
 }
 ```
 
-**Tracing the analogy through the code:**
+**Why:** Before doing anything else, check if we got lucky and picked the exact book we need. If so, we're done!
 
-When you run this with shelf [4, 5, 6, 7, 0, 1, 2] looking for book 0:
+### Step 4: Determine Which Half is Properly Sorted
 
-1. **First check (full shelf):**
-   - `leftShelf=0, rightShelf=6, middlePos=3`
-   - `middleBook=7, target=0`
-   - `leftBook=4 ≤ middleBook=7` → left half sorted
-   - Is `4 ≤ 0 < 7`? No
-   - Search right half: `leftShelf=4`
+**In our analogy:** Compare the leftmost book with the middle book to see if the left half is sorted without breaks.
 
-2. **Second check (right half-shelf [0,1,2]):**
-   - `leftShelf=4, rightShelf=6, middlePos=5`
-   - `middleBook=1, target=0`
-   - `leftBook=0 ≤ middleBook=1` → left half sorted
-   - Is `0 ≤ 0 < 1`? Yes!
-   - Search left half: `rightShelf=4`
+**The key logic:**
+```typescript
+function search(nums: number[], target: number): number {
+    let left = 0;
+    let right = nums.length - 1;
 
-3. **Third check (single book):**
-   - `leftShelf=4, rightShelf=4, middlePos=4`
-   - `middleBook=0, target=0`
-   - Found it! Return position 4 ✓
+    while (left <= right) {
+        const mid = Math.floor((left + right) / 2);
 
-The entire search happens by asking "which half-shelf is in order?" and "does my book fit there?" at each step—just like scanning a broken bookshelf with your eyes.
+        if (nums[mid] === target) {
+            return mid;
+        }
 
-## Complexity Analysis in Bookshelf Terms
+        // Is the LEFT half properly sorted?
+        if (nums[left] <= nums[mid]) {
+            // Left half is sorted: [left...mid] has no break point
+        } else {
+            // Left half has the break point, so RIGHT half must be sorted
+        }
+    }
 
-**Time: O(log n)**
-- Each time you check the middle book, you eliminate half the shelf
-- Just like normal binary search on an unbroken shelf
-- Shelf with 8 books → 4 books → 2 books → 1 book (3 steps max)
+    return -1;
+}
+```
 
-**Space: O(1)**
-- You only track the left and right boundaries of your current search range
-- No need to store which books you've seen—just remember where you're looking
-- Like using two bookends to mark your search area
+**Why:** If `nums[left] <= nums[mid]`, it means books are ascending from left to middle with no rotation break. Otherwise, the break is in the left half, making the right half sorted.
 
-## Edge Cases Through the Bookshelf Lens
+### Step 5: Check if Target Could Be in the Sorted Half
 
-**Single book on shelf:** [5]
-- Middle is the only book
-- Either it matches or it doesn't
-- No halves to compare—immediate answer
+**In our analogy:** Once we know which half is properly sorted, check if our target book's page count falls within that sorted range.
 
-**Two books, not rotated:** [1, 3]
-- Left book (1) ≤ Middle (1) → left half sorted
-- Check if target fits in [1, 1) or [1, 3]
-- Works like normal binary search
+**For the LEFT half being sorted:**
+```typescript
+if (nums[left] <= nums[mid]) {
+    // Left half is sorted [left...mid]
+    // Could target be in this sorted range?
+    if (nums[left] <= target && target < nums[mid]) {
+        right = mid - 1;  // Yes! Search left half
+    } else {
+        left = mid + 1;   // No! Must be in right half
+    }
+}
+```
 
-**Two books, rotated:** [3, 1]
-- Left book (3) > Middle (3)? No, they're equal
-- Left half is "sorted" (trivially)
-- If target=1: doesn't fit [3,3), so search right → found at position 1
+**Why:** If the left half is sorted and contains books from (say) 50 to 200 pages, we can definitively say whether a 100-page book could be there. If yes, search that half. If no, it MUST be in the other half.
 
-**Not rotated at all:** [1, 2, 3, 4, 5]
-- At every step, left ≤ middle is true
-- Behaves exactly like regular binary search on a normal shelf
-- The algorithm handles this perfectly!
+**For the RIGHT half being sorted:**
+```typescript
+else {
+    // Right half is sorted [mid...right]
+    // Could target be in this sorted range?
+    if (nums[mid] < target && target <= nums[right]) {
+        left = mid + 1;   // Yes! Search right half
+    } else {
+        right = mid - 1;  // No! Must be in left half
+    }
+}
+```
 
-**Target doesn't exist:** [4, 5, 6, 7, 0, 1, 2], target=10
-- You'll search both halves exhaustively
-- Eventually `leftShelf > rightShelf` (ran out of positions)
-- Return -1 (book not on shelf)
+**Why:** Same logic, but now we're checking if the target falls within the right half's sorted range.
 
-The beauty: every edge case makes perfect physical sense when you think about the broken bookshelf!
+### Step 6: Complete Algorithm
+
+**In our analogy:** Putting it all together—we repeatedly check the middle, identify the sorted half, determine which side to search, and adjust our boundaries.
+
+**Complete solution:**
+```typescript
+function search(nums: number[], target: number): number {
+    let left = 0;
+    let right = nums.length - 1;
+
+    while (left <= right) {
+        const mid = Math.floor((left + right) / 2);
+
+        // Found the exact book!
+        if (nums[mid] === target) {
+            return mid;
+        }
+
+        // Is LEFT half properly sorted?
+        if (nums[left] <= nums[mid]) {
+            // Left half is sorted: check if target is in this range
+            if (nums[left] <= target && target < nums[mid]) {
+                right = mid - 1;  // Search left half
+            } else {
+                left = mid + 1;   // Search right half
+            }
+        } else {
+            // RIGHT half must be sorted: check if target is in this range
+            if (nums[mid] < target && target <= nums[right]) {
+                left = mid + 1;   // Search right half
+            } else {
+                right = mid - 1;  // Search left half
+            }
+        }
+    }
+
+    return -1;  // Book not found
+}
+```
+
+---
+
+## Visualizing the Rotated Bookshelf
+
+Here's how the rotated bookshelf creates two sorted zones:
+
+```mermaid
+graph TD
+    A["Original Shelf:<br/>[50, 100, 150, 200, 250, 300, 350]"] --> B["Rotation happens at index 4"]
+    B --> C["Rotated Shelf:<br/>[250, 300, 350, 50, 100, 150, 200]"]
+
+    C --> D["Zone 1: High numbers<br/>[250, 300, 350]<br/>Still sorted!"]
+    C --> E["Zone 2: Low numbers<br/>[50, 100, 150, 200]<br/>Still sorted!"]
+
+    style D fill:#a8e6cf
+    style E fill:#ffd3b6
+```
+
+### How Binary Search Adapts to the Break Point
+
+```mermaid
+graph TD
+    Start["Array: [250, 300, 350, 50, 100, 150, 200]<br/>Target: 100"] --> Mid1["Check mid (index 3): 50"]
+
+    Mid1 --> Check1{"Is left half sorted?<br/>250 ≤ 50?"}
+    Check1 -->|No| Right1["Right half is sorted<br/>[50, 100, 150, 200]"]
+
+    Right1 --> Range1{"Is 100 in [50, 200]?"}
+    Range1 -->|Yes| Search1["Search right half<br/>left = 4"]
+
+    Search1 --> Mid2["Check mid (index 5): 150"]
+    Mid2 --> Check2{"Is right sorted?<br/>150 ≤ 200?"}
+    Check2 -->|Yes| Range2{"Is 100 in [150, 200]?"}
+    Range2 -->|No| Search2["Search left portion<br/>right = 4"]
+
+    Search2 --> Mid3["Check mid (index 4): 100"]
+    Mid3 --> Found["Found! Return 4"]
+
+    style Found fill:#90EE90
+    style Right1 fill:#a8e6cf
+```
+
+---
+
+## Tracing Through an Example
+
+Let's trace finding the book with **100 pages** on shelf: **[250, 300, 350, 50, 100, 150, 200]**
+
+| Step | Left | Right | Mid | nums[mid] | Analysis | Action |
+|------|------|-------|-----|-----------|----------|--------|
+| 1 | 0 | 6 | 3 | 50 | Left half (250 ≤ 50)? **NO** → Right is sorted [50-200]<br/>Is 100 in [50, 200]? **YES** | Search right: `left = 4` |
+| 2 | 4 | 6 | 5 | 150 | Right half (150 ≤ 200)? **YES** → Right is sorted [150-200]<br/>Is 100 in [150, 200]? **NO** | Search left: `right = 4` |
+| 3 | 4 | 4 | 4 | 100 | **nums[mid] === target** | **Found! Return 4** |
+
+**Key Observations:**
+- Each step cuts the search space in half
+- We correctly identified which half was sorted
+- We made decisions based on whether target could be in the sorted range
+- Total steps: 3 (much better than checking all 7 books!)
+
+---
+
+## Common Misconceptions
+
+### ❌ "The array is completely unsorted because of rotation"
+
+**Why it's wrong:** While the array isn't fully sorted from start to end, it contains TWO perfectly sorted segments.
+
+**In our analogy:** The bookshelf wasn't scrambled—it was rotated. The books in each zone are still in perfect order. Zone 1 has [250, 300, 350] in ascending order, and Zone 2 has [50, 100, 150, 200] in ascending order.
+
+**In code:** This is why we can still use binary search! We just need to identify which segment we're in.
+
+### ❌ "I need to find the rotation point first, then do binary search"
+
+**Why it's wrong:** You don't need a separate pass to find the rotation point. You handle it while searching.
+
+**In our analogy:** You don't need to find exactly where the shelf broke before looking for your book. You figure out which section is intact and make decisions based on that.
+
+**In code:** The condition `if (nums[left] <= nums[mid])` already tells us which half is properly sorted. We don't need extra work.
+
+### ✅ "At every step, at least one half is guaranteed to be sorted"
+
+**Why it's right:** The rotation creates exactly ONE break point in the entire array. When you split at the middle, at most ONE half can contain that break point—the other half MUST be clean.
+
+**In our analogy:** The shelf broke in one place. When you divide the shelf in half, one side is definitely intact (no break), so you can trust its ordering.
+
+**In code:** This is the foundation of our algorithm. We confidently identify the sorted half and reason about it.
+
+---
+
+## Try It Yourself
+
+**Challenge:** Find the book with **300 pages** on shelf: **[200, 250, 300, 350, 50, 100, 150]**
+
+**Walk through the analogy:**
+1. What's the middle book?
+2. Which half is properly sorted?
+3. Could 300 pages be in the sorted half's range?
+4. Which direction do you search?
+5. Repeat until found!
+
+**Expected path:**
+- Start: left=0, right=6, mid=3 → Book 350
+- Left half sorted [200-350], 300 in range? YES → search left
+- Next: left=0, right=2, mid=1 → Book 250
+- Left half sorted [200-250], 300 in range? NO → search right
+- Next: left=2, right=2, mid=2 → Book 300 → **Found!**
+
+**In code, this would return index 2.**
+
+---
+
+## Time Complexity: Why O(log n)?
+
+**In our analogy:** Each time you check the middle book, you eliminate HALF of the remaining shelf from consideration.
+
+- 100 books → check 1, eliminate 50 → 50 left
+- 50 books → check 1, eliminate 25 → 25 left
+- 25 books → check 1, eliminate 12 → 13 left
+- ...and so on
+
+**How many times can you cut in half?** About log₂(n) times. For 100 books, that's only about 7 checks!
+
+**Why this works despite rotation:** Because we're smart about identifying the sorted half at each step, we maintain the same "cut in half" property as regular binary search.
+
+---
+
+## The Key Insight
+
+The brilliant realization is that **rotation doesn't destroy order—it just splits it into two zones**.
+
+By identifying which zone is on which side of your middle point, you can make confident decisions about where to search next, maintaining the O(log n) efficiency of binary search even on a rotated array.
+
+Think of it like a bookshelf that got knocked but not scrambled. The books are still organized; they're just in two segments instead of one continuous segment. Your job is to figure out which segment contains your target book—and you do that by recognizing which half of your current view is intact.

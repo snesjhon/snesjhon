@@ -254,7 +254,7 @@ graph LR
 
 **2D Matrix**:
 
-- [ ] [74. Search a 2D Matrix](https://leetcode.com/problems/search-a-2d-matrix/) - Treat as flattened sorted array
+- [x] [74. Search a 2D Matrix](https://leetcode.com/problems/search-a-2d-matrix/) - Treat as flattened sorted array
 
 **Binary Search Boundaries**:
 
@@ -263,7 +263,7 @@ graph LR
 **Binary Search on Answer**:
 
 - [ ] [69. Sqrt(x)](https://leetcode.com/problems/sqrtx/) - Search for square root
-- [ ] [875. Koko Eating Bananas](https://leetcode.com/problems/koko-eating-bananas/) - Minimize eating speed
+- [x] [875. Koko Eating Bananas](https://leetcode.com/problems/koko-eating-bananas/) - Minimize eating speed
 
 **Bonus (If time permits)**:
 
