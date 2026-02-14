@@ -113,7 +113,6 @@ graph TD
 ### Building Block 1: Tree Node & Basic Structure
 
 #### 🧠 Mental Model First
-
 **What is this?**
 A tree node is like a **folder** in your file system. It has:
 - A name (the value)

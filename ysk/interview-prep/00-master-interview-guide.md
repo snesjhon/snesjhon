@@ -31,12 +31,12 @@ graph TB
 
 **Full-time preparation**: 3-4 months of focused study (30-40 hours/week)
 
-| Phase | Duration | DSA Focus | System Design Focus |
-|-------|----------|-----------|---------------------|
-| **Month 1** | 4-5 weeks | Novice: Arrays → Recursion | Fundamentals: Components → Caching |
+| Phase       | Duration  | DSA Focus                               | System Design Focus                                      |
+| ----------- | --------- | --------------------------------------- | -------------------------------------------------------- |
+| **Month 1** | 4-5 weeks | Novice: Arrays → Recursion              | Fundamentals: Components → Caching                       |
 | **Month 2** | 4-5 weeks | Novice → Studied: Binary Search → Trees | Fundamentals → Intermediate: API Design → Simple Systems |
-| **Month 3** | 4-5 weeks | Studied: Graphs → Backtracking | Intermediate: Social → E-commerce Systems |
-| **Month 4** | 4+ weeks | Studied → Expert: DP → Advanced | Intermediate → Advanced: Distributed Systems |
+| **Month 3** | 4-5 weeks | Studied: Graphs → Backtracking          | Intermediate: Social → E-commerce Systems                |
+| **Month 4** | 4+ weeks  | Studied → Expert: DP → Advanced         | Intermediate → Advanced: Distributed Systems             |
 
 **Part-time preparation**: 6-8 months (15-20 hours/week)
 
@@ -126,13 +126,13 @@ gantt
 
 **Goal**: Build pattern recognition for common problems and systems
 
-| Week | DSA (18-24 hrs) | System Design (12-16 hrs) | Total Hrs |
-|------|-----------------|---------------------------|-----------|
-| **6** | Binary Search | Simple Systems (URL Shortener, Pastebin) | 30-40 |
-| **7** | Binary Trees | Simple Systems (Key-Value Store, Rate Limiter) | 30-40 |
-| **8** | BST, Heaps | Social Media (Twitter, Instagram) | 30-40 |
-| **9** | Graph Fundamentals, DFS | Messaging (WhatsApp, Slack) | 30-40 |
-| **10** | Graph BFS | Search & Discovery (Autocomplete, Yelp) | 30-40 |
+| Week   | DSA (18-24 hrs)         | System Design (12-16 hrs)                      | Total Hrs |
+| ------ | ----------------------- | ---------------------------------------------- | --------- |
+| **6**  | Binary Search           | Simple Systems (URL Shortener, Pastebin)       | 30-40     |
+| **7**  | Binary Trees            | Simple Systems (Key-Value Store, Rate Limiter) | 30-40     |
+| **8**  | BST, Heaps              | Social Media (Twitter, Instagram)              | 30-40     |
+| **9**  | Graph Fundamentals, DFS | Messaging (WhatsApp, Slack)                    | 30-40     |
+| **10** | Graph BFS               | Search & Discovery (Autocomplete, Yelp)        | 30-40     |
 
 **Month 2 Checkpoint**:
 - ✅ 100-120 DSA problems solved
@@ -146,13 +146,13 @@ gantt
 
 **Goal**: Handle complex problems and system designs confidently
 
-| Week | DSA (18-24 hrs) | System Design (12-16 hrs) | Total Hrs |
-|------|-----------------|---------------------------|-----------|
-| **11** | Advanced Graphs (Topological, Dijkstra) | Video & Media (YouTube, Netflix) | 30-40 |
-| **12** | Backtracking Deep Dive | E-commerce & Payments | 30-40 |
-| **13** | Dynamic Programming 1D | Infrastructure (Monitoring, Distributed Cache) | 30-40 |
-| **14** | Dynamic Programming 2D | Review & Consolidate All Systems | 30-40 |
-| **15** | DP Practice & Review | Distributed Systems Fundamentals | 30-40 |
+| Week   | DSA (18-24 hrs)                         | System Design (12-16 hrs)                      | Total Hrs |
+| ------ | --------------------------------------- | ---------------------------------------------- | --------- |
+| **11** | Advanced Graphs (Topological, Dijkstra) | Video & Media (YouTube, Netflix)               | 30-40     |
+| **12** | Backtracking Deep Dive                  | E-commerce & Payments                          | 30-40     |
+| **13** | Dynamic Programming 1D                  | Infrastructure (Monitoring, Distributed Cache) | 30-40     |
+| **14** | Dynamic Programming 2D                  | Review & Consolidate All Systems               | 30-40     |
+| **15** | DP Practice & Review                    | Distributed Systems Fundamentals               | 30-40     |
 
 **Month 3 Checkpoint**:
 - ✅ 150-200 DSA problems solved
