@@ -1,33 +1,25 @@
-# Claude Code Text-to-Speech
+# Claude Code Voice - Talk To and From Claude Code
 
-Have Claude Code read its responses aloud using a **Stop hook** that triggers after every response.
+Two-way voice for Claude Code: **hear responses spoken aloud** and **speak your prompts** instead of typing.
 
-## How It Works
+---
 
-1. Claude Code fires a `Stop` event every time it finishes a response
-2. The hook script checks if TTS is enabled (`CLAUDE_TTS=1`)
-3. If enabled, it reads the session transcript, extracts the last assistant message, strips code blocks and markdown, and speaks the cleaned text through your system's TTS engine
+## Part 1: Hear Claude's Responses (Text-to-Speech)
 
-## Quick Setup
+A Claude Code **Stop hook** reads each response aloud after it finishes.
 
-### 1. Install a TTS engine
+### Pick a TTS Engine
 
-**macOS** - built-in `say` command, nothing to install.
+| Engine | Quality | Requires | Install |
+|--------|---------|----------|---------|
+| **OpenAI TTS** | Natural | `OPENAI_API_KEY` + audio player | Already have it if you use OpenAI |
+| **Piper** | Natural | Nothing (runs locally) | `pip install piper-tts` |
+| **macOS `say`** | Good | macOS | Built-in |
+| **espeak-ng** | Robotic | Linux | `sudo apt install espeak-ng` |
 
-**Linux (Ubuntu/Debian)**:
-```bash
-sudo apt install espeak-ng
-```
+### Setup
 
-**Cross-platform fallback** (requires internet):
-```bash
-pip3 install gtts
-# also need an audio player: mpv, ffplay, aplay, or paplay
-```
-
-### 2. Install the hook
-
-Copy the scripts to your Claude config directory:
+**1. Copy the scripts:**
 
 ```bash
 cp projects/claude-tts/tts-hook.sh ~/.claude/tts-hook.sh
@@ -35,7 +27,7 @@ cp projects/claude-tts/tts-read-response.py ~/.claude/tts-read-response.py
 chmod +x ~/.claude/tts-hook.sh ~/.claude/tts-read-response.py
 ```
 
-Then add the hook to `~/.claude/settings.json`:
+**2. Add the Stop hook to `~/.claude/settings.json`:**
 
 ```json
 {
@@ -55,91 +47,171 @@ Then add the hook to `~/.claude/settings.json`:
 }
 ```
 
-If you already have a Stop hook (like the git-check hook), add both entries to the array:
-
-```json
-{
-  "hooks": {
-    "Stop": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/stop-hook-git-check.sh"
-          }
-        ]
-      },
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/tts-hook.sh"
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
-### 3. Enable TTS
-
-TTS is **off by default**. Toggle it with an environment variable:
+**3. Enable and configure:**
 
 ```bash
-# Enable - Claude reads responses aloud
+# Turn it on
 export CLAUDE_TTS=1
 
-# Disable
-unset CLAUDE_TTS
+# Pick an engine (optional - auto-detects by default)
+export CLAUDE_TTS_ENGINE=openai   # or: piper, say, espeak
+
+# For OpenAI TTS, set your API key
+export OPENAI_API_KEY=sk-...
 ```
 
-Add to your shell profile (`~/.bashrc`, `~/.zshrc`) to persist:
+Add these to `~/.bashrc` or `~/.zshrc` to persist.
 
-```bash
-export CLAUDE_TTS=1
-```
-
-## Configuration
-
-All configuration is via environment variables:
+### Configuration
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `CLAUDE_TTS` | `0` | Set to `1` to enable TTS |
-| `CLAUDE_TTS_MAX_CHARS` | `1000` | Max characters to speak (longer responses are truncated) |
-| `CLAUDE_TTS_VOICE` | system default | macOS voice name (e.g. `Samantha`, `Daniel`, `Zarvox`) |
-| `CLAUDE_TTS_RATE` | system default | macOS speech rate in words per minute |
+| `CLAUDE_TTS` | `0` | Set to `1` to enable |
+| `CLAUDE_TTS_ENGINE` | auto | Force engine: `openai`, `piper`, `say`, `espeak` |
+| `CLAUDE_TTS_MAX_CHARS` | `1000` | Max characters before truncation |
+| `CLAUDE_TTS_VOICE` | engine default | Voice name (see below) |
+| `CLAUDE_TTS_RATE` | system default | Speech rate (macOS `say` only, in WPM) |
+| `OPENAI_API_KEY` | - | Required for OpenAI engine |
 
-## TTS Engine Priority
+**Voice names by engine:**
 
-The script tries engines in this order:
+- **OpenAI**: `alloy`, `ash`, `coral`, `echo`, `fable`, `nova` (default), `onyx`, `sage`, `shimmer`
+- **Piper**: `en_US-lessac-medium` (default), `en_US-amy-medium`, `en_GB-alan-medium` — [browse voices](https://rhasspy.github.io/piper-samples/)
+- **macOS say**: run `say -v '?'` to list voices
+- **espeak-ng**: run `espeak-ng --voices` to list voices
 
-1. **`say`** (macOS) - best quality, no internet needed
-2. **`espeak-ng`** (Linux) - lightweight, no internet needed
-3. **`espeak`** (Linux) - fallback for older systems
-4. **`gtts-cli`** (cross-platform) - uses Google TTS, requires internet + audio player
+---
 
-## What Gets Read
+## Part 2: Talk to Claude Code (Speech-to-Text Input)
 
-- Only the **text** portions of Claude's response
-- **Code blocks** are replaced with "code block omitted"
-- **URLs**, file paths, and markdown syntax are stripped
-- Long responses are **truncated** at `CLAUDE_TTS_MAX_CHARS` characters
+Three options, from easiest to most integrated:
+
+### Option A: VoiceMode MCP (Recommended - full two-way voice)
+
+[VoiceMode](https://github.com/mbailey/voicemode) is an MCP server that adds both voice input AND output to Claude Code in one package.
+
+```bash
+# Install as an MCP server
+claude mcp add --scope user voice-mode uvx voice-mode
+
+# Set your OpenAI key for Whisper STT + TTS
+export OPENAI_API_KEY=sk-...
+
+# Start a voice conversation
+claude
+# Then tell Claude: "listen to me" or "let's talk"
+```
+
+This gives you full two-way voice. Claude listens through your mic, transcribes with Whisper, responds, and speaks back. No hook setup needed — it replaces Part 1 entirely.
+
+### Option B: OS-level dictation (zero setup)
+
+Use your operating system's built-in dictation in the terminal:
+
+- **macOS**: Press `Fn` twice (or the mic key) in Terminal/iTerm — speaks directly into the Claude Code prompt
+- **Windows**: Press `Win + H` for voice typing
+- **Linux**: Install [Nerd Dictation](https://github.com/ideasman42/nerd-dictation) or use GNOME's built-in dictation
+
+This works immediately with no code changes. Just activate dictation while the Claude Code prompt is focused.
+
+### Option C: Whisper + SoX (DIY voice loop)
+
+Record from your microphone, transcribe locally with Whisper, and pipe to Claude Code:
+
+**Install:**
+```bash
+# macOS
+brew install sox ffmpeg
+pip install openai-whisper
+
+# Linux
+sudo apt install sox libsox-fmt-all ffmpeg
+pip install openai-whisper
+```
+
+**Use:**
+```bash
+# Record until 2 seconds of silence, transcribe, send to Claude
+sox -d /tmp/prompt.wav silence 1 0.1 1% 1 2.0 1%
+whisper /tmp/prompt.wav --model base --output_format txt --output_dir /tmp
+claude -p "$(cat /tmp/prompt.txt)"
+```
+
+For real-time streaming transcription, use [whisper.cpp](https://github.com/ggml-org/whisper.cpp) with the `--stream` mode.
+
+---
+
+## Quick Reference: Full Voice Setup
+
+The fastest path to talking back and forth with Claude Code:
+
+**If you have an OpenAI API key** (best quality):
+```bash
+# Voice output (TTS hook)
+export CLAUDE_TTS=1
+export CLAUDE_TTS_ENGINE=openai
+export OPENAI_API_KEY=sk-...
+
+# Voice input (VoiceMode MCP)
+claude mcp add --scope user voice-mode uvx voice-mode
+```
+
+**If you want fully local/offline** (no API keys):
+```bash
+# Voice output
+pip install piper-tts
+export CLAUDE_TTS=1
+export CLAUDE_TTS_ENGINE=piper
+
+# Voice input
+pip install openai-whisper
+# Use OS dictation (Fn+Fn on macOS) or the SoX+Whisper approach
+```
+
+**If you're on macOS and want zero dependencies**:
+```bash
+# Voice output
+export CLAUDE_TTS=1
+export CLAUDE_TTS_ENGINE=say
+
+# Voice input
+# Just press Fn twice in Terminal to start dictation
+```
+
+---
+
+## How the Stop Hook Works
+
+```
+Claude finishes responding
+        ↓
+Stop event fires → tts-hook.sh
+        ↓
+Checks CLAUDE_TTS=1?
+        ↓ yes
+tts-read-response.py
+        ↓
+Reads transcript JSONL → extracts last assistant message
+        ↓
+Strips code blocks, URLs, markdown
+        ↓
+Sends cleaned text to TTS engine (in background)
+        ↓
+You hear the response
+```
 
 ## Troubleshooting
 
 **No sound?**
-- Check `CLAUDE_TTS=1` is set: `echo $CLAUDE_TTS`
-- Verify TTS works directly: `say "hello"` (macOS) or `espeak-ng "hello"` (Linux)
-- Check the script runs: `echo '{"transcript_path":"..."}' | python3 tts-read-response.py`
+- Verify `echo $CLAUDE_TTS` prints `1`
+- Test the engine directly: `say "hello"` / `espeak-ng "hello"` / check `OPENAI_API_KEY` is set
+- Ensure you have an audio player: `mpv`, `ffplay`, `afplay`, or `aplay`
 
-**Audio cuts off?**
-- Increase `CLAUDE_TTS_MAX_CHARS`
-- The TTS runs in the background - if Claude responds again quickly, the previous speech continues
+**Voice sounds robotic?**
+- Switch to a natural engine: `export CLAUDE_TTS_ENGINE=openai` or `piper`
 
-**Want a different voice?**
-- macOS: `say -v '?'` lists all available voices
-- espeak-ng: `espeak-ng --voices` lists available voices
+**Response too long / cuts off?**
+- Adjust `CLAUDE_TTS_MAX_CHARS` (default 1000 characters)
+
+**Want to use VoiceMode instead of the hook?**
+- Remove the TTS hook from settings and just use VoiceMode MCP for both input and output
