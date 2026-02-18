@@ -2,6 +2,12 @@
 
 ## The Flag Line Analogy
 
+A monotone binary string always has a split point — everything left of it is 0, everything right is 1. We don't know where that split point should be, so we figure it out as we walk left to right. We keep a running tab (flips) that represents the cheapest cost to make everything behind us valid. When we see a 1, it costs nothing — we just count it. When we see a 0, the cost to fix everything behind us might change, so we recalculate: either flip this 0 into a 1, which adds one to our tab (flips + 1), or throw away our tab and replace it with ones — the cost of flipping every 1 we've counted into 0s instead. Whichever is cheaper becomes our new tab. By the end, the tab holds the answer.
+
+Take "010110". The first 0 triggers a recalculation: flip this 0 costs 0+1=1, or flip all zero 1s we've seen costs 0 — there's nothing to fix yet, tab stays 0. Next is 1, just count it. Next is 0, recalculate: flip this 0 costs 0+1=1, or flip the one 1 we've counted costs 1 — same price, tab becomes 1. Next two are 1s, just count them, three 1s seen now. Last is 0, recalculate: flip this 0 costs 1+1=2, or throw away our tab and flip all three 1s costs 3 — flipping the one 0 is cheaper, tab becomes 2. That's our answer.
+
+---
+
 Understanding this problem is like walking down a row of flags — each either **green (0)** or **red (1)** — and finding the fewest flags to repaint so that all the greens come before all the reds.
 
 **How the analogy maps to the problem:**

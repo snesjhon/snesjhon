@@ -37,22 +37,6 @@ The timelines below assume:
 
 ---
 
-## 📍 The Three Phases
-
-```mermaid
-graph LR
-    Novice[🌱 Novice<br/>Build Intuition<br/>3-5 weeks] --> Studied[📚 Studied<br/>Pattern Recognition<br/>5-8 weeks]
-    Studied --> Expert[🎯 Expert<br/>Problem Synthesis<br/>Ongoing]
-
-    style Novice fill:#e1f5ff
-    style Studied fill:#fff4e1
-    style Expert fill:#e1ffe1
-```
-
-**Total time to "Studied" level: 8-13 weeks (2-3 months)**
-
----
-
 ## 🌱 Phase 1: Novice (3-5 weeks)
 
 **Goal**: Build foundational problem-solving intuition with linear structures.
@@ -85,10 +69,16 @@ graph LR
 
 **Key Problems**:
 
+- [x] [125. Valid Palindrome](https://leetcode.com/problems/valid-palindrome/)
+- [x] [238. Product of Array Except Self](https://leetcode.com/problems/product-of-array-except-self/)
+- [ ] [36. Valid Sudoku](https://leetcode.com/problems/valid-sudoku/)
+- [ ] [271. Encode and Decode Strings](https://leetcode.com/problems/encode-and-decode-strings/) *(Premium)*
+
+*Additional Problems:*
+
 - [x] Reverse array
-- [x] Remove duplicates
-- [x] Valid palindrome
-- [x] Merge sorted arrays
+- [x] [26. Remove Duplicates from Sorted Array](https://leetcode.com/problems/remove-duplicates-from-sorted-array/)
+- [x] [88. Merge Sorted Array](https://leetcode.com/problems/merge-sorted-array/)
 
 **Why First**: Most fundamental structure. You need comfort here before anything else.
 
@@ -107,10 +97,15 @@ graph LR
 
 **Key Problems**:
 
-- [x] Two sum
-- [x] Contains duplicate
-- [x] Valid anagram
-- [x] First unique character
+- [x] [1. Two Sum](https://leetcode.com/problems/two-sum/)
+- [x] [217. Contains Duplicate](https://leetcode.com/problems/contains-duplicate/)
+- [x] [242. Valid Anagram](https://leetcode.com/problems/valid-anagram/)
+- [ ] [49. Group Anagrams](https://leetcode.com/problems/group-anagrams/)
+- [ ] [128. Longest Consecutive Sequence](https://leetcode.com/problems/longest-consecutive-sequence/)
+
+*Additional Problems:*
+
+- [x] [387. First Unique Character in a String](https://leetcode.com/problems/first-unique-character-in-a-string/)
 
 **Why Now**: Essential tool you'll use EVERYWHERE. Learn it early so it's second nature.
 
@@ -129,10 +124,15 @@ graph LR
 
 **Key Problems**:
 
-- [x] Container with most water
-- [x] 3Sum
-- [x] Remove element
-- [x] Sort colors
+- [x] [11. Container With Most Water](https://leetcode.com/problems/container-with-most-water/)
+- [x] [15. 3Sum](https://leetcode.com/problems/3sum/)
+- [ ] [167. Two Sum II - Input Array Is Sorted](https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/)
+- [ ] [42. Trapping Rain Water](https://leetcode.com/problems/trapping-rain-water/)
+
+*Additional Problems:*
+
+- [x] [27. Remove Element](https://leetcode.com/problems/remove-element/)
+- [x] [75. Sort Colors](https://leetcode.com/problems/sort-colors/)
 - This one still stumped me initially, I had to resort to visual guide, but I mostly go it, will come back
 
 **Why Now**: First real "technique" - teaches you that problems have patterns beyond brute force.
@@ -152,10 +152,16 @@ graph LR
 
 **Key Problems**:
 
+- [x] [3. Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/)
+- [x] [567. Permutation in String](https://leetcode.com/problems/permutation-in-string/)
+- [x] [76. Minimum Window Substring](https://leetcode.com/problems/minimum-window-substring/)
+- [ ] [121. Best Time to Buy and Sell Stock](https://leetcode.com/problems/best-time-to-buy-and-sell-stock/)
+- [ ] [424. Longest Repeating Character Replacement](https://leetcode.com/problems/longest-repeating-character-replacement/)
+- [ ] [239. Sliding Window Maximum](https://leetcode.com/problems/sliding-window-maximum/)
+
+*Additional Problems:*
+
 - [x] Max sum subarray of size K
-- [x] Longest substring without repeating chars
-- [x] Minimum window substring
-- [x] Permutation in string
 
 **Why Now**: Natural extension of two pointers. Solidifies the idea that technique matters.
 
@@ -174,10 +180,16 @@ graph LR
 
 **Key Problems**:
 
-- [x] Reverse linked list
-- [x] Merge two sorted lists
-- [x] Detect cycle
-- [x] Remove Nth node from end
+- [x] [206. Reverse Linked List](https://leetcode.com/problems/reverse-linked-list/)
+- [x] [21. Merge Two Sorted Lists](https://leetcode.com/problems/merge-two-sorted-lists/)
+- [x] [141. Linked List Cycle](https://leetcode.com/problems/linked-list-cycle/)
+- [x] [19. Remove Nth Node From End of List](https://leetcode.com/problems/remove-nth-node-from-end-of-list/)
+- [ ] [143. Reorder List](https://leetcode.com/problems/reorder-list/)
+- [ ] [138. Copy List with Random Pointer](https://leetcode.com/problems/copy-list-with-random-pointer/)
+- [ ] [2. Add Two Numbers](https://leetcode.com/problems/add-two-numbers/)
+- [ ] [287. Find the Duplicate Number](https://leetcode.com/problems/find-the-duplicate-number/)
+- [ ] [146. LRU Cache](https://leetcode.com/problems/lru-cache/)
+- [ ] [25. Reverse Nodes in K-Group](https://leetcode.com/problems/reverse-nodes-in-k-group/)
 
 **Why Now**: First non-array structure. Teaches pointer thinking which is crucial for trees/graphs later.
 
@@ -196,10 +208,16 @@ graph LR
 
 **Key Problems**:
 
-- [x] Valid parentheses
-- [x] Min stack
-- [x] Implement queue using stacks
-- [x] Daily temperatures
+- [x] [20. Valid Parentheses](https://leetcode.com/problems/valid-parentheses/)
+- [x] [155. Min Stack](https://leetcode.com/problems/min-stack/)
+- [x] [739. Daily Temperatures](https://leetcode.com/problems/daily-temperatures/)
+- [ ] [150. Evaluate Reverse Polish Notation](https://leetcode.com/problems/evaluate-reverse-polish-notation/)
+- [ ] [853. Car Fleet](https://leetcode.com/problems/car-fleet/)
+- [ ] [84. Largest Rectangle in Histogram](https://leetcode.com/problems/largest-rectangle-in-histogram/)
+
+*Additional Problems:*
+
+- [x] [232. Implement Queue using Stacks](https://leetcode.com/problems/implement-queue-using-stacks/)
 
 **Why Now**: These patterns appear everywhere. Also critical for understanding recursion call stack.
 
@@ -218,11 +236,14 @@ graph LR
 
 **Key Problems**:
 
-- [x] Fibonacci
+- [x] [22. Generate Parentheses](https://leetcode.com/problems/generate-parentheses/)
+- [x] [78. Subsets](https://leetcode.com/problems/subsets/)
+
+*Additional Problems:*
+
+- [x] [509. Fibonacci Number](https://leetcode.com/problems/fibonacci-number/)
 - [x] Factorial
-- [x] Reverse string recursively
-- [x] Generate parentheses
-- [x] Subsets
+- [x] [344. Reverse String](https://leetcode.com/problems/reverse-string/)
 
 **Why Now**: CRITICAL checkpoint. You cannot progress without recursion. Take your time here.
 
@@ -241,32 +262,20 @@ graph LR
 
 **Key Problems**:
 
-**Foundation (Start Here)**:
-
 - [x] [704. Binary Search](https://leetcode.com/problems/binary-search/) - Classic implementation
-- [x] [35. Search Insert Position](https://leetcode.com/problems/search-insert-position/) - Understanding boundaries
-- [ ] [278. First Bad Version](https://leetcode.com/problems/first-bad-version/) - Pattern variation
-
-**Rotated Arrays**:
-
+- [x] [74. Search a 2D Matrix](https://leetcode.com/problems/search-a-2d-matrix/) - Treat as flattened sorted array
+- [x] [875. Koko Eating Bananas](https://leetcode.com/problems/koko-eating-bananas/) - Minimize eating speed
 - [x] [153. Find Minimum in Rotated Sorted Array](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/) - No duplicates
 - [ ] [33. Search in Rotated Sorted Array](https://leetcode.com/problems/search-in-rotated-sorted-array/) - Target search
+- [ ] [981. Time Based Key-Value Store](https://leetcode.com/problems/time-based-key-value-store/)
+- [ ] [4. Median of Two Sorted Arrays](https://leetcode.com/problems/median-of-two-sorted-arrays/)
 
-**2D Matrix**:
+*Additional Problems:*
 
-- [x] [74. Search a 2D Matrix](https://leetcode.com/problems/search-a-2d-matrix/) - Treat as flattened sorted array
-
-**Binary Search Boundaries**:
-
+- [x] [35. Search Insert Position](https://leetcode.com/problems/search-insert-position/) - Understanding boundaries
+- [ ] [278. First Bad Version](https://leetcode.com/problems/first-bad-version/) - Pattern variation
 - [ ] [34. Find First and Last Position of Element in Sorted Array](https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/) - Finding range boundaries
-
-**Binary Search on Answer**:
-
 - [ ] [69. Sqrt(x)](https://leetcode.com/problems/sqrtx/) - Search for square root
-- [x] [875. Koko Eating Bananas](https://leetcode.com/problems/koko-eating-bananas/) - Minimize eating speed
-
-**Bonus (If time permits)**:
-
 - [ ] [162. Find Peak Element](https://leetcode.com/problems/find-peak-element/) - Binary search on unsorted array
 - [ ] [374. Guess Number Higher or Lower](https://leetcode.com/problems/guess-number-higher-or-lower/) - Interactive binary search
 
@@ -321,11 +330,22 @@ graph LR
 
 **Key Problems**:
 
-- Max depth of binary tree
-- Same tree
-- Invert binary tree
-- Diameter of binary tree
-- Lowest common ancestor
+- [x] [226. Invert Binary Tree](https://leetcode.com/problems/invert-binary-tree/)
+- [x] [104. Maximum Depth of Binary Tree](https://leetcode.com/problems/maximum-depth-of-binary-tree/)
+- [x] [543. Diameter of Binary Tree](https://leetcode.com/problems/diameter-of-binary-tree/)
+- [x] [100. Same Tree](https://leetcode.com/problems/same-tree/)
+- [ ] [110. Balanced Binary Tree](https://leetcode.com/problems/balanced-binary-tree/)
+- [ ] [572. Subtree of Another Tree](https://leetcode.com/problems/subtree-of-another-tree/)
+- [ ] [102. Binary Tree Level Order Traversal](https://leetcode.com/problems/binary-tree-level-order-traversal/)
+- [ ] [199. Binary Tree Right Side View](https://leetcode.com/problems/binary-tree-right-side-view/)
+- [ ] [1448. Count Good Nodes in Binary Tree](https://leetcode.com/problems/count-good-nodes-in-binary-tree/)
+- [ ] [105. Construct Binary Tree from Preorder and Inorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/)
+- [ ] [124. Binary Tree Maximum Path Sum](https://leetcode.com/problems/binary-tree-maximum-path-sum/)
+- [ ] [297. Serialize and Deserialize Binary Tree](https://leetcode.com/problems/serialize-and-deserialize-binary-tree/)
+
+*Additional Problems:*
+
+- [ ] [236. Lowest Common Ancestor of a Binary Tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/)
 
 **Why Now**: Trees are "training wheels" for graphs. Easier to visualize, no cycles, simpler rules.
 
@@ -344,10 +364,13 @@ graph LR
 
 **Key Problems**:
 
-- Validate BST
-- Kth smallest element in BST
-- Lowest common ancestor in BST
-- Insert into BST
+- [ ] [98. Validate Binary Search Tree](https://leetcode.com/problems/validate-binary-search-tree/)
+- [ ] [230. Kth Smallest Element in a BST](https://leetcode.com/problems/kth-smallest-element-in-a-bst/)
+- [ ] [235. Lowest Common Ancestor of a Binary Search Tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/)
+
+*Additional Problems:*
+
+- [ ] [701. Insert into a Binary Search Tree](https://leetcode.com/problems/insert-into-a-binary-search-tree/)
 
 **Why Now**: Extends tree knowledge with ordering property. Common in interviews.
 
@@ -366,10 +389,15 @@ graph LR
 
 **Key Problems**:
 
-- Kth largest element
-- Top K frequent elements
-- Merge K sorted lists
-- Find median from data stream
+- [ ] [703. Kth Largest Element in a Stream](https://leetcode.com/problems/kth-largest-element-in-a-stream/)
+- [ ] [1046. Last Stone Weight](https://leetcode.com/problems/last-stone-weight/)
+- [ ] [973. K Closest Points to Origin](https://leetcode.com/problems/k-closest-points-to-origin/)
+- [ ] [215. Kth Largest Element in an Array](https://leetcode.com/problems/kth-largest-element-in-an-array/)
+- [ ] [347. Top K Frequent Elements](https://leetcode.com/problems/top-k-frequent-elements/)
+- [ ] [621. Task Scheduler](https://leetcode.com/problems/task-scheduler/)
+- [ ] [355. Design Twitter](https://leetcode.com/problems/design-twitter/)
+- [ ] [295. Find Median from Data Stream](https://leetcode.com/problems/find-median-from-data-stream/)
+- [ ] [23. Merge K Sorted Lists](https://leetcode.com/problems/merge-k-sorted-lists/)
 
 **Why Now**: Powerful data structure. Often combined with graphs later (Dijkstra).
 
@@ -388,10 +416,11 @@ graph LR
 
 **Key Problems**:
 
-- Number of islands
-- Clone graph
-- Number of connected components
-- Valid tree
+- [ ] [200. Number of Islands](https://leetcode.com/problems/number-of-islands/)
+- [ ] [133. Clone Graph](https://leetcode.com/problems/clone-graph/)
+- [ ] [695. Max Area of Island](https://leetcode.com/problems/max-area-of-island/)
+- [ ] [323. Number of Connected Components in an Undirected Graph](https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/) *(Premium)*
+- [ ] [261. Graph Valid Tree](https://leetcode.com/problems/graph-valid-tree/) *(Premium)*
 
 **Why Now**: You finally have recursion, trees, and hash maps mastered. Ready for the complexity.
 
@@ -410,10 +439,15 @@ graph LR
 
 **Key Problems**:
 
-- All paths from source to target
-- Course schedule (detect cycle)
-- Number of provinces
-- Surrounded regions
+- [ ] [207. Course Schedule](https://leetcode.com/problems/course-schedule/)
+- [ ] [130. Surrounded Regions](https://leetcode.com/problems/surrounded-regions/)
+- [ ] [417. Pacific Atlantic Water Flow](https://leetcode.com/problems/pacific-atlantic-water-flow/)
+- [ ] [286. Walls and Gates](https://leetcode.com/problems/walls-and-gates/) *(Premium)*
+
+*Additional Problems:*
+
+- [ ] [797. All Paths From Source to Target](https://leetcode.com/problems/all-paths-from-source-to-target/)
+- [ ] [547. Number of Provinces](https://leetcode.com/problems/number-of-provinces/)
 
 **Why Now**: After trees, DFS on graphs is natural. You already know recursion deeply.
 
@@ -432,10 +466,12 @@ graph LR
 
 **Key Problems**:
 
-- Binary tree level order
-- Shortest path in binary matrix
-- Rotting oranges
-- Word ladder
+- [ ] [994. Rotting Oranges](https://leetcode.com/problems/rotting-oranges/)
+- [ ] [127. Word Ladder](https://leetcode.com/problems/word-ladder/)
+
+*Additional Problems:*
+
+- [ ] [1091. Shortest Path in Binary Matrix](https://leetcode.com/problems/shortest-path-in-binary-matrix/)
 
 **Why Now**: After DFS, BFS is just "using a queue instead of recursion."
 
@@ -454,10 +490,14 @@ graph LR
 
 **Key Problems**:
 
-- Course schedule II (topological sort)
-- Network delay time (Dijkstra)
-- Redundant connection (Union Find)
-- Cheapest flights within K stops
+- [ ] [210. Course Schedule II](https://leetcode.com/problems/course-schedule-ii/)
+- [ ] [684. Redundant Connection](https://leetcode.com/problems/redundant-connection/)
+- [ ] [743. Network Delay Time](https://leetcode.com/problems/network-delay-time/)
+- [ ] [787. Cheapest Flights Within K Stops](https://leetcode.com/problems/cheapest-flights-within-k-stops/)
+- [ ] [332. Reconstruct Itinerary](https://leetcode.com/problems/reconstruct-itinerary/)
+- [ ] [1584. Min Cost to Connect All Points](https://leetcode.com/problems/min-cost-to-connect-all-points/)
+- [ ] [778. Swim in Rising Water](https://leetcode.com/problems/swim-in-rising-water/)
+- [ ] [269. Alien Dictionary](https://leetcode.com/problems/alien-dictionary/) *(Premium)*
 
 **Why Now**: Combines everything. You're ready for these complex algorithms.
 
@@ -476,11 +516,19 @@ graph LR
 
 **Key Problems**:
 
-- Combinations
-- Permutations
-- N-Queens
-- Sudoku solver
-- Word search
+- [ ] [39. Combination Sum](https://leetcode.com/problems/combination-sum/)
+- [ ] [46. Permutations](https://leetcode.com/problems/permutations/)
+- [ ] [90. Subsets II](https://leetcode.com/problems/subsets-ii/)
+- [ ] [40. Combination Sum II](https://leetcode.com/problems/combination-sum-ii/)
+- [ ] [79. Word Search](https://leetcode.com/problems/word-search/)
+- [ ] [131. Palindrome Partitioning](https://leetcode.com/problems/palindrome-partitioning/)
+- [ ] [17. Letter Combinations of a Phone Number](https://leetcode.com/problems/letter-combinations-of-a-phone-number/)
+- [ ] [51. N-Queens](https://leetcode.com/problems/n-queens/)
+
+*Additional Problems:*
+
+- [ ] [77. Combinations](https://leetcode.com/problems/combinations/)
+- [ ] [37. Sudoku Solver](https://leetcode.com/problems/sudoku-solver/)
 
 **Why Now**: Advanced recursion. Requires strong foundation + graph DFS understanding.
 
@@ -499,11 +547,18 @@ graph LR
 
 **Key Problems**:
 
-- Climbing stairs
-- House robber
-- Coin change
-- Longest increasing subsequence
-- Decode ways
+- [ ] [70. Climbing Stairs](https://leetcode.com/problems/climbing-stairs/)
+- [ ] [746. Min Cost Climbing Stairs](https://leetcode.com/problems/min-cost-climbing-stairs/)
+- [ ] [198. House Robber](https://leetcode.com/problems/house-robber/)
+- [ ] [213. House Robber II](https://leetcode.com/problems/house-robber-ii/)
+- [ ] [5. Longest Palindromic Substring](https://leetcode.com/problems/longest-palindromic-substring/)
+- [ ] [647. Palindromic Substrings](https://leetcode.com/problems/palindromic-substrings/)
+- [ ] [91. Decode Ways](https://leetcode.com/problems/decode-ways/)
+- [ ] [322. Coin Change](https://leetcode.com/problems/coin-change/)
+- [ ] [152. Maximum Product Subarray](https://leetcode.com/problems/maximum-product-subarray/)
+- [ ] [139. Word Break](https://leetcode.com/problems/word-break/)
+- [ ] [300. Longest Increasing Subsequence](https://leetcode.com/problems/longest-increasing-subsequence/)
+- [ ] [416. Partition Equal Subset Sum](https://leetcode.com/problems/partition-equal-subset-sum/)
 
 **Why Now**: Hardest paradigm. Needs strong recursion + pattern recognition from earlier phases.
 
@@ -520,13 +575,19 @@ graph LR
 - String DP
 - Optimization
 
-**Key problems**:
+**Key Problems**:
 
-- Unique paths
-- Longest common subsequence
-- Edit distance
-- Regular expression matching
-- Burst balloons
+- [ ] [62. Unique Paths](https://leetcode.com/problems/unique-paths/)
+- [ ] [1143. Longest Common Subsequence](https://leetcode.com/problems/longest-common-subsequence/)
+- [ ] [309. Best Time to Buy and Sell Stock with Cooldown](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/)
+- [ ] [518. Coin Change II](https://leetcode.com/problems/coin-change-ii/)
+- [ ] [494. Target Sum](https://leetcode.com/problems/target-sum/)
+- [ ] [97. Interleaving String](https://leetcode.com/problems/interleaving-string/)
+- [ ] [329. Longest Increasing Path in a Matrix](https://leetcode.com/problems/longest-increasing-path-in-a-matrix/)
+- [ ] [115. Distinct Subsequences](https://leetcode.com/problems/distinct-subsequences/)
+- [ ] [72. Edit Distance](https://leetcode.com/problems/edit-distance/)
+- [ ] [312. Burst Balloons](https://leetcode.com/problems/burst-balloons/)
+- [ ] [10. Regular Expression Matching](https://leetcode.com/problems/regular-expression-matching/)
 
 **Why Now**: After 1D DP, extending to 2D is conceptual, not fundamentally new.
 
@@ -550,20 +611,131 @@ graph LR
 
 **Goal**: Combine techniques, optimize solutions, tackle hard problems.
 
-### Week 14+: Advanced Topics
+---
 
-**Greedy Algorithms**:
+### Week 14-15: Greedy Algorithms
 
-- Interval scheduling
-- Jump game
-- Gas station
-- Partition labels
+**Duration**: 5-7 days (full-time)
 
-**Tries**:
+**What You Learn**:
 
-- Implement trie
-- Word search II
-- Design add and search words
+- Local optimal choices leading to global optimal
+- Sorting as a preprocessing step
+- Interval-based thinking
+- When greedy works vs when you need DP
+
+**Key Problems**:
+
+- [ ] [53. Maximum Subarray](https://leetcode.com/problems/maximum-subarray/)
+- [ ] [55. Jump Game](https://leetcode.com/problems/jump-game/)
+- [ ] [45. Jump Game II](https://leetcode.com/problems/jump-game-ii/)
+- [ ] [134. Gas Station](https://leetcode.com/problems/gas-station/)
+- [ ] [846. Hand of Straights](https://leetcode.com/problems/hand-of-straights/)
+- [ ] [1899. Merge Triplets to Form Target Triplet](https://leetcode.com/problems/merge-triplets-to-form-target-triplet/)
+- [ ] [763. Partition Labels](https://leetcode.com/problems/partition-labels/)
+- [ ] [678. Valid Parenthesis String](https://leetcode.com/problems/valid-parenthesis-string/)
+
+**Why Now**: Greedy requires strong intuition about when local choices are globally optimal - something you build through DP and backtracking.
+
+---
+
+### Week 15-16: Intervals
+
+**Duration**: 3-5 days (full-time)
+
+**What You Learn**:
+
+- Interval sorting and merging patterns
+- Sweep line technique
+- Overlap detection
+- Meeting room scheduling
+
+**Key Problems**:
+
+- [ ] [57. Insert Interval](https://leetcode.com/problems/insert-interval/)
+- [ ] [56. Merge Intervals](https://leetcode.com/problems/merge-intervals/)
+- [ ] [435. Non-overlapping Intervals](https://leetcode.com/problems/non-overlapping-intervals/)
+- [ ] [252. Meeting Rooms](https://leetcode.com/problems/meeting-rooms/) *(Premium)*
+- [ ] [253. Meeting Rooms II](https://leetcode.com/problems/meeting-rooms-ii/) *(Premium)*
+- [ ] [1851. Minimum Interval to Include Each Query](https://leetcode.com/problems/minimum-interval-to-include-each-query/)
+
+**Why Now**: Interval problems combine sorting with greedy thinking - both skills you've built by now.
+
+---
+
+### Week 16-17: Tries
+
+**Duration**: 3-4 days (full-time)
+
+**What You Learn**:
+
+- Prefix-based data structures
+- Character-by-character traversal
+- Efficient string search
+- Autocomplete patterns
+
+**Key Problems**:
+
+- [ ] [208. Implement Trie (Prefix Tree)](https://leetcode.com/problems/implement-trie-prefix-tree/)
+- [ ] [211. Design Add and Search Words Data Structure](https://leetcode.com/problems/design-add-and-search-words-data-structure/)
+- [ ] [212. Word Search II](https://leetcode.com/problems/word-search-ii/)
+
+**Why Now**: Combines tree structure knowledge with string processing.
+
+---
+
+### Week 17-18: Math & Geometry
+
+**Duration**: 3-5 days (full-time)
+
+**What You Learn**:
+
+- Matrix manipulation patterns
+- In-place transformations
+- Mathematical reasoning in code
+- Coordinate geometry
+
+**Key Problems**:
+
+- [ ] [48. Rotate Image](https://leetcode.com/problems/rotate-image/)
+- [ ] [54. Spiral Matrix](https://leetcode.com/problems/spiral-matrix/)
+- [ ] [73. Set Matrix Zeroes](https://leetcode.com/problems/set-matrix-zeroes/)
+- [ ] [202. Happy Number](https://leetcode.com/problems/happy-number/)
+- [ ] [66. Plus One](https://leetcode.com/problems/plus-one/)
+- [ ] [50. Pow(x, n)](https://leetcode.com/problems/powx-n/)
+- [ ] [43. Multiply Strings](https://leetcode.com/problems/multiply-strings/)
+- [ ] [2013. Detect Squares](https://leetcode.com/problems/detect-squares/)
+
+**Why Now**: These problems test implementation precision and mathematical thinking - good to practice after mastering algorithmic patterns.
+
+---
+
+### Week 18-19: Bit Manipulation
+
+**Duration**: 3-4 days (full-time)
+
+**What You Learn**:
+
+- Binary representation
+- XOR, AND, OR, shift operations
+- Bit masking techniques
+- Space-efficient solutions
+
+**Key Problems**:
+
+- [ ] [136. Single Number](https://leetcode.com/problems/single-number/)
+- [ ] [191. Number of 1 Bits](https://leetcode.com/problems/number-of-1-bits/)
+- [ ] [338. Counting Bits](https://leetcode.com/problems/counting-bits/)
+- [ ] [190. Reverse Bits](https://leetcode.com/problems/reverse-bits/)
+- [ ] [268. Missing Number](https://leetcode.com/problems/missing-number/)
+- [ ] [371. Sum of Two Integers](https://leetcode.com/problems/sum-of-two-integers/)
+- [ ] [7. Reverse Integer](https://leetcode.com/problems/reverse-integer/)
+
+**Why Now**: Bit manipulation is a distinct skill set. Best tackled once you're comfortable with all other patterns.
+
+---
+
+### Week 19+: Advanced Topics
 
 **Advanced DP**:
 
@@ -581,78 +753,8 @@ graph LR
 
 **System Design**:
 
-- LRU Cache
 - LFU Cache
-- Design Twitter
 - Design search autocomplete
-
----
-
-## 📊 Summary Roadmap
-
-```mermaid
-graph TB
-    Start[Start: Complete Beginner]
-
-    subgraph "🌱 NOVICE: 3-5 weeks"
-        A1[Arrays/Strings<br/>3-5 days]
-        A2[Hash Map/Set<br/>2-3 days]
-        A3[Two Pointers<br/>2-3 days]
-        A4[Sliding Window ⭐<br/>3-4 days]
-        A5[Linked Lists<br/>3-4 days]
-        A6[Stack/Queue<br/>2-3 days]
-        A7[Recursion<br/>1-2 weeks]
-        A8[Binary Search<br/>4-5 days]
-
-        A1 --> A2 --> A3 --> A4 --> A5 --> A6 --> A7 --> A8
-    end
-
-    subgraph "📚 STUDIED: 5-8 weeks"
-        B1[Binary Trees<br/>4-6 days]
-        B2[BST<br/>3-4 days]
-        B3[Heaps<br/>3-4 days]
-        B4[Graph Fundamentals<br/>4-6 days]
-        B5[DFS<br/>4-6 days]
-        B6[BFS<br/>4-6 days]
-        B7[Advanced Graphs<br/>4-6 days]
-        B8[Backtracking<br/>5-7 days]
-        B9[1D DP<br/>1-2 weeks]
-        B10[2D DP<br/>1-2 weeks]
-
-        B1 --> B2 --> B3 --> B4 --> B5 --> B6 --> B7 --> B8 --> B9 --> B10
-    end
-
-    subgraph "🎯 EXPERT: Ongoing"
-        C1[Greedy]
-        C2[Tries]
-        C3[Advanced DP]
-        C4[Advanced Graphs]
-        C5[System Design]
-
-        C1 --> C2 --> C3 --> C4 --> C5
-    end
-
-    Start --> A1
-    A8 --> B1
-    B10 --> C1
-
-    style Start fill:#e1f5ff
-    style A8 fill:#90EE90
-    style B10 fill:#FFD700
-    style C5 fill:#ff6b6b
-```
-
----
-
-## 🎯 Milestones & Expectations
-
-| Phase       | Duration (Full-time) | Duration (Part-time) | Problems Solved | LeetCode Level  | Interview Ready |
-| ----------- | -------------------- | -------------------- | --------------- | --------------- | --------------- |
-| **Novice**  | 3-5 weeks            | 8-12 weeks           | 60-80           | Easy (80%+)     | Internships     |
-| **Studied** | 5-8 weeks            | 12-16 weeks          | 150-200         | Medium (60-70%) | Mid-level roles |
-| **Expert**  | Ongoing              | Ongoing              | 300+            | Hard (30-40%)   | Senior roles    |
-
-**At 6-7 hours/day (full-time)**, you can reach "Studied" level in **2-3 months** vs 5-7 months part-time.
 
 ---
 
@@ -700,32 +802,6 @@ Even at full-time pace, complex topics need time to sink in. Don't rush DP just 
 
 ---
 
-## 🔄 Where You Are Right Now
-
-**Your current position**: Stacks & Queues - Sliding Window ⭐
-
-**What's ahead**:
-
-- Critical milestone: Recursion (1-2 weeks) - Take your time here!
-- Graphs & topological sort: Weeks 8-11 (~1.5-2 months from now)
-
-**Your learning pace**: Full-time study (6-7 hours/day)
-
-- You mentioned it's going slower than expected - **this is normal**!
-- Quality > speed. Understanding deeply now saves time later.
-- The timeline assumes thorough mastery, not just "completion"
-
-**Recommendation**:
-
-- Finish Sliding Window thoroughly before moving on
-- Don't rush through Recursion (Week 4-5) - it's the foundation for graphs
-- Review Arrays/Hash Maps periodically - they're used everywhere
-- Consider the topological sort problem as a "future capstone" to motivate your learning
-
-**Why this works**: You're building the exact foundation needed for graphs!
-
----
-
 ## 🎓 Final Thought
 
 This path takes **2-3 months of full-time study** (or 5-7 months part-time) to reach "studied" level. That's normal! Companies like Google expect candidates to have spent months preparing. The key is:
@@ -737,4 +813,4 @@ This path takes **2-3 months of full-time study** (or 5-7 months part-time) to r
 
 You're not just learning algorithms - you're rewiring how you think about problems.
 
-**You're already 2 weeks in. Trust the process. You'll get there.** 🚀
+**Trust the process. You'll get there.**
