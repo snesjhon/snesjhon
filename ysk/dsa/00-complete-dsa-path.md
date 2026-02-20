@@ -114,7 +114,7 @@ The timelines below assume:
 
 - [ ] [49. Group Anagrams](https://leetcode.com/problems/group-anagrams/)
 - [ ] [128. Longest Consecutive Sequence](https://leetcode.com/problems/longest-consecutive-sequence/)
-- [ ] [36. Valid Sudoku](https://leetcode.com/problems/valid-sudoku/) *(combines 2D arrays + hash sets — do this one here, not in the Arrays section)*
+- [x] [36. Valid Sudoku](https://leetcode.com/problems/valid-sudoku/) *(combines 2D arrays + hash sets — do this one here, not in the Arrays section)*
 
 **Why Now**: Essential tool you'll use EVERYWHERE. Learn it early so it's second nature.
 

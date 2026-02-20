@@ -18,9 +18,9 @@ In an interview, sketch the API before the architecture. It forces clarity about
 graph LR
     Client["Client"]
 
-    Client -->|"REST\nHTTP + JSON\nSimple, stateless"| REST["REST API\nGET /users/123"]
-    Client -->|"GraphQL\nQuery language\nClient controls shape"| GQL["GraphQL\n{ user(id:123) { name } }"]
-    Client -->|"gRPC\nProtobuf + HTTP/2\nFast, typed"| GRPC["gRPC\nGetUser(UserRequest)"]
+    Client -->|"REST HTTP + JSON Simple, stateless"| REST["REST API GET /users/123"]
+    Client -->|"GraphQL Query language Client controls shape"| GQL["GraphQL { user(id:123) { name } }"]
+    Client -->|"gRPC Protobuf + HTTP/2 Fast, typed"| GRPC["gRPC GetUser(UserRequest)"]
 
     style REST fill:#90EE90
     style GQL fill:#e1f5ff
