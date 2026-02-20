@@ -41,8 +41,8 @@ The professional discipline here: you always check all three logbooks before sta
 
 Knowing which cluster logbook to use requires a simple calculation. The nine clusters are arranged in a 3×3 grid of their own:
 
-| | Cols 0–2 | Cols 3–5 | Cols 6–8 |
-|---|---|---|---|
+|              | Cols 0–2  | Cols 3–5  | Cols 6–8  |
+| ------------ | --------- | --------- | --------- |
 | **Rows 0–2** | Cluster 0 | Cluster 1 | Cluster 2 |
 | **Rows 3–5** | Cluster 3 | Cluster 4 | Cluster 5 |
 | **Rows 6–8** | Cluster 6 | Cluster 7 | Cluster 8 |
@@ -207,15 +207,15 @@ Row 0: [5, 3, ., ., 7, ., ., ., .]
 Row 1: [5, ., ., 1, 9, ., ., ., .]  <- "5" at (1,0) conflicts with (0,0)!
 ```
 
-| Container | Cargo | ClusterId | rowLogs check | colLogs check | clusterLogs check | Action |
-|-----------|-------|-----------|---------------|---------------|-------------------|--------|
-| (0,0) | "5" | 0 | empty — pass | empty — pass | empty — pass | Stamp all 3 |
-| (0,1) | "3" | 0 | {"5"} no "3" — pass | empty — pass | {"5"} no "3" — pass | Stamp all 3 |
-| (0,2) | "." | — | — | — | — | Skip |
-| (0,3) | "." | — | — | — | — | Skip |
-| (0,4) | "7" | 1 | {"5","3"} no "7" — pass | empty — pass | empty — pass | Stamp all 3 |
-| ... | ... | ... | ... | ... | ... | ... |
-| (1,0) | "5" | 0 | {"5","3","7"} — **"5" found!** | — | — | **Return false** |
+| Container | Cargo | ClusterId | rowLogs check                  | colLogs check | clusterLogs check   | Action           |
+| --------- | ----- | --------- | ------------------------------ | ------------- | ------------------- | ---------------- |
+| (0,0)     | "5"   | 0         | empty — pass                   | empty — pass  | empty — pass        | Stamp all 3      |
+| (0,1)     | "3"   | 0         | {"5"} no "3" — pass            | empty — pass  | {"5"} no "3" — pass | Stamp all 3      |
+| (0,2)     | "."   | —         | —                              | —             | —                   | Skip             |
+| (0,3)     | "."   | —         | —                              | —             | —                   | Skip             |
+| (0,4)     | "7"   | 1         | {"5","3"} no "7" — pass        | empty — pass  | empty — pass        | Stamp all 3      |
+| ...       | ...   | ...       | ...                            | ...           | ...                 | ...              |
+| (1,0)     | "5"   | 0         | {"5","3","7"} — **"5" found!** | —             | —                   | **Return false** |
 
 The inspector catches the "5" at (1,0) because `rowLogs[0]` was stamped with "5" when container (0,0) was processed. Same territory, same cargo label — violation halts the audit.
 
@@ -262,6 +262,46 @@ The right discipline: one loop, three sets, one stamp per container after all th
 Wrong. The formula `Math.floor(r/3) * 3 + Math.floor(c/3)` naturally produces cluster IDs 0–8 for any (r, c). You don't need lookup tables or special cases — the math handles every container correctly.
 
 Integer division by 3 groups consecutive rows/columns into bands of three. Multiplying one band by 3 and adding the other gives a unique combination — the same logic behind how you'd number boxes on a shelf.
+
+---
+
+## The Pattern Behind the Cluster Formula: 2D → 1D Flattening
+
+The formula `Math.floor(r/3) * 3 + Math.floor(c/3)` is an instance of a general pattern: **converting a 2D coordinate into a single 1D index**.
+
+The universal formula is:
+
+```
+index = row * width + col
+```
+
+The index is just "how many cells came before this one?" Two things come before cell `(row, col)`: every cell in the rows above it, and every cell to its left in the same row. The rows above contain `row * width` cells total — because each row has exactly `width` cells, and there are `row` complete rows above you (same logic as 3 bags × 4 apples = 12 apples). The cells to the left number `col`. Add them together: `row * width + col`.
+
+In the cluster formula, the "grid" is the **3×3 arrangement of clusters**, so `width = 3`:
+
+```
+row-band  = Math.floor(r / 3)   ← which row in the cluster grid (0, 1, or 2)
+col-band  = Math.floor(c / 3)   ← which col in the cluster grid (0, 1, or 2)
+clusterId = row-band * 3 + col-band
+```
+
+### The problem that makes this click: 74. Search a 2D Matrix
+
+That problem has you binary search a sorted `m × n` matrix by treating it as a flat array of `m * n` elements. At each midpoint you convert the 1D index back to a 2D cell:
+
+```typescript
+const row = Math.floor(mid / n);
+const col = mid % n;
+```
+
+This is the **reverse** direction — 1D → 2D. The same formula, rearranged:
+
+| Direction | Formula                                  | Used in                   |
+| --------- | ---------------------------------------- | ------------------------- |
+| 2D → 1D   | `row * width + col`                      | Valid Sudoku (cluster ID) |
+| 1D → 2D   | `row = idx / width`, `col = idx % width` | Search a 2D Matrix        |
+
+Working through 074 forces you to understand why `row * n + col` uniquely identifies any cell. Once that's in your head, the cluster formula in 036 isn't a new thing to memorize — it's the same pattern applied to a 3×3 grid of clusters.
 
 ---
 
