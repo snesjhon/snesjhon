@@ -16,31 +16,49 @@ The encoding problem sounds algorithmic but resolves quickly: hash the long URL 
 
 ## Whiteboard Diagram
 
+**Flow 1 — Redirect (read path)**
+
 ```mermaid
 graph TB
     Client["Client\n(browser / app)"]
+    CDN["CDN\n(caches popular redirects)"]
     LB["Load Balancer\n(L7)"]
-    AppServer["App Server\n(read + write)"]
+    AppServer["App Server"]
     Cache["Redis Cache\n shortCode → longURL"]
     DB[("Database\n(shortCode PK, longURL, userId, createdAt, clicks)")]
-    CDN["CDN\n(caches popular redirects)"]
 
     Client -->|"GET /abc123"| CDN
     CDN -->|"Cache miss"| LB
     LB --> AppServer
-    AppServer -->|"Cache hit?"| Cache
-    Cache -->|"Hit: longURL"| AppServer
-    Cache -->|"Miss"| DB
-    DB --> AppServer
+    AppServer -->|"1. check cache"| Cache
+    Cache -->|"Hit: return longURL"| AppServer
+    Cache -->|"Miss: query DB"| DB
+    DB -->|"return longURL"| AppServer
     AppServer -->|"302 Redirect → longURL"| Client
-
-    Client -->|"POST /shorten { url }"| LB
-    LB --> AppServer
-    AppServer -->|"hash + store"| DB
-    AppServer -->|"warm cache"| Cache
 
     style Cache fill:#FFD700
     style CDN fill:#e1f5ff
+    style DB fill:#fff4e1
+```
+
+**Flow 2 — Shorten (write path)**
+
+```mermaid
+graph TB
+    Client["Client\n(browser / app)"]
+    LB["Load Balancer\n(L7)"]
+    AppServer["App Server"]
+    DB[("Database\n(shortCode PK, longURL, userId, createdAt, clicks)")]
+    Cache["Redis Cache\n shortCode → longURL"]
+
+    Client -->|"POST /shorten { url }"| LB
+    LB --> AppServer
+    AppServer -->|"1. hash + store"| DB
+    DB -->|"OK"| AppServer
+    AppServer -->|"2. warm cache"| Cache
+    AppServer -->|"shortURL"| Client
+
+    style Cache fill:#FFD700
     style DB fill:#fff4e1
 ```
 
