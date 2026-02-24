@@ -32,9 +32,9 @@ Heaps appear in three interview archetypes: **top-K problems**, **streaming data
 
 Imagine a hospital ER. Patients arrive constantly, each assigned a severity score. The nurse's station doesn't care about arrival order — it always sends the most critical patient to the doctor first.
 
-- **Patient arrives** = insert O(log n) — they bubble up to their priority slot
-- **Doctor calls next** = extract-min/max O(log n) — remove the root, reorganize
-- **Who's next?** = peek O(1) — just look at the top
+- **Patient arrives** = `enqueue` O(log n) — they bubble up to their priority slot
+- **Doctor calls next** = `dequeue` O(log n) — remove the root, reorganize
+- **Who's next?** = `front()` O(1) — just look at the top
 
 The heap *is* that triage nurse: always knows the most critical item in O(1), reorganizes in O(log n).
 
@@ -78,9 +78,9 @@ graph TD
     H --> MIN["Min-Heap: smallest at root"]
     H --> MAX["Max-Heap: largest at root"]
     H --> OPS["Core Operations"]
-    OPS --> INS["Insert: O(log n) - heapify up"]
-    OPS --> PEEK["Peek: O(1) - read index 0"]
-    OPS --> EXT["Extract: O(log n) - heapify down"]
+    OPS --> INS["enqueue: O(log n) - heapify up"]
+    OPS --> PEEK["front(): O(1) - read index 0"]
+    OPS --> EXT["dequeue: O(log n) - heapify down"]
     H --> IMPL["Stored as Array - no pointers"]
     IMPL --> MATH["Parent: floor i-1 over 2 - Left: 2i+1 - Right: 2i+2"]
     H --> USES["Common Use Cases"]
@@ -106,7 +106,7 @@ class MinHeap {
 
   // The minimum is ALWAYS at index 0 — that's the whole point
   // This is O(1): just read the front of the array
-  peek(): number | undefined {
+  front(): number | undefined {
     return this.heap[0];
   }
 
@@ -160,13 +160,13 @@ class MinHeap {
     [this.heap[i], this.heap[j]] = [this.heap[j], this.heap[i]];
   }
 
-  peek(): number | undefined { return this.heap[0]; }
+  front(): number | undefined { return this.heap[0]; }
   size(): number { return this.heap.length; }
 
-  // INSERT: append to end, then bubble UP
+  // ENQUEUE: append to end, then bubble UP
   // Why end? Preserves the "complete binary tree" shape efficiently
   // Why bubble up? The new element might be smaller than its ancestors
-  insert(val: number): void {
+  enqueue(val: number): void {
     this.heap.push(val);                           // Step 1: add to end
     this.heapifyUp(this.heap.length - 1);          // Step 2: fix upward
   }
@@ -183,15 +183,15 @@ class MinHeap {
   }
 }
 
-// Walkthrough: insert [5, 2, 8, 1] one by one
-// After insert 5:  [5]
-// After insert 2:  [5,2] → heapifyUp(1): parent(1)=0, heap[0]=5 > heap[1]=2 → swap
-//                  [2,5]
-// After insert 8:  [2,5,8] → heapifyUp(2): parent(2)=0, heap[0]=2 <= heap[2]=8 → stop
-//                  [2,5,8]
-// After insert 1:  [2,5,8,1] → heapifyUp(3): parent(3)=1, heap[1]=5 > heap[3]=1 → swap
-//                  [2,1,8,5] → heapifyUp(1): parent(1)=0, heap[0]=2 > heap[1]=1 → swap
-//                  [1,2,8,5] ✓
+// Walkthrough: enqueue [5, 2, 8, 1] one by one
+// After enqueue 5:  [5]
+// After enqueue 2:  [5,2] → heapifyUp(1): parent(1)=0, heap[0]=5 > heap[1]=2 → swap
+//                   [2,5]
+// After enqueue 8:  [2,5,8] → heapifyUp(2): parent(2)=0, heap[0]=2 <= heap[2]=8 → stop
+//                   [2,5,8]
+// After enqueue 1:  [2,5,8,1] → heapifyUp(3): parent(3)=1, heap[1]=5 > heap[3]=1 → swap
+//                   [2,1,8,5] → heapifyUp(1): parent(1)=0, heap[0]=2 > heap[1]=1 → swap
+//                   [1,2,8,5] ✓
 ```
 
 **Mental model for heapify-up**: *"I just joined the company. Am I more important than my manager? If yes, we swap roles and I check with my new manager."*
@@ -216,12 +216,12 @@ class MinHeap {
     [this.heap[i], this.heap[j]] = [this.heap[j], this.heap[i]];
   }
 
-  peek(): number | undefined  { return this.heap[0]; }
+  front(): number | undefined  { return this.heap[0]; }
   size(): number               { return this.heap.length; }
   isEmpty(): boolean           { return this.heap.length === 0; }
 
   // O(log n) — append + heapify up
-  insert(val: number): void {
+  enqueue(val: number): void {
     this.heap.push(val);
     this.heapifyUp(this.heap.length - 1);
   }
@@ -229,7 +229,7 @@ class MinHeap {
   // O(log n) — remove root, restore heap
   // Critical trick: move the LAST element to the root, then heapify down
   // Why last element? It's the easiest to remove (no gaps), maintains shape
-  extractMin(): number | undefined {
+  dequeue(): number | undefined {
     if (this.heap.length === 0) return undefined;
     if (this.heap.length === 1) return this.heap.pop();
 
@@ -291,10 +291,10 @@ class MinHeap {
 
 // Quick usage:
 const heap = new MinHeap();
-heap.insert(5); heap.insert(2); heap.insert(8); heap.insert(1);
-heap.peek();        // 1
-heap.extractMin();  // 1
-heap.peek();        // 2
+heap.enqueue(5); heap.enqueue(2); heap.enqueue(8); heap.enqueue(1);
+heap.front();    // 1
+heap.dequeue();  // 1
+heap.front();    // 2
 ```
 
 **Visualizing extractMin on `[1, 2, 8, 5]`**:
@@ -328,45 +328,49 @@ Result: [2, 5, 8] ✓  —  heap property restored, extracted 1
 - "Top K most frequent elements"
 - Any "best K" from a stream or large array where K << n
 
-**The counterintuitive insight**: Use a **min-heap** to find K **largest** elements. The min-heap acts as a "bouncer" keeping only your best K candidates. The root shows the weakest candidate — if a new element beats it, swap them in.
+**The counterintuitive insight**: Use a **min-heap** to find K **largest** elements.
+
+A min-heap helps here because I'm trying to maintain a running "top K" window as I scan through the array. I don't know the final K largest upfront — I'm discovering them one element at a time. What I need is a way to, at any point, instantly answer: "of everything I've seen so far, which K elements are the largest, and if I need to drop one, which one goes?" The min-heap answers both: the root is always the weakest of my current K candidates, so I can drop it in O(log k) without scanning everything.
+
+The reason it's a *min*-heap and not a max-heap: I want to evict the *smallest* of my current candidates whenever I see a better one. A min-heap puts the smallest at the root — right where I can grab it cheaply.
+
+Tracing `findKLargest([3, 2, 1, 5, 6, 4], k=2)`:
+
+- See 3. I have 1 candidate, still under K=2. Just keep it. Heap: `[3]`
+- See 2. Now I have 2 candidates — I'm at capacity. Heap: `[2, 3]`. Root is 2 (the weaker of my two).
+- See 1. I now have 3 but only want 2. Who do I drop? The weakest — that's 1 (it just became the root). Drop it. Heap stays `[2, 3]`.
+- See 5. I now have 3 again. Weakest is 2. Drop it — 5 is a better candidate. Heap: `[3, 5]`.
+- See 6. I now have 3 again. Weakest is 3. Drop it. Heap: `[5, 6]`.
+- See 4. I now have 3 again. Weakest is 4. Drop it — 4 doesn't beat either 5 or 6. Heap stays `[5, 6]`.
+
+Done. Heap holds `[5, 6]` — the 2 largest. The root (5) is the Kth largest.
+
+---
 
 ```typescript
-// Find K largest elements from nums
-// Time: O(n log k)  Space: O(k)
-// Much better than sort O(n log n) when k is small
+import { MinPriorityQueue } from "@datastructures-js/priority-queue";
 
-function findKLargest(nums: number[], k: number): number[] {
-  const minHeap = new MinHeap();
+// LeetCode 215 — Kth Largest Element in an Array
+// Time: O(n log k)  Space: O(k)
+function findKthLargest(nums: number[], k: number): number {
+  const pq = new MinPriorityQueue<number>();
 
   for (const num of nums) {
-    minHeap.insert(num);            // Add every element to heap
+    pq.enqueue(num);
 
-    // When heap exceeds size K, evict the smallest
-    // This keeps the heap as a "running top K" window
-    if (minHeap.size() > k) {
-      minHeap.extractMin();         // Goodbye, weakest candidate
+    // size > k means we have K+1 elements — one too many.
+    // Evict the smallest. The K survivors are always the K largest seen so far.
+    // While size <= k: just accumulate, no eviction happens at all.
+    if (pq.size() > k) {
+      pq.dequeue(); // removes the minimum (weakest candidate)
     }
   }
 
-  // After processing all nums, heap holds exactly K largest elements
-  // heap[0] (the root) IS the Kth largest element
-  const result: number[] = [];
-  while (!minHeap.isEmpty()) {
-    result.push(minHeap.extractMin()!);
-  }
-  return result.reverse(); // Optional: return in descending order
+  // front() is the minimum of our top K — the Kth largest overall
+  return pq.front().element;
 }
 
-// Example: nums = [3, 2, 1, 5, 6, 4], k = 2
-// Process 3: heap = [3]
-// Process 2: heap = [2, 3]
-// Process 1: heap = [1, 3, 2] → size > 2 → extractMin → heap = [2, 3]
-// Process 5: heap = [2, 3, 5] → size > 2 → extractMin(2) → heap = [3, 5]
-// Process 6: heap = [3, 5, 6] → size > 2 → extractMin(3) → heap = [5, 6]
-// Process 4: heap = [4, 6, 5] → size > 2 → extractMin(4) → heap = [5, 6]
-// Result: [5, 6], Kth largest = heap[0] = 5  ✓
-
-// For K smallest: use MAX-heap of size K, evict the largest when size > K
+// For K smallest: use MaxPriorityQueue of size K, dequeue the largest when size > K
 ```
 
 **Complexity**:
@@ -387,6 +391,8 @@ function findKLargest(nums: number[], k: number): number[] {
 **Key idea**: A min-heap holds the "current front" of each sorted source. Always extract the global minimum, then advance that source's pointer.
 
 ```typescript
+import { MinPriorityQueue } from "@datastructures-js/priority-queue";
+
 // Merge K sorted arrays into one sorted array
 // Time: O(n log k) where n = total elements, k = number of arrays
 // Space: O(k) for the heap (one representative per array)
@@ -398,34 +404,25 @@ interface HeapEntry {
 }
 
 function mergeKSortedArrays(arrays: number[][]): number[] {
-  // In practice: implement MinHeap with custom comparator
-  // Here we use a sorted array to simulate heap behavior
-  const heap: HeapEntry[] = [];
+  // priority option tells the heap which field to order by
+  const pq = new MinPriorityQueue<HeapEntry>({ priority: (x) => x.val });
   const result: number[] = [];
 
-  // Initialize: seed one element from each array
+  // Seed one element from each array
   for (let i = 0; i < arrays.length; i++) {
     if (arrays[i].length > 0) {
-      heap.push({ val: arrays[i][0], arrayIdx: i, elemIdx: 0 });
+      pq.enqueue({ val: arrays[i][0], arrayIdx: i, elemIdx: 0 });
     }
   }
-  heap.sort((a, b) => a.val - b.val); // Treat as initial heap build
 
-  // Each iteration: extract the minimum, advance its pointer
-  while (heap.length > 0) {
-    // Extract-min: smallest current frontier element
-    const { val, arrayIdx, elemIdx } = heap.shift()!;
+  // Each iteration: dequeue the global minimum, advance that source's pointer
+  while (!pq.isEmpty()) {
+    const { val, arrayIdx, elemIdx } = pq.dequeue().element;
     result.push(val);
 
-    // If this source has more elements, add the next one
     const nextIdx = elemIdx + 1;
     if (nextIdx < arrays[arrayIdx].length) {
-      heap.push({
-        val: arrays[arrayIdx][nextIdx],
-        arrayIdx,
-        elemIdx: nextIdx
-      });
-      heap.sort((a, b) => a.val - b.val); // Re-heapify (use proper heap for O(log k))
+      pq.enqueue({ val: arrays[arrayIdx][nextIdx], arrayIdx, elemIdx: nextIdx });
     }
   }
 
@@ -434,10 +431,10 @@ function mergeKSortedArrays(arrays: number[][]): number[] {
 
 // Example: arrays = [[1,4,7], [2,5,8], [3,6,9]]
 // Initial heap: [{1,0,0}, {2,1,0}, {3,2,0}]
-// Round 1: extract 1, add {4,0,1} → result=[1]
-// Round 2: extract 2, add {5,1,1} → result=[1,2]
-// Round 3: extract 3, add {6,2,1} → result=[1,2,3]
-// ... continues until all elements extracted in sorted order
+// Round 1: dequeue 1, enqueue {4,0,1} → result=[1]
+// Round 2: dequeue 2, enqueue {5,1,1} → result=[1,2]
+// Round 3: dequeue 3, enqueue {6,2,1} → result=[1,2,3]
+// ... continues until all elements dequeued in sorted order
 
 // NOTE: For LeetCode 23 (Merge K Sorted Lists), same pattern but
 // heap entries hold ListNode pointers instead of array indices
@@ -461,78 +458,65 @@ function mergeKSortedArrays(arrays: number[][]): number[] {
 **Key insight**: Keep two heaps — a max-heap for the lower half and a min-heap for the upper half. The median lives at one (or both) of their roots.
 
 ```typescript
-// Find median from a data stream
+import { MinPriorityQueue, MaxPriorityQueue } from "@datastructures-js/priority-queue";
+
+// LeetCode 295 — Find Median from Data Stream
 // addNum: O(log n)   findMedian: O(1)
 
 class MedianFinder {
-  // Lower half: max-heap (top = largest of smaller numbers)
-  // We simulate a max-heap by negating values in a min-heap
-  private lowerMaxHeap: number[] = [];   // stores negated values
+  // Lower half: max-heap (front = largest of smaller numbers)
+  private lower = new MaxPriorityQueue<number>();
 
-  // Upper half: min-heap (top = smallest of larger numbers)
-  private upperMinHeap: MinHeap = new MinHeap();
+  // Upper half: min-heap (front = smallest of larger numbers)
+  private upper = new MinPriorityQueue<number>();
 
   // Invariants we ALWAYS maintain:
-  // 1. Every number in lowerMaxHeap <= every number in upperMinHeap
+  // 1. lower.front() <= upper.front()  (every lower value ≤ every upper value)
   // 2. |lower.size - upper.size| <= 1  (sizes differ by at most 1)
 
   addNum(num: number): void {
-    // Step 1: Route num to the correct half
-    // Default: add to lower (max-heap)
-    this.lowerInsert(num);
+    // Step 1: Default — add to lower (max-heap)
+    this.lower.enqueue(num);
 
     // Step 2: Enforce ordering invariant
-    // If max of lower > min of upper, move max-of-lower to upper
+    // If max of lower > min of upper, move it over
     if (
-      !this.upperMinHeap.isEmpty() &&
-      this.lowerPeek()! > this.upperMinHeap.peek()!
+      !this.upper.isEmpty() &&
+      this.lower.front().element > this.upper.front().element
     ) {
-      this.upperMinHeap.insert(this.lowerExtract()!);
+      this.upper.enqueue(this.lower.dequeue().element);
     }
 
     // Step 3: Rebalance sizes (lower can have at most 1 extra)
-    if (this.lowerSize() > this.upperMinHeap.size() + 1) {
-      this.upperMinHeap.insert(this.lowerExtract()!);
-    } else if (this.upperMinHeap.size() > this.lowerSize()) {
-      this.lowerInsert(this.upperMinHeap.extractMin()!);
+    if (this.lower.size() > this.upper.size() + 1) {
+      this.upper.enqueue(this.lower.dequeue().element);
+    } else if (this.upper.size() > this.lower.size()) {
+      this.lower.enqueue(this.upper.dequeue().element);
     }
   }
 
   findMedian(): number {
-    if (this.lowerSize() > this.upperMinHeap.size()) {
+    if (this.lower.size() > this.upper.size()) {
       // Odd total: lower has the middle element
-      return this.lowerPeek()!;
+      return this.lower.front().element;
     }
     // Even total: median is average of the two middle elements
-    return (this.lowerPeek()! + this.upperMinHeap.peek()!) / 2;
+    return (this.lower.front().element + this.upper.front().element) / 2;
   }
-
-  // Max-heap via negation trick: negate on insert, un-negate on read
-  private lowerInsert(val: number) {
-    this.lowerMaxHeap.push(-val);
-    this.lowerMaxHeap.sort((a, b) => a - b); // min of negated = max of original
-  }
-  private lowerExtract(): number | undefined {
-    return this.lowerMaxHeap.length ? -this.lowerMaxHeap.shift()! : undefined;
-  }
-  private lowerPeek(): number | undefined {
-    return this.lowerMaxHeap.length ? -this.lowerMaxHeap[0] : undefined;
-  }
-  private lowerSize(): number { return this.lowerMaxHeap.length; }
 }
 
 // Example walkthrough: addNum 5, 2, 8
-// After 5: lower=[5]       upper=[]       → median = 5
-// After 2: lower=[5,2]     → max(lower)=5, upper empty, sizes ok
+// After 5: lower=[5]    upper=[]    → median = 5
+// After 2: lower=[5,2]  → max(lower)=5, upper empty, sizes ok
 //          → rebalance: lower has 2, upper has 0, diff=2 > 1
 //          → move max of lower (5) to upper
-//          → lower=[2]  upper=[5]         → median = (2+5)/2 = 3.5
-// After 8: lower=[2,8]?   → lower.max=8 > upper.min=5 → move 8 to upper
-//          lower=[2]       upper=[5,8]    → upper.size > lower.size
+//          → lower=[2]  upper=[5]   → median = (2+5)/2 = 3.5
+// After 8: lower=[2,8]? → lower.front()=8 > upper.front()=5 → move 8 to upper
+//          lower=[2]    upper=[5,8] → upper.size > lower.size
 //          → move min of upper (5) to lower
-//          lower=[2,5]     upper=[8]      → median = lower.max = 5
+//          lower=[2,5]  upper=[8]   → median = lower.front() = 5
 
-// Invariant check: lower=[2,5] (max=5), upper=[8] (min=8)
+// Invariant check: lower.front()=5, upper.front()=8
 // 5 <= 8 ✓  |sizes: 2 vs 1| = 1 ≤ 1 ✓
 ```
 
@@ -598,16 +582,16 @@ graph TD
 // O(n log k) time, O(k) space — much better when k << n
 ```
 
-**2. JavaScript has no built-in heap**
+**2. JavaScript has no built-in heap — use the library**
 
 ```typescript
 // Array.sort() is NOT a heap. Re-sorting after each insert is O(n log n)
 // per operation, not O(log n). This kills performance in stream problems.
 //
-// Options for LeetCode:
-// - Implement MinHeap from scratch (as above)
-// - Use @datastructures-js/priority-queue if allowed
-// - For small inputs, sorted array + splice works but note the complexity
+// Use: import { MinPriorityQueue, MaxPriorityQueue } from "@datastructures-js/priority-queue"
+// dequeue().element — removes and returns the min (or max) value
+// front().element   — peeks without removing
+// enqueue(val)      — inserts
 ```
 
 **3. Swapping with wrong child in heapifyDown**
@@ -642,7 +626,7 @@ if (smallest !== i) { swap(i, smallest); i = smallest; }
 
 ### Edge Cases to Always Test
 
-- **Empty heap**: `extractMin()` should return `undefined` or handle gracefully
+- **Empty heap**: `dequeue()` on an empty heap throws — always guard with `isEmpty()` first
 - **Single element**: insert then extract should work cleanly
 - **All identical values**: no infinite loops — comparisons use `<` not `<=`
 - **K ≥ n in Top-K**: return all elements (heap never evicts anything)
@@ -708,4 +692,4 @@ isValid(): boolean {
 
 ---
 
-> **JavaScript/TypeScript Note**: Unlike Python (`heapq`) or Java (`PriorityQueue`), JavaScript has no built-in heap. In LeetCode TypeScript solutions, you'll implement your own MinHeap class (as shown above) or note the O(log n) operations and use a sorted array as a stand-in for smaller inputs. When mentioning complexity in interviews, always state "assuming O(log n) heap operations" to show you understand the underlying structure.
+> **JavaScript/TypeScript Note**: JavaScript has no built-in heap. In LeetCode TypeScript solutions, use `import { MinPriorityQueue, MaxPriorityQueue } from "@datastructures-js/priority-queue"`. The three methods you need are `enqueue(val)`, `dequeue().element`, and `front().element`. For custom ordering (e.g. by distance or frequency), pass a `priority` function: `new MinPriorityQueue({ priority: (x) => x.dist })`. When mentioning complexity in interviews, always state "assuming O(log n) heap operations" to show you understand the underlying structure.

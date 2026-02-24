@@ -401,9 +401,9 @@ The timelines below assume:
 
 **First Pass** *(do these now — max heap then min heap, then combine)*:
 
-- [ ] [1046. Last Stone Weight](https://leetcode.com/problems/last-stone-weight/) *(pure max heap — simplest mental model)*
-- [ ] [703. Kth Largest Element in a Stream](https://leetcode.com/problems/kth-largest-element-in-a-stream/) *(min heap to track top K)*
-- [ ] [215. Kth Largest Element in an Array](https://leetcode.com/problems/kth-largest-element-in-an-array/)
+- [x] [1046. Last Stone Weight](https://leetcode.com/problems/last-stone-weight/) *(pure max heap — simplest mental model)*
+- [x] [703. Kth Largest Element in a Stream](https://leetcode.com/problems/kth-largest-element-in-a-stream/) *(min heap to track top K)*
+- [x] [215. Kth Largest Element in an Array](https://leetcode.com/problems/kth-largest-element-in-an-array/)
 
 **Come Back & Reinforce** *(return to after Graph Fundamentals)*:
 
