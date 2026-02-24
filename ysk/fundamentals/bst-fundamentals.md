@@ -420,13 +420,13 @@ At 2: 2 is p (equal), and 4 > 2 → split! LCA = 2
 
 This distinction matters because it changes your entire approach:
 
-| Situation | General Binary Tree | BST |
-|---|---|---|
-| **Find a value** | Must search both branches (O(n)) | Compare once, eliminate half (O(log n)) |
-| **Validate structure** | Check structural rules only | Must also check ordering with bounds |
-| **Sorted output** | Sort after collecting values | In-order traversal is already sorted |
-| **Find Kth element** | Collect all, sort, index | Count during in-order traversal |
-| **Find LCA** | Post-order, check both subtrees | Top-down, follow the split point |
+| Situation              | General Binary Tree              | BST                                     |
+| ---------------------- | -------------------------------- | --------------------------------------- |
+| **Find a value**       | Must search both branches (O(n)) | Compare once, eliminate half (O(log n)) |
+| **Validate structure** | Check structural rules only      | Must also check ordering with bounds    |
+| **Sorted output**      | Sort after collecting values     | In-order traversal is already sorted    |
+| **Find Kth element**   | Collect all, sort, index         | Count during in-order traversal         |
+| **Find LCA**           | Post-order, check both subtrees  | Top-down, follow the split point        |
 
 The core difference: **in a BST, you always know which direction to go**. You almost never need to check both branches. That's what makes BST problems feel different from general tree problems — you're using the ordering to skip work, not just walking through everything.
 

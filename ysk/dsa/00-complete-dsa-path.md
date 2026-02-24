@@ -1,8 +1,8 @@
 # Complete DSA Learning Path: Novice → Expert
 
-> 📌 **Part of the [Master Interview Preparation Guide](../interview-prep/00-master-interview-guide.md)**
+> 📌 **Part of the [Master Interview Preparation Guide](00-master-interview-guide.md)**
 >
-> This is the **DSA-focused** component of your interview prep. For the complete picture including System Design, Behavioral prep, and job search strategy, see the [Master Guide](../interview-prep/00-master-interview-guide.md).
+> This is the **DSA-focused** component of your interview prep. For the complete picture including System Design, Behavioral prep, and job search strategy, see the [Master Guide](00-master-interview-guide.md).
 
 ---
 
@@ -39,7 +39,7 @@ Don't try to finish "Come Back & Reinforce" before moving to the next section. F
 
 The timelines below assume:
 
-- ✅ You're following the integrated schedule in the [Master Interview Guide](../interview-prep/00-master-interview-guide.md)
+- ✅ You're following the integrated schedule in the [Master Interview Guide](00-master-interview-guide.md)
 - ✅ You're studying both DSA and System Design in parallel from Week 1
 - ⚠️ Complex topics (recursion, DP, graphs) need processing time regardless of hours spent
 - 💡 Quality practice > raw hours. Focus on understanding patterns deeply.
@@ -376,8 +376,8 @@ The timelines below assume:
 
 **First Pass** *(do these now — learn BST by inserting before validating)*:
 
-- [ ] [701. Insert into a Binary Search Tree](https://leetcode.com/problems/insert-into-a-binary-search-tree/)
-- [ ] [98. Validate Binary Search Tree](https://leetcode.com/problems/validate-binary-search-tree/)
+- [x] [701. Insert into a Binary Search Tree](https://leetcode.com/problems/insert-into-a-binary-search-tree/)
+- [x] [98. Validate Binary Search Tree](https://leetcode.com/problems/validate-binary-search-tree/)
 
 **Come Back & Reinforce** *(return to after Heaps)*:
 

@@ -1,8 +1,8 @@
 # Complete System Design Learning Path: Novice → Expert
 
-> 📌 **Part of the [Master Interview Preparation Guide](../interview-prep/00-master-interview-guide.md)**
+> 📌 **Part of the [Master Interview Preparation Guide](00-master-interview-guide.md)**
 >
-> This is the **System Design-focused** component of your interview prep. For the complete picture including DSA, Behavioral prep, and job search strategy, see the [Master Guide](../interview-prep/00-master-interview-guide.md).
+> This is the **System Design-focused** component of your interview prep. For the complete picture including DSA, Behavioral prep, and job search strategy, see the [Master Guide](00-master-interview-guide.md).
 
 ---
 
@@ -32,7 +32,7 @@ System design is more conceptual than DSA, requiring:
 - ✅ Drawing diagrams and thinking through trade-offs
 - ✅ Less "grinding problems," more "understanding patterns and components"
 - 💡 Building mental models of how real systems work
-- 📊 Following the integrated schedule in the [Master Interview Guide](../interview-prep/00-master-interview-guide.md)
+- 📊 Following the integrated schedule in the [Master Interview Guide](00-master-interview-guide.md)
 
 ---
 

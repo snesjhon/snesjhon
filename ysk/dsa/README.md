@@ -6,7 +6,7 @@
 
 ## 🚀 Quick Start
 
-1. **Read the Master Guide**: [`00-master-interview-guide.md`](./00-master-interview-guide.md)
+1. **Read the Master Guide**: [`00-master-interview-guide.md`](00-master-interview-guide.md)
 2. **Review the Detailed Paths**:
    - [DSA Learning Path](../dsa/00-complete-dsa-path.md)
    - [System Design Learning Path](../system-design/00-complete-system-design-path.md)
@@ -183,7 +183,7 @@ Legend: 🔴 Behind | 🟡 In Progress | 🟢 On Track | ✅ Complete
 
 ## 🔗 Quick Links
 
-- **Master Guide**: [00-master-interview-guide.md](./00-master-interview-guide.md)
+- **Master Guide**: [00-master-interview-guide.md](00-master-interview-guide.md)
 - **DSA Path**: [../dsa/00-complete-dsa-path.md](../dsa/00-complete-dsa-path.md)
 - **System Design Path**: [../system-design/00-complete-system-design-path.md](../system-design/00-complete-system-design-path.md)
 
