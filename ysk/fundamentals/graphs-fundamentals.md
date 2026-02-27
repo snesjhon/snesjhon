@@ -70,13 +70,13 @@ graph TD
 
 ### Key Operations
 
-| Operation | Adjacency List | Adjacency Matrix |
-|-----------|---------------|-----------------|
-| Add vertex | O(1) | O(V²) |
-| Add edge | O(1) | O(1) |
-| Check if edge exists | O(degree) | O(1) |
-| Find all neighbors | O(degree) | O(V) |
-| Space | O(V + E) | O(V²) |
+| Operation            | Adjacency List | Adjacency Matrix |
+| -------------------- | -------------- | ---------------- |
+| Add vertex           | O(1)           | O(V²)            |
+| Add edge             | O(1)           | O(1)             |
+| Check if edge exists | O(degree)      | O(1)             |
+| Find all neighbors   | O(degree)      | O(V)             |
+| Space                | O(V + E)       | O(V²)            |
 
 **When to use each representation**:
 - **Adjacency List** → sparse graphs (most interview problems). Use `Map<number, number[]>`
@@ -87,109 +87,408 @@ graph TD
 
 ## 3. Building Blocks - Progressive Learning
 
-### Level 1: Simplest Form — Graph Representation
+### Level 1: Representing a Graph
 
-Before you can traverse, you need to represent a graph in memory.
+**Why this level matters**
+Every graph algorithm starts from the same foundation: you need a way to answer "given a node, who are its neighbors?" The adjacency list is the answer to almost every interview problem.
+
+**How to think about it**
+A graph is just "who connects to who." The adjacency list is a Map where each key is a node and each value is its list of neighbors. Nothing more abstract than a lookup table. You're not computing anything yet, just recording relationships.
+
+Whether you add one direction or both depends on what the edges represent — the problem tells you, not the data. "Roads between cities" means undirected (add both). "Course prerequisites" or "who follows who" means directed (add one).
+
+**Walking through it**
+
+Three edges to add: `0→1`, `1→2`, `0→3`. Each row below is one node's neighbor list.
+
+Each edge `[from, to]` means "`from` can reach `to`" — so only `from`'s neighbor list gains a new entry. `to`'s list is unchanged because the edge says nothing about where `to` can go. (If the graph is [[#The City Road Map Analogy|undirected]] — a two-way street — you'd also push `from` onto `to`'s list.)
+
+After initializing (before any edges):
+```
+0: []
+1: []
+2: []
+3: []
+```
+
+After adding `0→1`:
+```
+0: [1]   ← updated
+1: []
+2: []
+3: []
+```
+
+After adding `1→2`:
+```
+0: [1]
+1: [2]   ← updated
+2: []
+3: []
+```
+
+After adding `0→3`:
+```
+0: [1, 3]   ← updated again
+1: [2]
+2: []
+3: []
+```
+
+That's a directed graph — edge `0→1` only means 0 can reach 1. If the graph were [[#The City Road Map Analogy|undirected]], every edge goes both ways, so each edge updates *two* rows:
+
+```
+0: [1, 3]
+1: [0, 2]   ← 0→1 also added 0 here
+2: [1]      ← 1→2 also added 1 here
+3: [0]      ← 0→3 also added 0 here
+```
+
+**The one thing to get right**
+
+Say node 3 has no edges. If you skip initialization and only loop over the edge list, you never write a row for node 3:
+
+```
+Without initialization:    With initialization:
+
+0: [1]                     0: [1]
+1: [2]                     1: [2]
+2: []                      2: []
+                           3: []   ← this row exists
+```
+
+Without initialization: `graph.has(3)` returns `false` and `graph.get(3)` returns `undefined`. Any code that looks up node 3 will act as if it doesn't exist.
+
+A node should exist in the Map because it's a node — not because it happens to connect to something.
 
 ```typescript
-// ================================================================
-// GRAPH REPRESENTATION: Adjacency List
-// Input: n nodes (0 to n-1), edges as pairs [from, to]
-// ================================================================
-
+// n = 4 → nodes are 0, 1, 2, 3
+// edges = [[0,1],[1,2],[0,3]]  → the connections to record
+// directed returns:   Map { 0→[1,3], 1→[2],    2→[],   3→[]   }
+// undirected returns: Map { 0→[1,3], 1→[0,2],  2→[1],  3→[0]  }
 function buildAdjacencyList(n: number, edges: number[][]): Map<number, number[]> {
   const graph = new Map<number, number[]>();
 
-  // STEP 1: Initialize every node with an empty neighbor list
-  // Critical: nodes with no edges won't appear in the edges array
+  // Initialize all nodes
   for (let i = 0; i < n; i++) {
     graph.set(i, []);
   }
 
-  // STEP 2: Add each edge
+  // Directed (one-way): only from gains a neighbor
   for (const [from, to] of edges) {
-    graph.get(from)!.push(to);  // directed: from → to only
-
-    // For UNDIRECTED graphs, also add the reverse:
-    // graph.get(to)!.push(from);
+    graph.get(from)!.push(to);
   }
+
+  // Undirected (two-way): both nodes gain a neighbor
+  // for (const [from, to] of edges) {
+  //   graph.get(from)!.push(to);
+  //   graph.get(to)!.push(from);
+  // }
 
   return graph;
 }
-
-// ================================================================
-// GRID AS A GRAPH (extremely common in interviews)
-// No need to build an explicit adjacency list!
-// Neighbors = cells in 4 directions (or 8 for diagonal movement)
-// ================================================================
-
-const DIRECTIONS = [
-  [-1, 0],  // up
-  [1, 0],   // down
-  [0, -1],  // left
-  [0, 1],   // right
-];
-
-// Check if a cell is inside the grid bounds
-function inBounds(row: number, col: number, grid: string[][]): boolean {
-  return row >= 0 && row < grid.length && col >= 0 && col < grid[0].length;
-}
 ```
 
-### Level 2: Adding Traversal — DFS
+> **Mental anchor**: "Adjacency list = Map: each node → its neighbors list."
+
+---
+
+**→ Bridge to Level 2**: Now you can store any graph. But storing it isn't enough — looping over the Map visits nodes in insertion order, not in any connected or meaningful order. To actually explore the graph, you need traversal.
+
+### Level 2: DFS — Following One Path Until It Ends
+
+**Why this level matters**
+You need a way to visit every reachable node exactly once. DFS is the simplest: follow each path as far as it goes, then backtrack.
+
+**How to think about it**
+DFS is like exploring a building by always taking the first door you haven't tried yet. You exhaust one entire wing before coming back to try other doors. The key difference from tree DFS: trees can't [[#The City Road Map Analogy|cycle]], graphs can. Without a [[#The City Road Map Analogy|visited set]], two connected nodes would bounce you between them forever.
+
+`Map { 0 → [1,3], 1 → [2], 2→[], 3→[] }
+
+**Walking through it**
+- Start at 0. 
+- Mark visited = `{0}`. Neighbors are `[1, 3]` — take 1 first. 
+- Mark visited = `{0, 1}`. Node 1's neighbor is 2 — take it. 
+- Mark visited = `{0, 1, 2}`. Node 2 has no unvisited neighbors, so backtrack. 
+- Back at 1: nothing left. 
+- Back at 0: take 3. 
+- Mark visited = `{0, 1, 2, 3}`. 
+- Done — every node reached.
+
+**The one thing to get right**
+Mark visited *before* recursing into neighbors, not after. If you mark after, a [[#The City Road Map Analogy|cycle]] can bring you back to this node before the first visit finishes — you'll recurse into it again before it's marked, and the loop never ends.
 
 ```typescript
-// ================================================================
-// GRAPH DFS — Depth First Search
-// Strategy: go as DEEP as possible, then backtrack
-// Use: path finding, cycle detection, connected components
-// ================================================================
-
 function dfs(
   graph: Map<number, number[]>,
   node: number,
-  visited: Set<number>  // CRITICAL: prevents infinite loops from cycles
+  visited: Set<number>
 ): void {
-  // Already visited? Stop — this is how we handle cycles
   if (visited.has(node)) return;
-
-  // Mark visited BEFORE exploring neighbors
-  // If you mark after, you can visit the same node twice in a cycle
   visited.add(node);
 
-  // Process this node (print it, count it, collect it...)
   console.log("Visiting:", node);
 
-  // Recurse into each unvisited neighbor
   for (const neighbor of graph.get(node) ?? []) {
     dfs(graph, neighbor, visited);
-    // visited.has check is redundant here since dfs starts with that check
-    // but being explicit is fine too
   }
 }
 
-// Pattern: outer loop to cover disconnected components
+// Basic usage: DFS from a single start node.
+// This visits every node reachable from start. That's all you need.
+const visited = new Set<number>();
+dfs(graph, 0, visited);  // visits 0 → 1 → 2 → 3
+```
+
+**Extension: what if the graph is disconnected?**
+
+`dfs(graph, 0, visited)` only reaches nodes connected to node 0. If the graph has separate groups with no edges between them, nodes in the other groups are never reached.
+
+The outer loop is the fix — not part of DFS itself, just a wrapper that says: after each DFS finishes, check if any node was still never visited. If so, start another DFS from there. Repeat until every node has been seen.
+
+```typescript
+// Only needed when the graph might be disconnected
 function visitAllNodes(n: number, graph: Map<number, number[]>): void {
   const visited = new Set<number>();
-
   for (let node = 0; node < n; node++) {
-    if (!visited.has(node)) {
-      // This node hasn't been reached yet — a new disconnected component!
-      dfs(graph, node, visited);
-    }
+    if (!visited.has(node)) dfs(graph, node, visited);
   }
 }
 ```
 
-### Level 3: Full Pattern — BFS + Grid DFS Template
+**Extension: early-exit DFS — stop as soon as you find the target**
+
+The basic DFS always visits every reachable node. If you only need to know whether a target exists — not visit everything — you can return a `boolean` and stop the moment you find it.
+
+The key insight is in the `for` loop:
 
 ```typescript
-// ================================================================
-// GRAPH BFS — Breadth First Search
-// Strategy: explore level by level (queue, not recursion)
-// Key property: BFS guarantees SHORTEST path in unweighted graphs
-// ================================================================
+for (const neighbor of graph.get(node) ?? []) {
+  if (dfs(neighbor)) return true;  // true bubbles all the way up — done
+  // false = dead end on this branch, loop continues to next neighbor
+}
+return false;  // only reached if every branch returned false
+```
 
+`false` doesn't propagate — it just lets the loop move to the next neighbor. `true` is the signal that short-circuits everything above it immediately. So a single branch returning `false` doesn't end the search; it just means "try the next door."
+
+```typescript
+function hasPath(graph: Map<number, number[]>, start: number, target: number): boolean {
+  const visited = new Set<number>();
+
+  function dfs(node: number): boolean {
+    if (node === target) return true;   // found — stop here
+    if (visited.has(node)) return false;
+    visited.add(node);
+
+    for (const neighbor of graph.get(node) ?? []) {
+      if (dfs(neighbor)) return true;   // one branch found it — done
+    }
+    return false;  // exhausted all branches from this node
+  }
+
+  return dfs(start);
+}
+```
+
+Use the void DFS when you need to visit everything (counting components, flood fill). Use the boolean DFS when you only care about reachability.
+
+> **Mental anchor**: "DFS = go deep, mark first, backtrack. Visited set = the only thing stopping cycles from looping forever."
+
+---
+
+**→ Bridge to Level 3**: DFS visits every reachable node, but the order is arbitrary — it follows whichever edges come first. That's fine for counting components or flood-filling a region. But if you need the *shortest* path between two nodes, DFS could wander through a long detour before finding the target. That's what BFS solves.
+
+### Level 3: BFS — Exploring Layer by Layer
+
+**Why this level matters**
+DFS doesn't care about distance, so it can't guarantee shortest path. BFS explores nodes in strict order of distance from the start — processing all direct neighbors first, then their neighbors, and so on. This is why BFS *guarantees* the shortest path in [[#The City Road Map Analogy|unweighted]] graphs.
+
+**How to think about it**
+BFS uses a queue (FIFO). You start by enqueuing the source node. When you process a node, you enqueue its unvisited neighbors at the back. This means you finish processing every direct neighbor of the source before you ever touch a neighbor's neighbor.
+
+That ordering is what guarantees shortest path: the first time BFS reaches a target node, it got there via the most direct route — because every shorter route was already processed earlier in the queue. A longer route would still be sitting in the back.
+
+DFS has no such guarantee. It dives down one path immediately, potentially reaching the target via a long detour before it ever tries the short route.
+
+**Walking through it**
+
+Here's the graph we're traversing from node `0`:
+
+```mermaid
+graph TD
+    subgraph L0["Layer 0"]
+        n0(["0"])
+    end
+    subgraph L1["Layer 1"]
+        n1(["1"])
+        n3(["3"])
+    end
+    subgraph L2["Layer 2"]
+        n2(["2"])
+    end
+    n0 --> n1
+    n0 --> n3
+    n1 --> n2
+```
+
+Notice `1` and `3` are both Layer 1 — BFS finishes both before ever touching `2`. That ordering comes directly from the queue, as you'll see below.
+
+---
+
+**BFS**
+
+```typescript
+const visited = new Set<number>();
+const distance = new Map<number, number>();
+
+const queue: number[] = [start];
+visited.add(start);
+distance.set(start, 0);
+
+while (queue.length > 0) {
+	const node = queue.shift()!;  // O(n) — acceptable for interviews
+	for (const neighbor of graph.get(node) ?? []) {
+	  if (!visited.has(neighbor)) {
+		visited.add(neighbor);
+		distance.set(neighbor, distance.get(node)! + 1);
+		queue.push(neighbor);
+	  }
+	}
+}
+```
+
+**Initialization — before the loop starts**
+
+```typescript
+const queue: number[] = [start]; // queue = [0]
+visited.add(start);              // visited = {0}
+distance.set(start, 0);          // distance = {0: 0}
+```
+
+The start node is seeded into all three structures. It's marked `visited` immediately when enqueued — not when processed — so it can never be re-enqueued later.
+
+```
+queue:    [0]
+visited:  {0}
+distance: {0: 0}
+```
+
+---
+
+**Iteration 1** — `node = queue.shift()` pulls **0** off the front
+
+`queue.shift()` removes the first element. `queue` is now `[]`. We look up `graph.get(0)` → neighbors are `[1, 3]`.
+
+Neither `1` nor `3` is in `visited`, so for each:
+
+```typescript
+visited.add(neighbor);                           // mark immediately on enqueue
+distance.set(neighbor, distance.get(node)! + 1) // distance of 0 was 0, so +1 = 1
+queue.push(neighbor);                            // join the back of the queue
+```
+
+```
+queue:    [1, 3]
+visited:  {0, 1, 3}
+distance: {0:0, 1:1, 3:1}
+```
+
+---
+
+**Iteration 2** — `node = queue.shift()` pulls **1** off the front
+
+`queue` is now `[3]`. Neighbors of `1: [2]`. 
+
+Not in `visited` so continue with: 
+
+```typescript
+visited.add(2);
+distance.set(2, distance.get(1)! + 1) // distance of 1 was 1, so +1 = 2
+queue.push(2);
+```
+
+```
+queue:    [3, 2]
+visited:  {0, 1, 2, 3}
+distance: {0:0, 1:1, 2:2, 3:1}
+```
+
+`distance.get(node)! + 1` is the key line — each node inherits its distance from whoever discovered it, then adds one. This is how distances accumulate correctly across layers.
+
+---
+
+**Iteration 3** — `node = queue.shift()` pulls **3** off the front
+
+`queue` is now `[2]`. Neighbors of `3`: none. The `for` loop body never runs.
+
+```
+queue:    [2]
+visited:  {0, 1, 2, 3}    ← unchanged
+distance: {0:0, 1:1, 2:2, 3:1}  ← unchanged
+```
+
+---
+
+**Iteration 4** — `node = queue.shift()` pulls **2** off the front
+
+`queue` is now `[]`. Neighbors of `2`: none.
+
+```
+queue:    []
+visited:  {0, 1, 2, 3}
+distance: {0:0, 1:1, 2:2, 3:1}
+```
+
+`queue.length > 0` is now `false` — the `while` loop exits. BFS returns `distance`, which now holds the shortest path from `0` to every reachable node.
+
+**The one thing to get right**
+
+When I add a node to the queue, I should mark it as visited *at that same moment* — not later when I actually process it.
+
+The reason: there is a gap between when I add a node to the queue and when I get around to processing it. During that gap, other nodes may also discover that same node and try to add it too. If I haven't marked it yet, my `visited` check won't catch that — so the same node ends up in the queue multiple times, and its distance gets overwritten each time, leaving me with the wrong answer.
+
+Marking it the moment I add it closes that gap. Once a node is in `visited`, any future neighbor that tries to add it will see it's already been claimed and skip it.
+
+To see why this matters, add one edge to our graph: `1 → 3`. Now `3` is reachable from both `0` (distance 1) and `1` (distance 2 via the longer path).
+
+```mermaid
+graph TD
+    subgraph L0["Layer 0"]
+        n0(["0"])
+    end
+    subgraph L1["Layer 1"]
+        n1(["1"])
+        n3(["3"])
+    end
+    subgraph L2["Layer 2"]
+        n2(["2"])
+    end
+    n0 --> n1
+    n0 --> n3
+    n1 --> n2
+    n1 --> n3
+```
+
+The correct shortest distance from `0` to `3` is **1** — the direct edge.
+
+
+```
+queue:    [3, 2, 3]   ← 3 is in here twice
+visited:  {0, 1}      ← 3 still not marked
+distance: {0:0, 1:1, 3:2}  ← WRONG — was 1, now overwritten to 2
+```
+
+When `3` finally gets dequeued, its recorded distance is `2` instead of `1`. No crash — just a silently wrong answer.
+
+---
+
+
+**Mark-on-enqueue prevents this entirely.**
+
+When I mark a node visited the moment I add it to the queue, any other node that later tries to add it will see it's already in `visited` and skip it. The first path to reach a node wins — and in BFS, the first path is always the shortest. The distance gets set once, correctly, and never touched again.
+
+```typescript
 function bfs(
   graph: Map<number, number[]>,
   start: number
@@ -197,81 +496,53 @@ function bfs(
   const visited = new Set<number>();
   const distance = new Map<number, number>();
 
-  // Initialize queue with starting node
   const queue: number[] = [start];
   visited.add(start);
   distance.set(start, 0);
 
   while (queue.length > 0) {
-    const node = queue.shift()!;  // dequeue from FRONT (FIFO)
-    // Note: queue.shift() is O(n) — acceptable for interviews.
-    // For production, use a proper deque (e.g., two-stack queue)
+    const node = queue.shift()!;  // O(n) — acceptable for interviews
 
     for (const neighbor of graph.get(node) ?? []) {
       if (!visited.has(neighbor)) {
         visited.add(neighbor);
-        // BFS level guarantees this is the shortest distance
         distance.set(neighbor, distance.get(node)! + 1);
-        queue.push(neighbor);  // enqueue at BACK
+        queue.push(neighbor);
       }
     }
   }
 
   return distance;
-  // If distance.has(target) → reachable from start
-  // distance.get(target) → shortest path length
 }
+```
 
-// ================================================================
-// GRID DFS TEMPLATE
-// The most common interview pattern (Number of Islands, etc.)
-// ================================================================
+> **Mental anchor**: "Queue = FIFO = level-by-level = shortest distance guaranteed."
 
+#### Grid DFS
+
+In grid problems, the graph is implicit — you never build an adjacency list. Each cell *is* a node, and its neighbors are the four adjacent cells. The visited check becomes a 2D boolean array. Everything else is identical to Level 2's DFS.
+
+```typescript
 function gridDFS(
   grid: string[][],
   row: number,
   col: number,
   visited: boolean[][]
 ): void {
-  // Combined boundary + validity + visited check
-  // Put all termination conditions first
   if (
-    row < 0 || row >= grid.length ||         // out of bounds (rows)
-    col < 0 || col >= grid[0].length ||      // out of bounds (cols)
-    visited[row][col] ||                      // already visited
-    grid[row][col] === '0'                    // not land (problem-specific)
+    row < 0 || row >= grid.length ||
+    col < 0 || col >= grid[0].length ||
+    visited[row][col] ||
+    grid[row][col] === '0'
   ) return;
 
   visited[row][col] = true;  // mark before recursing
 
-  // 4-directional flood fill
-  gridDFS(grid, row - 1, col, visited);  // up
-  gridDFS(grid, row + 1, col, visited);  // down
-  gridDFS(grid, row, col - 1, visited);  // left
-  gridDFS(grid, row, col + 1, visited);  // right
+  gridDFS(grid, row - 1, col, visited);
+  gridDFS(grid, row + 1, col, visited);
+  gridDFS(grid, row, col - 1, visited);
+  gridDFS(grid, row, col + 1, visited);
 }
-
-// Outer loop pattern for island counting
-function countIslands(grid: string[][]): number {
-  const rows = grid.length;
-  const cols = grid[0].length;
-  const visited = Array.from({ length: rows }, () => new Array(cols).fill(false));
-  let count = 0;
-
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-      if (grid[r][c] === '1' && !visited[r][c]) {
-        gridDFS(grid, r, c, visited);  // flood fill the entire island
-        count++;
-      }
-    }
-  }
-
-  return count;
-}
-
-// Time: O(V + E) for graph traversal, O(rows × cols) for grid
-// Space: O(V) for visited + O(V) recursion stack
 ```
 
 ---
