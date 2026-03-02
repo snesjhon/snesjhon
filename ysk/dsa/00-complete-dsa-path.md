@@ -1,4 +1,4 @@
-# Complete DSA Learning Path: Novice → Expert
+ Complete DSA Learning Path: Novice → Expert
 
 > 📌 **Part of the [Master Interview Preparation Guide](00-master-interview-guide.md)**
 >
@@ -86,7 +86,7 @@ The timelines below assume:
 **Come Back & Reinforce** *(return to after Hash Maps — these use concepts from the next section)*:
 
 - [x] [238. Product of Array Except Self](https://leetcode.com/problems/product-of-array-except-self/)
-- [ ] [271. Encode and Decode Strings](https://leetcode.com/problems/encode-and-decode-strings/) *(Premium)*
+- [x] [271. Encode and Decode Strings](https://leetcode.com/problems/encode-and-decode-strings/) *(Premium)*
 
 **Why First**: Most fundamental structure. You need comfort here before anything else.
 
@@ -112,7 +112,7 @@ The timelines below assume:
 
 **Come Back & Reinforce** *(return to after Two Pointers)*:
 
-- [ ] [49. Group Anagrams](https://leetcode.com/problems/group-anagrams/)
+- [x] [49. Group Anagrams](https://leetcode.com/problems/group-anagrams/)
 - [ ] [128. Longest Consecutive Sequence](https://leetcode.com/problems/longest-consecutive-sequence/)
 - [x] [36. Valid Sudoku](https://leetcode.com/problems/valid-sudoku/) *(combines 2D arrays + hash sets — do this one here, not in the Arrays section)*
 
@@ -431,9 +431,9 @@ The timelines below assume:
 
 **First Pass** *(do these now — grid-based graphs first, adjacency list second)*:
 
-- [ ] [200. Number of Islands](https://leetcode.com/problems/number-of-islands/)
-- [ ] [695. Max Area of Island](https://leetcode.com/problems/max-area-of-island/)
-- [ ] [133. Clone Graph](https://leetcode.com/problems/clone-graph/)
+- [x] [200. Number of Islands](https://leetcode.com/problems/number-of-islands/)
+- [x] [695. Max Area of Island](https://leetcode.com/problems/max-area-of-island/)
+- [x] [133. Clone Graph](https://leetcode.com/problems/clone-graph/)
 
 **Come Back & Reinforce** *(return to after Graph DFS)*:
 

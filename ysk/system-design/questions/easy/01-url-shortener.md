@@ -76,12 +76,12 @@ graph TB
 
 **2. 301 (permanent) vs 302 (temporary) redirect?**
 
-| | 301 Permanent | 302 Temporary |
-|--|--------------|--------------|
-| Browser caches redirect | ✅ Yes | ❌ No |
-| Your server handles each click | ❌ No (browser handles) | ✅ Yes |
-| Can track analytics | ❌ No | ✅ Yes |
-| Load on your system | Lower | Higher |
+|                                | 301 Permanent          | 302 Temporary |
+| ------------------------------ | ---------------------- | ------------- |
+| Browser caches redirect        | ✅ Yes                  | ❌ No          |
+| Your server handles each click | ❌ No (browser handles) | ✅ Yes         |
+| Can track analytics            | ❌ No                   | ✅ Yes         |
+| Load on your system            | Lower                  | Higher        |
 
 > If analytics matter (most real products): **use 302**.
 

@@ -230,7 +230,40 @@ test('countIslands: single water cell', countIslands([['0']]), 0);
 // of the region it marks instead of void.
 // -----------------------------------------------------------------------------
 
-function maxIslandArea(grid: string[][]): number {}
+function maxIslandArea(grid: string[][]): number {
+  let maxArea = 0;
+  const directions = [
+    [1, 0],
+    [-1, 0],
+    [0, 1],
+    [0, -1],
+  ];
+
+  function dfs(row: number, col: number) {
+    //constraints
+    if (row < 0 || row >= grid.length) return 0;
+    if (col < 0 || col >= grid[0].length) return 0;
+    if (grid[row][col] === '0') return 0;
+
+    grid[row][col] = '0';
+    let localCount = 1;
+
+    for (const [dr, dc] of directions) {
+      localCount += dfs(row + dr, col + dc);
+    }
+    return localCount;
+  }
+
+  for (let rIdx = 0; rIdx < grid.length; rIdx++) {
+    for (let cIdx = 0; cIdx < grid[0].length; cIdx++) {
+      if (grid[rIdx][cIdx] === '1') {
+        const counts = dfs(rIdx, cIdx);
+        maxArea = Math.max(maxArea, counts);
+      }
+    }
+  }
+  return maxArea;
+}
 //
 //
 // // ---- maxIslandArea ----

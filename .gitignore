@@ -16,3 +16,5 @@
 .trash/
 .DS_Store
 node_modules
+
+personal/*
