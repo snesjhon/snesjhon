@@ -20,49 +20,33 @@
 // -----------------------------------------------------------------------------
 function countProvinces(isConnected: number[][]): number {
   /**
- 1. I'm thinking about this in a grid way where it's rows and columns, right? At the end of the day, rows and columns that we can still DFS through regardless of what we do. It already gives us this adjacency list, which is what this grid list is. And we would still just keep a map of what we've seen, then iterate through each of the grid columns. Columns and rows. And then mark if we've seen them four. 
- 2. What's really tripping me up is that normally we've gone through and done two nested loops where one would be rows and one would be columns. And then we would get either the row or the column for each. But in this scenario, this is a adjacency matrix, quote unquote. So therefore, we just have a square, which means it's put somewhere. It's like I and J equals one, mean city and city are directly connected. I and I are equals one, always. A city connects itself, ignore it. But none of that really tells me that this, we wouldn't want to go through row and column. So maybe I'll try that first and then see if that comes up with my idea and then try something else. 
-  */
+   1. So we know that for each row counts as a city. And within each of those rows, there is an identifier that tells us that certain cities are connected. The only way to know which cities are connected is to iterate through each of the rows. And then from those rows, we iterate from, we DFS through each of those columns to see which ones are connected.Because we know that first iterate through the rows within the outer loop. And then DFS through the inner loop, which gives us J. That allows us to iterate through both the rows and columns. 
+   2. Knowing that we have a rows and columns adjacency list, adjacency matrix, that means that we can assume that both the rows and columns are of the same length. So we don't have to do row and column connected, but I guess we could also do that as well. 
+   */
 
-  const seen = Array.from({ length: isConnected.length }, () =>
-    Array.from({ length: isConnected[0].length }).fill(false),
-  );
+  const cities = isConnected.length;
+  const visited = new Set();
   let provinces = 0;
 
-  const directions = [
-    [-1, 0],
-    [1, 0],
-    [0, -1],
-    [0, 1],
-  ];
+  function dfs(city: number) {
+    visited.add(city);
 
-  function dfs(row: number, col: number) {
-    // constraints
-    // 1. within our bounds
-    // 2. not marked as seen
-    // 3. if not 0
-
-    if (row < 0 || row >= isConnected.length) return;
-    if (col < 0 || col >= isConnected[0].length) return;
-    if (isConnected[row][col] === 0) return;
-    if (seen[row][col]) return;
-
-    seen[row][col] = true;
-
-    for (const [r, c] of directions) {
-      dfs(row + r, col + c);
-    }
-  }
-
-  for (let rIdx = 0; rIdx < isConnected.length; rIdx++) {
-    for (let cIdx = 0; cIdx < isConnected[0].length; cIdx++) {
-      const current = isConnected[rIdx][cIdx];
-      if (current === 1 && !seen[rIdx][cIdx]) {
-        dfs(rIdx, cIdx);
-        provinces++;
+    for (let j = 0; j < cities; j++) {
+      //constraints
+      if (isConnected[city][j] === 1 && !visited.has(j)) {
+        dfs(j);
       }
     }
   }
+
+  for (let city = 0; city < cities; city++) {
+    // constraints
+    if (visited.has(city)) continue;
+
+    dfs(city);
+    provinces++;
+  }
+
   return provinces;
 }
 
@@ -107,7 +91,21 @@ test('countProvinces: single city', countProvinces([[1]]), 1);
 //   canReach(isConnected, 2, 3) → true   (directly connected)
 // -----------------------------------------------------------------------------
 function canReach(isConnected: number[][], a: number, b: number): boolean {
-  throw new Error('TODO');
+  const cities = isConnected.length;
+  const visited = new Set();
+
+  function dfs(city: number) {
+    visited.add(city);
+
+    for (let j = 0; j < cities; j++) {
+      if (isConnected[city][j] === 1 && !visited.has(j)) {
+        dfs(j);
+      }
+    }
+  }
+  dfs(a);
+
+  return visited.has(b);
 }
 
 const twoGroups = [
@@ -135,7 +133,27 @@ test('canReach: other group direct', canReach(twoGroups, 2, 3), true);
 //   → two provinces each of size 1 → return 1
 // -----------------------------------------------------------------------------
 function largestProvinceSize(isConnected: number[][]): number {
-  throw new Error('TODO');
+  const seen = new Set();
+  const cities = isConnected.length;
+  let size = 1;
+
+  function dfs(city: number) {
+    seen.add(city);
+
+    for (let j = 0; j < cities; j++) {
+      if (isConnected[city][j] === 1 && !seen.has(j)) {
+        size++;
+        dfs(j);
+      }
+    }
+  }
+
+  for (let city = 0; city < cities; city++) {
+    if (seen.has(city)) continue;
+
+    dfs(city);
+  }
+  return size;
 }
 
 const bigGroup = [
