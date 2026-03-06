@@ -9,6 +9,18 @@
 # Peak = 3x average  (rule of thumb for traffic spikes)
 # Storage = count * size_per_item
 
+# =============================================================================
+# Test harness
+# =============================================================================
+def test(desc, actual, expected)
+  pass = actual == expected
+  puts "#{pass ? 'PASS' : 'FAIL'} #{desc}"
+  unless pass
+    puts "  expected: #{expected.inspect}"
+    puts "  received: #{actual.inspect}"
+  end
+end
+
 # -----------------------------------------------------------------------------
 # Exercise 1
 # Calculate average QPS given daily event count.
@@ -19,7 +31,7 @@
 #   10M events/day -> 10_000_000 / 100_000 = 100 QPS average
 # -----------------------------------------------------------------------------
 def avg_qps(daily_events)
-  (daily_events / 100_000.0).round(1)
+  raise NotImplementedError, "TODO"
 end
 
 test("10M events/day = 100 QPS",   avg_qps(10_000_000),  100.0)
@@ -33,7 +45,7 @@ test("500M events/day = 5000 QPS", avg_qps(500_000_000), 5000.0)
 # Peak traffic (lunch hour, viral moment) is typically ~3x average.
 # -----------------------------------------------------------------------------
 def peak_qps(daily_events)
-  avg_qps(daily_events) * 3
+  raise NotImplementedError, "TODO"
 end
 
 test("10M events/day peak = 300 QPS",   peak_qps(10_000_000),  300.0)
@@ -50,16 +62,7 @@ test("100M events/day peak = 3000 QPS", peak_qps(100_000_000), 3000.0)
 # 1TB = 1_000_000_000_000 bytes
 # -----------------------------------------------------------------------------
 def daily_storage(count, bytes_per_item)
-  total_bytes = count * bytes_per_item
-  if total_bytes >= 1_000_000_000_000
-    { value: (total_bytes / 1_000_000_000_000.0).round(1), unit: :tb }
-  elsif total_bytes >= 1_000_000_000
-    { value: (total_bytes / 1_000_000_000.0).round(1), unit: :gb }
-  elsif total_bytes >= 1_000_000
-    { value: (total_bytes / 1_000_000.0).round(1), unit: :mb }
-  else
-    { value: (total_bytes / 1_000.0).round(1), unit: :kb }
-  end
+  raise NotImplementedError, "TODO"
 end
 
 # 100M tweets/day, 500 bytes each
@@ -88,14 +91,7 @@ test("1M messages @ 200B = 200MB/day",
 SERVER_CAPACITY = 300  # requests/sec for DB-heavy Rails app
 
 def capacity_decision(peak_qps, num_servers, cacheable)
-  total_capacity = SERVER_CAPACITY * num_servers
-  if peak_qps <= total_capacity
-    :sufficient
-  elsif cacheable
-    :needs_cache
-  else
-    :needs_more_servers
-  end
+  raise NotImplementedError, "TODO"
 end
 
 test("300 QPS, 2 servers (600 capacity) -> sufficient",
@@ -113,26 +109,11 @@ test("3000 QPS, 5 servers (1500 capacity), cacheable -> needs_cache",
 # -----------------------------------------------------------------------------
 # Exercise 5
 # Full estimation: given a scenario, walk through the full calculation.
-# Returns { avg_qps:, peak_qps:, daily_storage_gb:, annual_storage_tb: }
+# Returns { avg_write_qps:, peak_write_qps:, avg_read_qps:, peak_read_qps:,
+#           daily_storage_gb:, annual_storage_tb: }
 # -----------------------------------------------------------------------------
 def full_estimate(daily_writes:, bytes_per_write:, read_write_ratio:)
-  avg_write_qps  = avg_qps(daily_writes)
-  peak_write_qps = avg_write_qps * 3
-  avg_read_qps   = avg_write_qps * read_write_ratio
-  peak_read_qps  = avg_read_qps * 3
-
-  daily_bytes = daily_writes * bytes_per_write
-  daily_gb    = (daily_bytes / 1_000_000_000.0).round(2)
-  annual_tb   = (daily_gb * 365 / 1_000.0).round(2)
-
-  {
-    avg_write_qps:  avg_write_qps,
-    peak_write_qps: peak_write_qps,
-    avg_read_qps:   avg_read_qps,
-    peak_read_qps:  peak_read_qps,
-    daily_storage_gb: daily_gb,
-    annual_storage_tb: annual_tb
-  }
+  raise NotImplementedError, "TODO"
 end
 
 # Twitter-like: 100M tweets/day, 500B each, 10:1 read:write
@@ -146,27 +127,5 @@ test("twitter: avg write QPS",       result[:avg_write_qps],   1000.0)
 test("twitter: peak write QPS",      result[:peak_write_qps],  3000.0)
 test("twitter: avg read QPS",        result[:avg_read_qps],    10000.0)
 test("twitter: peak read QPS",       result[:peak_read_qps],   30000.0)
-test("twitter: daily storage 50GB",  result[:daily_storage_gb], 0.05)
-  # 100M * 500 bytes = 50,000,000,000 bytes = 50GB ... rounding to 0.05 TB?
-  # Let's re-check: 100_000_000 * 500 = 50_000_000_000 bytes / 1_000_000_000 = 50.0 GB
-
-# Fix the test above — re-run to see the actual result
-puts "\nFull estimate result (Twitter-like system):"
-puts "  Avg write QPS:     #{result[:avg_write_qps]}"
-puts "  Peak write QPS:    #{result[:peak_write_qps]}"
-puts "  Avg read QPS:      #{result[:avg_read_qps]}"
-puts "  Peak read QPS:     #{result[:peak_read_qps]}"
-puts "  Daily storage:     #{result[:daily_storage_gb]} GB"
-puts "  Annual storage:    #{result[:annual_storage_tb]} TB"
-
-# =============================================================================
-# Test harness
-# =============================================================================
-def test(desc, actual, expected)
-  pass = actual == expected
-  puts "#{pass ? 'PASS' : 'FAIL'} #{desc}"
-  unless pass
-    puts "  expected: #{expected.inspect}"
-    puts "  received: #{actual.inspect}"
-  end
-end
+test("twitter: daily storage 50GB",  result[:daily_storage_gb], 50.0)
+test("twitter: annual storage",      result[:annual_storage_tb], 18.25)

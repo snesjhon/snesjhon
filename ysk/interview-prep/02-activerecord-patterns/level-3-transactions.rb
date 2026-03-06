@@ -5,6 +5,18 @@
 # Goal: understand when transactions are needed, why bang methods matter,
 #       and what happens to data when a step fails.
 
+# =============================================================================
+# Test harness
+# =============================================================================
+def test(desc, actual, expected)
+  pass = actual == expected
+  puts "#{pass ? 'PASS' : 'FAIL'} #{desc}"
+  unless pass
+    puts "  expected: #{expected.inspect}"
+    puts "  received: #{actual.inspect}"
+  end
+end
+
 # -----------------------------------------------------------------------------
 # Exercise 1
 # Simulate a transaction.
@@ -15,13 +27,7 @@
 # This is how ActiveRecord::Base.transaction works under the hood.
 # -----------------------------------------------------------------------------
 def simulate_transaction(initial_state, operations)
-  state = initial_state.dup
-  operations.each do |op|
-    state = op.call(state)
-  end
-  state
-rescue RuntimeError => e
-  initial_state.dup  # roll back to initial state on any error
+  raise NotImplementedError, "TODO"
 end
 
 # All succeed
@@ -63,28 +69,12 @@ test("first op fails: receiver never touched",
 # save returns false on failure — does NOT trigger rollback.
 # save! raises ActiveRecord::RecordInvalid — DOES trigger rollback.
 #
-# Given the method used, return whether the transaction would roll back.
-# Return :rolls_back or :silent_failure
+# Given the method used, return whether the first record is saved or rolled back
+# when the second operation fails.
+# Return :saved or :rolled_back
 # -----------------------------------------------------------------------------
-def transaction_behavior(save_method, second_op_raises)
-  if save_method == :save_bang && second_op_raises
-    :rolls_back       # exception -> rollback
-  elsif save_method == :save && second_op_raises
-    :silent_failure   # second step raises but first step's false return is ignored
-  elsif save_method == :save_bang && !second_op_raises
-    :rolls_back       # if first raises, rollback. If neither raises, commit.
-    # correction: let's be specific
-  else
-    :commits
-  end
-end
-
-# More precise version: what happens to FIRST record if second fails
 def first_record_state_on_second_failure(save_method)
-  case save_method
-  when :save       then :saved      # save returned false but no rollback -> first record IS saved
-  when :save_bang  then :rolled_back # save! raises on failure -> entire transaction rolls back
-  end
+  raise NotImplementedError, "TODO"
 end
 
 test("save on failure: first record stays saved (no rollback)",
@@ -104,27 +94,7 @@ test("save! on failure: first record is rolled back",
 # - Doing a "read-then-write" that must be atomic (check balance, then debit)
 # -----------------------------------------------------------------------------
 def needs_transaction?(scenario)
-  case scenario
-  when :single_user_update
-    # Just updating one user's name
-    :no_transaction_needed   # single write is atomic by default
-
-  when :transfer_funds
-    # Debit sender + credit receiver — both must succeed or neither
-    :needs_transaction
-
-  when :create_order_and_line_items
-    # Order is useless without its line items
-    :needs_transaction
-
-  when :send_email_after_save
-    # Save user, then send email — email failure shouldn't undo the save
-    :no_transaction_needed   # these should be decoupled via after_commit + job
-
-  when :decrement_inventory_and_create_order
-    # Must check stock and create order atomically
-    :needs_transaction
-  end
+  raise NotImplementedError, "TODO"
 end
 
 test("single update: no transaction needed",
@@ -153,22 +123,8 @@ test("inventory + order: needs transaction",
 # Return the safe callback name as a symbol.
 # -----------------------------------------------------------------------------
 def safe_callback_for_job_enqueueing
-  :after_commit
-  # after_commit fires AFTER the transaction commits — the record is guaranteed
-  # to exist in the database by the time the job worker looks for it.
+  raise NotImplementedError, "TODO"
 end
 
 test("safe callback for job enqueueing is after_commit",
   safe_callback_for_job_enqueueing, :after_commit)
-
-# =============================================================================
-# Test harness
-# =============================================================================
-def test(desc, actual, expected)
-  pass = actual == expected
-  puts "#{pass ? 'PASS' : 'FAIL'} #{desc}"
-  unless pass
-    puts "  expected: #{expected.inspect}"
-    puts "  received: #{actual.inspect}"
-  end
-end

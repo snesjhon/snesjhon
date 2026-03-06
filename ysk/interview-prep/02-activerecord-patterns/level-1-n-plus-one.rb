@@ -7,6 +7,18 @@
 # The signal: an association accessed inside a loop without includes.
 # The fix: add .includes(:association) to the initial query.
 
+# =============================================================================
+# Test harness
+# =============================================================================
+def test(desc, actual, expected)
+  pass = actual == expected
+  puts "#{pass ? 'PASS' : 'FAIL'} #{desc}"
+  unless pass
+    puts "  expected: #{expected.inspect}"
+    puts "  received: #{actual.inspect}"
+  end
+end
+
 # -----------------------------------------------------------------------------
 # Exercise 1
 # Count the number of DB queries a code pattern fires.
@@ -22,11 +34,7 @@
 #   -> 1 query for posts only = 1 total
 # -----------------------------------------------------------------------------
 def query_count(pattern, n)
-  case pattern
-  when :no_includes_access_user then 1 + n   # 1 for posts + N for users
-  when :includes_access_user    then 2        # always 2 regardless of N
-  when :no_includes_no_access   then 1        # only the initial query
-  end
+  raise NotImplementedError, "TODO"
 end
 
 test("no includes, 1 record: 1+1=2 queries",   query_count(:no_includes_access_user, 1),   2)
@@ -45,32 +53,7 @@ test("no access to user: 1 query",             query_count(:no_includes_no_acces
 # a loop, and was it eager-loaded before the loop?"
 # -----------------------------------------------------------------------------
 def has_n_plus_one?(snippet)
-  case snippet
-  when :posts_all_access_user_in_loop
-    # @posts = Post.all
-    # @posts.each { |p| puts p.user.name }
-    :n_plus_one
-
-  when :posts_includes_user_access_in_loop
-    # @posts = Post.includes(:user)
-    # @posts.each { |p| puts p.user.name }
-    :efficient
-
-  when :posts_all_no_loop_access
-    # @posts = Post.all
-    # @posts.count  <- doesn't access user
-    :efficient
-
-  when :posts_includes_but_accesses_comments_too
-    # @posts = Post.includes(:user)
-    # @posts.each { |p| p.comments.count }  <- comments NOT included!
-    :n_plus_one
-
-  when :posts_includes_user_and_comments
-    # @posts = Post.includes(:user, :comments)
-    # @posts.each { |p| puts p.user.name; p.comments.each { |c| puts c.body } }
-    :efficient
-  end
+  raise NotImplementedError, "TODO"
 end
 
 test("Post.all + user in loop = N+1",
@@ -91,34 +74,22 @@ test("includes(:user, :comments) = efficient",
 # -----------------------------------------------------------------------------
 # Exercise 3
 # Fix the N+1 by returning the correct .includes() chain.
-# Given what associations are accessed in the view, return the includes list.
+# Given what associations are accessed in the resolver or GraphQL type field,
+# return the includes list needed in the collection resolver.
 #
 # Example:
-#   view accesses: post.user.name
+#   type field accesses: post.user.name
 #   -> needs: [:user]
 #
-#   view accesses: post.user.name AND post.comments.each
+#   type field accesses: post.user.name AND post.comments.each
 #   -> needs: [:user, :comments]
 #
-#   view accesses: post.user.name AND post.comments.first.user.email
+#   type field accesses: post.user.name AND post.comments.first.user.email
 #   -> needs: [{ user: [] }, { comments: [:user] }]
-#   (comments' user needs to be included too)
+#   (comments' user needs to be included too — use DataLoader for deep nesting)
 # -----------------------------------------------------------------------------
 def required_includes(view_accesses)
-  case view_accesses
-  when :post_user_name
-    [:user]
-
-  when :post_user_name_and_comments
-    [:user, :comments]
-
-  when :post_user_and_comments_with_comment_user
-    # comments.first.user.email -> need comments AND comment's user
-    [:user, { comments: [:user] }]
-
-  when :post_only_title
-    []  # no associations accessed, no includes needed
-  end
+  raise NotImplementedError, "TODO"
 end
 
 test("accessing post.user.name needs [:user]",
@@ -136,15 +107,3 @@ test("accessing comment.user needs nested includes",
 test("no association access needs no includes",
   required_includes(:post_only_title),
   [])
-
-# =============================================================================
-# Test harness
-# =============================================================================
-def test(desc, actual, expected)
-  pass = actual == expected
-  puts "#{pass ? 'PASS' : 'FAIL'} #{desc}"
-  unless pass
-    puts "  expected: #{expected.inspect}"
-    puts "  received: #{actual.inspect}"
-  end
-end

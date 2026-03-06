@@ -10,11 +10,13 @@
 
 ## 1. Overview
 
-When someone types `https://myapp.com/posts` into a browser and hits Enter, a chain reaction begins. The browser sends an HTTP request. Rails receives it, decides what to do, talks to the database, and sends back a response.
+> **Stack**: Rails API-only backend + GraphQL + React frontend. There are no ERB views, no `redirect_to`, no `render :new`. Rails talks exclusively through a single `POST /graphql` endpoint. React owns the UI, form state, and navigation.
 
-Rails doesn't do this magically — it follows a strict contract. That contract is REST: a set of conventions that maps HTTP verbs and URLs to specific operations. Once you internalize that contract, the entire Rails framework becomes predictable.
+When a React component needs data or wants to write something, it sends a GraphQL document to `POST /graphql`. Rails receives it, routes it to the right resolver, the resolver talks to the database through ActiveRecord, and sends back JSON.
 
-Every Rails interview will test whether you understand that contract instinctively — not just whether you can copy a scaffold.
+Rails doesn't do this magically — it follows a contract. That contract is your GraphQL schema: a typed definition of every read (Query) and write (Mutation) your API supports. Once you internalize the schema as your source of truth, the entire stack becomes predictable.
+
+Every Rails + GraphQL interview will test whether you understand that contract instinctively — not just whether you can copy a scaffold.
 
 ---
 
@@ -22,7 +24,7 @@ Every Rails interview will test whether you understand that contract instinctive
 
 ### The Traffic Cop Analogy
 
-Think of your Rails app as a city. The **router** (`routes.rb`) is the city's street signs — it decides which street a car (request) belongs on. The **controller** is the traffic cop at the intersection — it looks at who's in the car (auth), checks if they're allowed through (params), and directs them to their destination (model, then view). The **model** is the city's filing office — the actual data lives there. The **view** is the printed document the clerk hands back.
+Think of your Rails app as a city. The **GraphQL schema** is the city's directory — it lists every operation available and what data each one returns. The **GraphqlController** is the city gate — every car (request) enters here with a query or mutation document. The **resolver** is the traffic cop at the specific intersection — it checks who's in the car (auth via context), validates what they're carrying (input types), and directs them to the filing office. The **model** is the city's filing office — the actual data lives there. The **resolver** hands back a typed response — not a view, but a JSON payload React consumes.
 
 The cop never does the filing. The filing office never checks IDs. Everyone has exactly one job.
 
@@ -30,33 +32,37 @@ The cop never does the filing. The filing office never checks IDs. Everyone has 
 
 ```mermaid
 graph TD
-    Browser[Browser Request]
-    Router[Router routes.rb]
-    Controller[Controller]
-    Auth[Auth Check]
-    Params[Strong Params]
+    React[React Component]
+    Endpoint[POST /graphql]
+    GQLController[GraphqlController#execute]
+    Schema[GraphQL Schema]
+    Resolver[Resolver]
+    Auth[Auth Check via context]
+    InputType[Input Type validation]
     Model[Model + DB]
-    View[View / JSON Response]
+    Payload[Typed Payload JSON]
 
-    Browser -->|HTTP verb + path| Router
-    Router -->|matches route| Controller
-    Controller --> Auth
-    Auth -->|unauthorized| Redirect[Redirect to login]
-    Auth -->|authorized| Params
-    Params -->|filtered data| Model
-    Model -->|record| View
-    View -->|HTML or JSON| Browser
+    React -->|query or mutation document| Endpoint
+    Endpoint --> GQLController
+    GQLController -->|builds context current_user| Schema
+    Schema -->|routes to| Resolver
+    Resolver --> Auth
+    Auth -->|unauthorized| Error[GraphQL error in response]
+    Auth -->|authorized| InputType
+    InputType -->|validated args| Model
+    Model -->|record| Payload
+    Payload -->|JSON to React| React
 ```
 
 ### The HTTP Verb Contract
 
-| Verb | Meaning | Safe? | Idempotent? |
-|------|---------|-------|-------------|
-| GET | Read only, never changes data | Yes | Yes |
-| POST | Create a new resource | No | No |
-| PATCH | Partial update of an existing resource | No | Yes |
-| PUT | Full replacement of an existing resource | No | Yes |
-| DELETE | Remove a resource | No | Yes |
+| Verb   | Meaning                                  | Safe? | Idempotent? |
+| ------ | ---------------------------------------- | ----- | ----------- |
+| GET    | Read only, never changes data            | Yes   | Yes         |
+| POST   | Create a new resource                    | No    | No          |
+| PATCH  | Partial update of an existing resource   | No    | Yes         |
+| PUT    | Full replacement of an existing resource | No    | Yes         |
+| DELETE | Remove a resource                        | No    | Yes         |
 
 ##### CLAUDE: This needs more attention, why is this important to make this distinction
 **Safe** = server state doesn't change. **Idempotent** = calling it twice has the same effect as once.
@@ -65,470 +71,641 @@ graph TD
 
 ## 3. Building Blocks — Progressive Learning
 
-### Level 1: HTTP Verbs & RESTful Routes — Why the Map Exists
+### Level 1: The GraphQL Contract — How Operations Replace Routes
 
 **Why this level matters**
 
-Before you write a single line of controller code, Rails needs to know: when this URL arrives, which action runs? The router makes that decision. If you misunderstand how routes map verbs to actions, you'll get `ActionController::RoutingError` and have no idea why.
+In REST you define 7 routes. In GraphQL you define **one** route (`POST /graphql`) and then declare every available operation in your schema. If you approach a Rails+GraphQL interview thinking in REST routes, you'll confuse yourself and your interviewer.
 
 **How to think about it**
 
-REST is a convention invented because the web needed a standard language. HTTP already had verbs (GET, POST, etc.) — REST said "let's use them consistently." `GET /posts` always means "give me the list." `POST /posts` always means "create one." `DELETE /posts/5` always means "remove post 5." Once everyone agreed on this, frameworks could generate the whole map automatically.
+GraphQL splits all operations into two categories: **Query** (reads, never changes data) and **Mutation** (writes, changes data). React sends a document that names one of these and declares exactly what fields it wants back. Rails routes everything to the GraphQL schema, which dispatches to the right resolver.
 
-`resources :posts` in `routes.rb` expands into 7 route definitions at once. That's the entire contract:
-
-```ruby
-# What `resources :posts` actually generates:
-# Verb    Path              Action   Purpose
-# GET     /posts            index    Show all posts
-# GET     /posts/new        new      Show the blank creation form
-# POST    /posts            create   Save the new post to DB
-# GET     /posts/:id        show     Show one specific post
-# GET     /posts/:id/edit   edit     Show the edit form for one post
-# PATCH   /posts/:id        update   Save edits to one post
-# DELETE  /posts/:id        destroy  Remove one post
-
-
-# There's always two actions for what feels like one operation
-
-new -> create
-edit -> update
-
-create | update -> process a form
-new | edit -> show a form
+The conceptual operations map like this:
 
 ```
+REST action   →  GraphQL equivalent       Who owns the "form"?
+──────────────────────────────────────────────────────────────
+index         →  Query.posts              Rails resolver
+show          →  Query.post(id:)          Rails resolver
+new           →  (doesn't exist in Rails) React component state
+create        →  Mutation.createPost      Rails resolver
+edit          →  (doesn't exist in Rails) React pre-fills from Query.post
+update        →  Mutation.updatePost      Rails resolver
+destroy       →  Mutation.deletePost      Rails resolver
+```
 
-**Walking through it**
+**`new` and `edit` no longer exist as Rails concerns.** React manages blank/pre-filled form state. Rails only receives the final submitted data via a mutation.
 
-Why GET for both `index` and `new`? Because they're both reads — no data changes. The browser is just asking "show me something."
+**Walking through it — the single route + schema**
 
-Why does `new` exist separately from `create`? Because there are two steps: (1) show the user a blank form (new), (2) receive the filled-in form (create). The form needs a page to live on — that's `new`. The submission is a separate request — that's `create`.
+Before reading a single line of code, ask: *what problem is this controller solving?*
 
-Why PATCH and not POST for update? POST means "create something new." PATCH means "modify something that already exists." Using the right verb communicates intent to anyone reading your API.
+In REST, Rails routing IS the dispatcher. `resources :posts` generates 7 routes, each mapped directly to a controller action. The route table decides what runs.
+
+In GraphQL, Rails routing is just a **door**. One route. Everything enters here, and the GraphQL schema takes over as the dispatcher from that point. This controller's only job is: receive the request, unpack the pieces, hand them to the schema, send back whatever the schema returns.
+
+That's it. If you understand that, every line below makes sense.
+
+---
+
+```ruby
+# config/routes.rb
+Rails.application.routes.draw do
+  post '/graphql', to: 'graphql#execute'
+end
+```
+
+**Why POST, even for reads?**
+
+Your instinct might be: "reads should be GET." That's REST thinking. In GraphQL, even a read (a `query`) is sent as POST — because every operation carries a body: the query document, the variables, the operation name. GET requests technically don't have bodies. POST is consistent and works for everything, so that's what GraphQL uses universally.
+
+---
+
+```ruby
+class GraphqlController < ApplicationController
+  def execute
+```
+
+**Why is this called `execute`?**
+
+It's not `index`, `show`, `create`. Those names are REST conventions tied to HTTP verbs and resource actions. This action has no REST equivalent — it doesn't correspond to one thing, it dispatches to *all* things. `execute` just means: "run whatever GraphQL operation was sent."
+
+---
+
+```ruby
+    variables = prepare_variables(params[:variables])
+```
+
+**Why does `prepare_variables` need to exist at all?**
+
+This is the one that trips people up. Here's the problem it's solving:
+
+When React sends a GraphQL mutation with user input, it doesn't hardcode the values into the query string. It separates them as *variables*:
+
+```graphql
+# The query document (static, reusable)
+mutation CreatePost($title: String!, $body: String!) {
+  createPost(input: { title: $title, body: $body }) {
+    post { id }
+    errors
+  }
+}
+```
+```json
+// The variables (the actual user data, sent separately)
+{ "title": "Hello", "body": "World" }
+```
+
+Those variables travel as `params[:variables]`. But here's the issue — Rails is an HTTP framework, not a GraphQL framework. It doesn't know what these variables are. Depending on how the client sent the request, `params[:variables]` can arrive in wildly different shapes:
+
+| Client sends it as    | What Rails gives you                               |
+| --------------------- | -------------------------------------------------- |
+| JSON body (correct)   | Already a Hash `{ "title" => "Hello" }`            |
+| A JSON-encoded string | A String `"{\"title\":\"Hello\"}"` — needs parsing |
+| Nothing at all        | `nil`                                              |
+| Rails form encoding   | An `ActionController::Parameters` object           |
+
+The GraphQL gem's `execute` method expects a plain Hash or nil. Give it a String and it breaks. Give it `ActionController::Parameters` and it may behave unpredictably.
+
+`prepare_variables` normalizes all of these cases into one consistent shape before they touch the schema. It's defensive infrastructure — a translator between "whatever HTTP sent" and "what GraphQL expects." Without it, you'd have a controller that works perfectly in development (where your test client sends clean JSON) and breaks in production when a client sends variables slightly differently.
+
+---
+
+```ruby
+    query     = params[:query]
+```
+
+This is the GraphQL document itself — the string the client sent. Example:
+
+```
+"query { posts { id title author { name } } }"
+```
+
+Rails doesn't parse it. It just stores it as a string and hands it to the schema, which parses and validates it.
+
+---
+
+```ruby
+    operation = params[:operationName]
+```
+
+The GraphQL spec allows a single request body to contain **multiple named operations**:
+
+```graphql
+query GetPost { post(id: 1) { title } }
+query GetPosts { posts { title } }
+```
+
+`operationName` tells the server which one to actually run. In practice, most requests contain one operation and this is either nil or matches it exactly. But it exists because the spec supports batching, and the gem requires the parameter slot to be present.
+
+---
+
+```ruby
+    context   = { current_user: current_user }
+```
+
+**Why a context hash instead of passing `current_user` as an argument?**
+
+Your resolver chain is deep: schema → mutation → resolver → maybe a sub-resolver for a nested type. If you needed to pass `current_user` as a function argument all the way down, every method signature would carry it.
+
+Context is the solution. It's a Hash that travels with the entire execution. Any resolver at any depth can access it via `context[:current_user]`. You build it once here, at the edge of your app where you have access to the session/token, and it's available everywhere inside the schema automatically.
+
+The `current_user` method on the right side is your standard Rails auth helper — Devise, JWT, session cookie, whatever your app uses. This is the only place in the GraphQL stack where auth *lookup* happens. From here on, resolvers only *check* context, they don't look anything up.
+
+---
+
+```ruby
+    result = MyAppSchema.execute(query, variables: variables,
+                                        context: context,
+                                        operation_name: operation)
+```
+
+This is the handoff. Rails is done. The GraphQL gem takes the query string, parses it, validates it against your schema, dispatches to the correct resolver, and runs the execution. `MyAppSchema` is your schema class — it knows about every type, every query field, every mutation. After this line, the schema is driving, not Rails.
+
+---
+
+```ruby
+    render json: result
+```
+
+**Why always HTTP 200, even on errors?**
+
+This is the part that most surprises people coming from REST. In REST, a validation failure is a `422`. An auth failure is `401`. In GraphQL, **every response is HTTP 200**. Success, failure, auth error — all 200.
+
+Errors don't live in the HTTP status. They live inside the JSON body, in an `errors` array at the top level or in a `errors` field inside a mutation payload. The HTTP layer just says "we received and processed your request." The GraphQL layer says "and here's what happened."
+
+The `result` object knows how to serialize itself to the correct shape:
+```json
+// Success
+{ "data": { "createPost": { "post": { "id": "1" }, "errors": [] } } }
+
+// Business logic failure (wrong channel — payload errors)
+{ "data": { "createPost": { "post": null, "errors": ["Title can't be blank"] } } }
+
+// Auth failure (right channel — execution errors)
+{ "data": null, "errors": [{ "message": "Not authenticated" }] }
+```
+
+React reads the body, not the status code. That's the contract.
+
+```json
+// What the React client sends for each operation:
+
+// Reading a list (replaces index action)
+query {
+  posts { id title publishedAt author { name } }
+}
+
+// Reading one record (replaces show action)
+query {
+  post(id: "5") { id title body author { name } }
+}
+
+// Creating (replaces new + create actions)
+mutation {
+  createPost(input: { title: "Hello", body: "World" }) {
+    post { id title }
+    errors
+  }
+}
+
+// Updating (replaces edit + update actions)
+mutation {
+  updatePost(id: "5", input: { title: "Updated" }) {
+    post { id title }
+    errors
+  }
+}
+
+// Deleting (replaces destroy action)
+mutation {
+  deletePost(id: "5") {
+    success
+    errors
+  }
+}
+```
 
 **The one thing to get right**
 
-`new` and `create` are a pair. `edit` and `update` are a pair. `new`/`edit` are GET (show a form). `create`/`update` are POST/PATCH (process the form). They're always two actions for what feels like one operation.
+In REST, `new` and `edit` are server-rendered form pages. In GraphQL+React, those don't exist — React owns the form. Rails only ever sees a **mutation with data**, never a "give me a blank form" request. The server-side pair is now just: **query (read)** or **mutation (write)**.
 
-**Scenario 1: Full CRUD — all 7 routes**
-```ruby
-# Use when users can do everything: browse, read, create, edit, delete
-# config/routes.rb
-Rails.application.routes.draw do
-  resources :posts
-  # → GET    /posts            index
-  # → GET    /posts/new        new
-  # → POST   /posts            create
-  # → GET    /posts/:id        show
-  # → GET    /posts/:id/edit   edit
-  # → PATCH  /posts/:id        update
-  # → DELETE /posts/:id        destroy
-end
+**Scenario 1: Full CRUD schema — all operations available**
+```json
+// Use when users can do everything: browse, read, create, edit, delete
+type Query {
+  posts: [Post!]!          # replaces index
+  post(id: ID!): Post      # replaces show
+}
+
+type Mutation {
+  createPost(input: CreatePostInput!): CreatePostPayload!   # replaces create
+  updatePost(id: ID!, input: UpdatePostInput!): UpdatePostPayload!  # replaces update
+  deletePost(id: ID!): DeletePostPayload!                   # replaces destroy
+}
+// new + edit don't exist — React manages form state
 ```
 
-**Scenario 2: Read-only — viewers can browse, not write**
-```ruby
-# Use for public resources: a blog feed, a product catalog
-# config/routes.rb
-Rails.application.routes.draw do
-  resources :posts, only: %i[index show]
-  # → GET /posts        index
-  # → GET /posts/:id    show
-  # Everything else (create, edit, destroy...) → 404
-end
+**Scenario 2: Read-only schema — viewers can browse, not write**
+```json
+// Use for public resources: a blog feed, a product catalog
+// Simply don't define Mutation for this type
+type Query {
+  posts: [Post!]!
+  post(id: ID!): Post
+}
+// No Mutation = no writes possible at the schema level
 ```
 
-**Scenario 3: Full CRUD minus hard delete**
-```ruby
-# Use when records are soft-deleted (flagged as deleted, not removed from DB)
-# config/routes.rb
-Rails.application.routes.draw do
-  resources :posts, except: %i[destroy]
-  # → GET    /posts            index
-  # → GET    /posts/new        new
-  # → POST   /posts            create
-  # → GET    /posts/:id        show
-  # → GET    /posts/:id/edit   edit
-  # → PATCH  /posts/:id        update
-  # (no destroy route — cannot be called, even by accident)
-end
+**Scenario 3: Full CRUD minus hard delete (soft-delete pattern)**
+```json
+// Use when records are soft-deleted (archived flag, not removed from DB)
+type Mutation {
+  createPost(input: CreatePostInput!): CreatePostPayload!
+  updatePost(id: ID!, input: UpdatePostInput!): UpdatePostPayload!
+  archivePost(id: ID!): ArchivePostPayload!   // sets archived_at, never destroys
+  // No deletePost — hard delete cannot be called, even by accident
+}
 ```
 
-**Scenario 4: Custom action on top of standard routes**
+**Scenario 4: Custom operation beyond CRUD**
+```json
+// Use when a resource needs a non-CRUD action (e.g. publish a draft)
+type Mutation {
+  publishPost(id: ID!): PublishPostPayload!   # flips published: true, sets published_at
+  unpublishPost(id: ID!): PublishPostPayload!
+}
+```
+
 ```ruby
-# Use when a resource needs a non-CRUD action (e.g. publish a draft)
-# config/routes.rb
-Rails.application.routes.draw do
-  resources :posts do
-    member     { patch :publish }   # PATCH /posts/:id/publish  (acts on one post)
-    collection { get   :drafts  }   # GET   /posts/drafts       (acts on all posts)
+# app/graphql/mutations/publish_post.rb
+module Mutations
+  class PublishPost < BaseMutation
+    argument :id, ID, required: true
+    field :post, Types::PostType, null: true
+    field :errors, [String], null: false
+
+    def resolve(id:)
+      post = current_user.posts.find(id)
+      if post.publish!
+        { post: post, errors: [] }
+      else
+        { post: nil, errors: post.errors.full_messages }
+      end
+    end
   end
 end
 ```
 
 **Scenario 5: Nested resource (comments belong to a post)**
-```ruby
-# Use when a resource only makes sense in the context of a parent
-# config/routes.rb
-Rails.application.routes.draw do
-  resources :posts do
-    resources :comments, only: %i[create destroy]
-    # → POST   /posts/:post_id/comments/:id   create
-    # → DELETE /posts/:post_id/comments/:id   destroy
-  end
-end
+```json
+// Use when a resource only makes sense in the context of a parent
+// Pass the parent ID as a mutation argument — no nested routes needed
+type Mutation {
+  createComment(postId: ID!, input: CreateCommentInput!): CreateCommentPayload!
+  deleteComment(id: ID!): DeleteCommentPayload!
+}
 ```
 
-> **Mental anchor**: "GET reads. POST creates. PATCH updates. DELETE removes. `resources` is just that rule applied to all 7 actions at once."
+> **Mental anchor**: "One route: POST /graphql. Two operation types: Query (reads) and Mutation (writes). No new/edit actions — React owns form state. Schema = your contract."
 
 ---
 
-**→ Bridge to Level 2**: Now that you know which URL triggers which action, you need to understand what each action actually *does* — and more importantly, *why* each of the seven exists as a separate action rather than one big handler.
+**→ Bridge to Level 2**: Now that you know the single route sends everything to the schema, you need to understand what a resolver does — it's the GraphQL equivalent of a controller action. Each query field and mutation field has a resolver that runs when React asks for it.
 
-### Level 2: The Seven Controller Actions — Why Each Exists
+### Level 2: Resolvers — What Replaces Controller Actions
 
 **Why this level matters**
 
-Interviewers will show you a controller and ask: "What does this do?" Or they'll describe a feature and ask: "Which actions do you need?" If you only know that `index` lists things, you'll struggle. You need to know the *semantic reason* each action exists.
+Interviewers will show you a resolver and ask: "What does this do?" Or they'll describe a feature and ask: "Which mutations do you need?" If you only know that resolvers "return data," you'll struggle. You need to know how authentication flows through context, how authorization is enforced, and what success vs. failure looks like in a mutation payload.
 
 **How to think about it**
 
-Rails actions map to user *intents*. Users have a limited number of intentions with any resource: browse, read one, fill in a form, submit a form, edit a form, submit edits, delete. Rails gives each intent its own named slot.
+Resolvers map to user *intents* — the same intents as REST actions, but without `new` and `edit` (React owns those). Each resolver: (1) checks auth via context, (2) loads the record, (3) validates/writes, (4) returns a typed payload.
 
-**Walking through it — each action explained**
+**Walking through it — each resolver explained**
 
-**`index` — "show me the collection"**
-
-The user wants to browse. This action loads a group of records (often filtered/sorted) and passes them to the view. It's a read — never changes data. Always think: "what's the right scope here? Should I filter? Paginate? Eager-load associations?"
+**`Query.posts` — "give me the collection" (replaces `index`)**
 
 ```ruby
-def index
-  @posts = Post.published.recent.includes(:user, :comments)
-  # Why includes? Because the view will access post.user.name and
-  # post.comments.count — without includes, that's an N+1 query.
+# app/graphql/types/query_type.rb
+field :posts, [Types::PostType], null: false
+
+def posts
+  Post.published.recent.includes(:user, :comments)
+  # includes because the PostType resolver will access post.user.name
+  # Without it: N+1 — one query per post to load the author
 end
 ```
 
-**`show` — "show me this one thing"**
-
-The user clicked on a specific record. This action fetches one record by ID. If it doesn't exist, Rails should raise `RecordNotFound` (which becomes a 404). Notice: `show` doesn't build the object — `set_post` in a `before_action` does that, so it's reused across show/edit/update/destroy.
+**`Query.post` — "give me this one record" (replaces `show`)**
 
 ```ruby
-def show
-  # @post already set by set_post before_action
-  # Just render the view — nothing else to do
+field :post, Types::PostType, null: true do
+  argument :id, ID, required: true
+end
+
+def post(id:)
+  Post.find(id)
+  # find raises RecordNotFound -> GraphQL returns null + error
 end
 ```
 
-**`new` — "give me a blank form"**
+**`Mutation.createPost` — "save what React submitted" (replaces `new` + `create`)**
 
-The user clicked "New Post." They need a blank form to fill in. This action builds an empty model object so the form builder has something to bind to. It does NOT save anything. No database write happens here.
-
-```ruby
-def new
-  @post = Post.new  # blank, unsaved — just gives the form a shape
-end
-```
-
-**`create` — "save what the user submitted"**
-
-The user filled in the form and hit Submit. The form data arrives as params. This action: (1) filters params (strong params), (2) tries to save, (3) on success redirects; on failure re-renders the form. The reason you re-render (not redirect) on failure is so the user sees their errors without losing what they typed.
+React manages the blank form. When the user submits, React sends this mutation. The resolver validates and saves — on failure it returns errors in the payload so React can display them inline.
 
 ```ruby
-def create
-  @post = current_user.posts.build(post_params)
-  if @post.save
-    redirect_to @post, notice: "Post created."
-    # redirect because the POST is done — GET the new resource
-  else
-    render :new, status: :unprocessable_entity
-    # re-render (not redirect) so @post still has error messages
-    # status: :unprocessable_entity needed for Turbo/Hotwire in Rails 7+
-  end
-end
-```
+# app/graphql/mutations/create_post.rb
+module Mutations
+  class CreatePost < BaseMutation
+    argument :input, Types::CreatePostInputType, required: true
 
-**`edit` — "give me a pre-filled form"**
+    field :post,   Types::PostType, null: true
+    field :errors, [String],        null: false
 
-Like `new`, but the form is pre-filled with the existing record's data. The user wants to change something. Again, no database write — just show the form.
+    def resolve(input:)
+      post = context[:current_user].posts.build(
+        title:     input[:title],
+        body:      input[:body],
+        published: input[:published] || false
+      )
 
-```ruby
-def edit
-  # @post already set by set_post — the form builder populates itself from @post
-end
-```
-
-**`update` — "save the edits"**
-
-Like `create`, but for modifying an existing record. The pattern is identical: filter params, try to update, redirect on success or re-render on failure.
-
-```ruby
-def update
-  if @post.update(post_params)
-    redirect_to @post, notice: "Post updated."
-  else
-    render :edit, status: :unprocessable_entity
-  end
-end
-```
-
-**`destroy` — "remove this record"**
-
-The user confirmed they want to delete. This action destroys the record and redirects to a sensible fallback (the index, usually). There's no "failure" state to re-render — either it destroys or it raises an exception.
-
-```ruby
-def destroy
-  @post.destroy
-  redirect_to posts_path, notice: "Post deleted."
-end
-```
-
-**The full controller — seeing the whole picture**
-
-```ruby
-class PostsController < ApplicationController
-  before_action :authenticate_user!
-  before_action :set_post, only: %i[show edit update destroy]
-  # Why only those four? Because index, new, and create don't need a specific post yet.
-
-  def index
-    @posts = Post.published.recent.includes(:user, :comments)
-  end
-
-  def show; end   # @post from set_post, view handles the rest
-
-  def new
-    @post = Post.new
-  end
-
-  def create
-    @post = current_user.posts.build(post_params)
-    if @post.save
-      redirect_to @post, notice: "Post created."
-    else
-      render :new, status: :unprocessable_entity
+      if post.save
+        { post: post, errors: [] }
+      else
+        { post: nil, errors: post.errors.full_messages }
+        # No redirect_to. No render :new. React reads errors[] and displays them.
+      end
     end
   end
+end
+```
 
-  def edit; end   # @post from set_post, view handles the rest
+**`Mutation.updatePost` — "save the edits" (replaces `edit` + `update`)**
 
-  def update
-    if @post.update(post_params)
-      redirect_to @post, notice: "Post updated."
-    else
-      render :edit, status: :unprocessable_entity
+React pre-fills the edit form by calling `Query.post` first (its own concern). When the user submits, this mutation runs.
+
+```ruby
+module Mutations
+  class UpdatePost < BaseMutation
+    argument :id,    ID,                         required: true
+    argument :input, Types::UpdatePostInputType, required: true
+
+    field :post,   Types::PostType, null: true
+    field :errors, [String],        null: false
+
+    def resolve(id:, input:)
+      post = context[:current_user].posts.find(id)
+      # Scoped to current_user — prevents user A from updating user B's posts (IDOR)
+
+      if post.update(input.to_h.compact)
+        { post: post, errors: [] }
+      else
+        { post: nil, errors: post.errors.full_messages }
+      end
     end
-  end
-
-  def destroy
-    @post.destroy
-    redirect_to posts_path, notice: "Post deleted."
-  end
-
-  private
-
-  def set_post
-    @post = Post.find(params[:id])
-    # find raises RecordNotFound if missing -> auto 404
-  end
-
-  def post_params
-    params.require(:post).permit(:title, :body, :excerpt, :published)
   end
 end
 ```
 
-> **Mental anchor**: "index/show/new/edit are reads. create/update/destroy are writes. new+create are a pair (form then submit). edit+update are a pair (form then submit)."
+**`Mutation.deletePost` — "remove this record" (replaces `destroy`)**
+
+```ruby
+module Mutations
+  class DeletePost < BaseMutation
+    argument :id, ID, required: true
+
+    field :success, Boolean, null: false
+    field :errors,  [String], null: false
+
+    def resolve(id:)
+      post = context[:current_user].posts.find(id)
+      post.destroy
+      { success: true, errors: [] }
+    rescue ActiveRecord::RecordNotFound
+      { success: false, errors: ["Post not found"] }
+    end
+  end
+end
+```
+
+**The full schema + base mutation — seeing the whole picture**
+
+```ruby
+# app/graphql/types/mutation_type.rb
+module Types
+  class MutationType < Types::BaseObject
+    field :create_post, mutation: Mutations::CreatePost
+    field :update_post, mutation: Mutations::UpdatePost
+    field :delete_post, mutation: Mutations::DeletePost
+  end
+end
+
+# app/graphql/mutations/base_mutation.rb
+module Mutations
+  class BaseMutation < GraphQL::Schema::Mutation
+    # Convenience helper — any resolver can call current_user
+    def current_user
+      context[:current_user] || raise(GraphQL::ExecutionError, "Not authenticated")
+    end
+  end
+end
+```
+
+> **Mental anchor**: "Resolvers replace controller actions. Context carries current_user (auth). Payload carries post + errors (result). No redirect_to. No render :new. React reads the payload and decides what to show."
 
 ---
 
-**→ Bridge to Level 3**: The controller knows what to do, but how does it know which data from the form it's allowed to touch? That's the job of strong parameters — the security layer that prevents users from sending rogue fields.
+**→ Bridge to Level 3**: The resolver knows what to do, but how does it know which fields from the mutation it's allowed to touch? In REST that's strong params. In GraphQL that's **input types** — a typed schema declaration that whitelist fields before they reach your resolver.
 
-### Level 3: Strong Parameters — The Security Layer
+### Level 3: Input Types — The GraphQL Security Layer
 
 **Why this level matters**
 
-Without strong parameters, a malicious user could submit `post[user_id]=99` in a form and set themselves as the admin, or submit `user[role]=admin` to escalate privileges. This is called **mass assignment vulnerability** — it was a real Rails exploit in 2012 that affected GitHub. Strong params were invented to prevent it.
+The underlying threat is identical to strong params: a malicious client sends `role: "admin"` or `user_id: 99` in the mutation payload, hoping the resolver passes it through to the model. Input types prevent this — you declare an explicit set of allowed fields in the schema itself, and anything outside that set is rejected by the GraphQL layer before your resolver even runs.
 
 **How to think about it**
 
-Your controller receives a `params` hash that contains everything the client sent — URL params, form fields, JSON body. The client is untrusted. Before you pass any of that to the model, you must declare an explicit whitelist: "I allow exactly these fields and nothing else."
+An input type is a strongly-typed whitelist. You declare it once in the schema. Every mutation that uses it gets the same protection automatically. No field exists unless you explicitly define it.
 
-`require` says "this key must exist in params or raise an error." `permit` says "from the nested hash, only allow these specific keys."
+```
+Client sends mutation:
+  createPost(input: {
+    title: "Hello"
+    body:  "World"
+    role:  "admin"   ← attacker tries to inject this
+  })
+
+GraphQL input type only defines: title, body, published
+→ role is rejected at the schema level with an argument error
+→ resolver never sees it
+```
 
 **Walking through it**
 
-```
-User submits form with:
-  post[title] = "Hello"
-  post[body]  = "World"
-  post[admin] = true      ← attacker tried to inject this
+```ruby
+# app/graphql/types/create_post_input_type.rb
+module Types
+  class CreatePostInputType < Types::BaseInputObject
+    argument :title,     String,  required: true
+    argument :body,      String,  required: true
+    argument :published, Boolean, required: false
 
-params = {
-  post: {
-    title: "Hello",
-    body: "World",
-    admin: true            ← in params, but not permitted
-  }
-}
+    # role, user_id, admin — not listed here = cannot be sent
+  end
+end
 
-params.require(:post)      => { title: "Hello", body: "World", admin: true }
-      .permit(:title, :body)  => { title: "Hello", body: "World" }
-                              # admin is silently dropped
+# app/graphql/types/update_post_input_type.rb
+module Types
+  class UpdatePostInputType < Types::BaseInputObject
+    argument :title,     String,  required: false
+    argument :body,      String,  required: false
+    argument :published, Boolean, required: false
+    # All optional — only fields the client sends get updated
+  end
+end
 ```
 
 ```ruby
-# Simple flat params
-def post_params
-  params.require(:post).permit(:title, :body, :excerpt, :published)
-end
-
-# Array fields (tags, ids)
-def post_params
-  params.require(:post).permit(:title, :body, tags: [])
-  # tags: [] permits an array of scalars
-end
-
-# Nested model attributes (accepts_nested_attributes_for)
-def post_params
-  params.require(:post).permit(
-    :title, :body,
-    comments_attributes: [:id, :body, :_destroy]
+# In the resolver, input arrives as a typed object — not a raw hash
+def resolve(input:)
+  post = current_user.posts.build(
+    title:     input[:title],
+    body:      input[:body],
+    published: input[:published] || false
+    # input[:role] doesn't exist — the type system removed it
   )
+end
+
+# For update: use .to_h.compact to skip nil (unset) fields
+def resolve(id:, input:)
+  post = current_user.posts.find(id)
+  post.update(input.to_h.compact)
+end
+```
+
+**Array and nested input types**
+
+```ruby
+# Array of scalars (tags)
+argument :tags, [String], required: false
+
+# Nested input type (comment inside a post mutation)
+argument :comments, [Types::CommentInputType], required: false
+
+module Types
+  class CommentInputType < Types::BaseInputObject
+    argument :body, String, required: true
+  end
 end
 ```
 
 **The one thing to get right**
 
-Never pass `params[:post]` directly to `Post.new`. Always go through `post_params`. And never use `permit!` (which allows everything) in production — it defeats the entire purpose.
+Never pass raw arguments directly to `Post.new` — always go through the input type. And never skip defining an input type for mutations that accept user data. A mutation with no input type is the GraphQL equivalent of `params.permit!`.
 
 ```ruby
-# NEVER: mass assignment with raw params
-Post.new(params[:post])
+# NEVER: pass raw args hash directly to model
+def resolve(**args)
+  Post.new(args)          # no whitelist — mass assignment vulnerability
 
-# NEVER: permit everything
-params.require(:post).permit!
-
-# ALWAYS: explicit whitelist
-params.require(:post).permit(:title, :body, :excerpt, :published)
+# ALWAYS: go through a typed input
+def resolve(input:)
+  Post.new(title: input[:title], body: input[:body])
 ```
 
-> **Mental anchor**: "require says 'this key must exist.' permit says 'only these inner keys get through.' Everything else is silently dropped."
+> **Mental anchor**: "Input types are strong params for GraphQL. Declare the allowed fields in the schema — anything else is rejected before your resolver runs."
 
 ---
 
-**→ Bridge to Level 4**: So far the controller has been responding with HTML views. But what when the client is a mobile app or a JavaScript SPA? It expects JSON. The controller needs to respond differently based on who's asking.
+**→ Bridge to Level 4**: The resolver returns data or errors. But GraphQL has two distinct error channels — and using the wrong one is a common mistake that makes debugging painful for React.
 
-### Level 4: JSON API Mode — The Same Controller, Different Output
+### Level 4: Error Handling in GraphQL — Two Error Channels
 
 **Why this level matters**
 
-Modern apps often serve multiple clients: a web UI, a mobile app, a third-party integration. They all want the same data but in different formats. Rails has a clean way to handle this without duplicating controllers.
+GraphQL always returns HTTP 200. This surprises people. Whether a mutation succeeded or failed, the HTTP status is 200. Errors live *inside* the JSON body. There are two channels for them — using the wrong one for the wrong situation breaks how React handles failures.
 
 **How to think about it**
 
-The request includes a `Content-Type` and `Accept` header that tells Rails what format the client wants. `respond_to` lets you define what to send for each format. For dedicated API controllers (like `Api::V1::PostsController`), skip this — just always render JSON.
+```
+Channel 1: GraphQL execution errors  (top-level "errors" array)
+  → For: authentication failures, schema violations, unhandled exceptions
+  → React: the whole operation failed, show a generic error
+
+Channel 2: Payload errors field      (inside the mutation result)
+  → For: business logic failures — validation errors, "post not found", etc.
+  → React: the mutation ran, but something specific went wrong — show it inline
+```
 
 **Walking through it**
 
 ```ruby
-# Hybrid controller — responds to both HTML and JSON
-def index
-  @posts = Post.published.recent.includes(:user)
-
-  respond_to do |format|
-    format.html  # renders app/views/posts/index.html.erb
-    format.json { render json: @posts }
-  end
+# Channel 1: Execution error — use for auth failures and system errors
+# Raises immediately, resolver stops, goes into top-level "errors" array
+def current_user
+  context[:current_user] || raise(GraphQL::ExecutionError, "Not authenticated")
 end
 
-# Dedicated API controller (simpler — always JSON)
-module Api
-  module V1
-    class PostsController < ApplicationController
-      before_action :authenticate_api_user!
-      before_action :set_post, only: %i[show update destroy]
+# Response shape React sees:
+# {
+#   "data": { "createPost": null },
+#   "errors": [{ "message": "Not authenticated", "locations": [...] }]
+# }
+```
 
-      def index
-        posts = Post.published.recent.includes(:user)
-                    .page(params[:page]).per(25)
+```ruby
+# Channel 2: Payload errors — use for validation and business logic failures
+# Resolver completes normally, errors are in the mutation's return value
+def resolve(input:)
+  post = current_user.posts.build(input.to_h)
 
-        render json: {
-          posts: posts.map { |p| serialize_post(p) },
-          meta: {
-            total_count: posts.total_count,
-            current_page: posts.current_page
-          }
-        }
-      end
-
-      def show
-        render json: serialize_post(@post)
-      end
-
-      def create
-        post = current_user.posts.build(post_params)
-        if post.save
-          render json: serialize_post(post), status: :created
-        else
-          render json: { errors: post.errors.full_messages },
-                 status: :unprocessable_entity
-        end
-      end
-
-      def update
-        if @post.update(post_params)
-          render json: serialize_post(@post)
-        else
-          render json: { errors: @post.errors.full_messages },
-                 status: :unprocessable_entity
-        end
-      end
-
-      def destroy
-        @post.destroy
-        head :no_content  # 204 — success, no body
-      end
-
-      private
-
-      def set_post
-        @post = current_user.posts.find(params[:id])
-        # Scoped to current_user: prevents user A from accessing user B's posts
-        # This is preventing IDOR (Insecure Direct Object Reference)
-      end
-
-      def post_params
-        params.require(:post).permit(:title, :body, :excerpt, :published)
-      end
-
-      def serialize_post(post)
-        {
-          id: post.id,
-          title: post.title,
-          body: post.body,
-          published: post.published,
-          author: post.user.name,
-          created_at: post.created_at.iso8601
-          # iso8601: "2024-01-15T10:30:00Z" — timezone-safe string format
-        }
-      end
-    end
+  if post.save
+    { post: post, errors: [] }
+  else
+    { post: nil, errors: post.errors.full_messages }
+    # Response React sees:
+    # { "data": { "createPost": { "post": null, "errors": ["Title can't be blank"] } } }
+    # React reads errors[] and shows them next to the form field
   end
 end
 ```
 
-**Key API decisions to mention in interviews:**
+**Payload type design — every mutation needs this shape**
 
-- **Namespace** (`Api::V1`): allows breaking changes in V2 without affecting V1 clients
-- **Pagination**: never return unbounded collections — use `kaminari` or `pagy`
-- **Scope finds to current_user**: prevents IDOR attacks
-- **`head :no_content`** for DELETE: 204 status, no body — this is the correct REST response
-- **`iso8601`** for timestamps: consistent, parseable across all clients
-- **`status: :created`** (201) for successful POST: tells client a resource was created
+```ruby
+# Every mutation payload follows the same contract:
+# post (or nil on failure) + errors (empty on success, messages on failure)
 
-> **Mental anchor**: "HTML controller shows views. API controller renders JSON. Both use the same actions, same strong params, same auth. Only the output format changes."
+module Types
+  class CreatePostPayload < Types::BaseObject
+    field :post,   Types::PostType, null: true   # null on failure
+    field :errors, [String],        null: false  # [] on success
+  end
+
+  class UpdatePostPayload < Types::BaseObject
+    field :post,   Types::PostType, null: true
+    field :errors, [String],        null: false
+  end
+
+  class DeletePostPayload < Types::BaseObject
+    field :success, Boolean, null: false
+    field :errors,  [String], null: false
+  end
+end
+```
+
+**Key GraphQL API decisions to mention in interviews:**
+
+- **Always include `errors: [String!]!` in every mutation payload** — React needs a consistent contract
+- **Execution errors for auth/schema failures, payload errors for business logic** — mixing them makes React error handling unpredictable
+- **Scope finds to `current_user`** — `Post.find(id)` lets any user access any post; `current_user.posts.find(id)` prevents IDOR
+- **`includes` in query resolvers** — if the PostType exposes `author`, the resolver must `includes(:user)` or you have an N+1
+- **Pagination**: never return unbounded collections — use `first`/`after` cursor arguments with connections
+
+> **Mental anchor**: "GraphQL is always HTTP 200. Auth errors → execution errors (top-level). Validation failures → payload errors field. React reads errors[], not HTTP status."
 
 ---
 
@@ -536,59 +713,63 @@ end
 
 ```mermaid
 graph TD
-    Q1{What does the request want?}
+    Q1{What does React need?}
 
-    Q1 -- List of records --> index
-    Q1 -- One specific record --> show
-    Q1 -- A blank form to fill in --> new
-    Q1 -- Submit a new record --> create
-    Q1 -- A pre-filled form to edit --> edit
-    Q1 -- Submit edits --> update
-    Q1 -- Remove a record --> destroy
+    Q1 -- List of records --> QueryPosts[Query.posts — load with includes]
+    Q1 -- One specific record --> QueryPost[Query.post id: — find by id]
+    Q1 -- A blank form --> ReactState[React component state — Rails not involved]
+    Q1 -- Submit a new record --> MutCreate[Mutation.createPost input:]
+    Q1 -- A pre-filled form --> QueryPost2[Query.post id: — React fills form from response]
+    Q1 -- Submit edits --> MutUpdate[Mutation.updatePost id: input:]
+    Q1 -- Remove a record --> MutDelete[Mutation.deletePost id:]
 
-    create --> Q2{Did it save?}
-    Q2 -- Yes --> Redirect[redirect_to record]
-    Q2 -- No --> Rerender[render :new, status: 422]
+    MutCreate --> Q2{Did it save?}
+    Q2 -- Yes --> PayloadSuccess[return post: post, errors: empty]
+    Q2 -- No --> PayloadFail[return post: nil, errors: messages]
 
-    update --> Q3{Did it update?}
-    Q3 -- Yes --> Redirect2[redirect_to record]
-    Q3 -- No --> Rerender2[render :edit, status: 422]
+    MutUpdate --> Q3{Did it update?}
+    Q3 -- Yes --> PayloadSuccess2[return post: post, errors: empty]
+    Q3 -- No --> PayloadFail2[return post: nil, errors: messages]
 ```
 
 ---
 
 ## 5. Common Gotchas
 
-**1. Re-rendering vs Redirecting on failure**
+**1. Returning an execution error for a validation failure**
 
-On failed create/update, you `render :new` (not `redirect_to new_post_path`). Why? Because redirect loses `@post` — the object with its validation errors. The view needs `@post.errors` to show what went wrong.
+Raising `GraphQL::ExecutionError` for a validation failure (e.g. blank title) is the wrong channel. It makes React think the whole operation is broken. Return `{ post: nil, errors: post.errors.full_messages }` in the payload instead. Reserve execution errors for auth failures and unexpected exceptions.
 
-**2. `status: :unprocessable_entity` on re-render (Rails 7+)**
+**2. N+1 in resolvers**
 
-With Turbo (Rails 7 default), if you `render :new` without `status: 422`, Turbo won't replace the form — it silently swallows the response. Always add `status: :unprocessable_entity`.
+If `PostType` exposes `author { name }`, every post resolver will fire `User.find(post.user_id)`. Add `includes(:user)` in the query resolver, or use the `graphql-batch` gem's DataLoader pattern for nested fields. This is the #1 GraphQL performance bug.
 
-**3. Strong params missing a field = silent blank**
+**3. Input type missing a field = silent nil in the model**
 
-If your form submits `title` but you forgot to permit `:title`, the save will succeed with a blank title. No error. The user is confused. Always check your `permit` list matches your form fields.
+If the client sends `title` but you forgot to declare `argument :title` in the input type, GraphQL drops it silently. The resolver receives `nil` for title, the model saves with a blank title, no error. Always check your input type arguments match what the client sends.
 
-**4. Scoping find to current_user in APIs**
+**4. Not scoping find to `current_user`**
 
-`Post.find(params[:id])` lets any authenticated user access any post. `current_user.posts.find(params[:id])` restricts to posts they own. Always scope finds in APIs.
+`Post.find(id)` lets any authenticated user read or mutate any post by ID. `current_user.posts.find(id)` restricts to posts they own. Skipping this is an IDOR (Insecure Direct Object Reference) vulnerability. Always scope in resolvers.
 
-**5. `head :no_content` vs `render json: {}`**
+**5. Forgetting `errors: []` on success**
 
-For DELETE, return 204 with no body (`head :no_content`). Returning `render json: {}` returns 200 with an empty JSON object — this is technically wrong (200 implies a body with meaningful content).
+If a mutation payload returns `{ post: post }` on success without `errors: []`, React can't distinguish between "it worked" and "it failed silently." The contract must be consistent: always return both `post` and `errors`, one of which will be empty.
+
+**6. Not including `:user` when the type needs `author`**
+
+In a query resolver: `Post.published.recent` → if `PostType` exposes `author`, you have N+1. Fix: `Post.published.recent.includes(:user)`. The signal: any association accessed inside a type field requires `includes` in the resolver that loads the collection.
 
 ---
 
 ## 6. Practice Scenarios
 
-Work through these before your interview. For each, decide: which action? which verb + path? what does success look like? what does failure look like?
+Work through these before your interview. For each, decide: which operation type (Query or Mutation)? what does the input type look like? what does success look like? what does failure look like?
 
-- [ ] "Users can publish a post (flip it from draft to published)" → which action? custom route or standard?
-- [ ] "An API endpoint to get all posts by a specific user" → which verb + path? how do you scope it?
-- [ ] "Create a comment nested under a post" → nested resource? which controller handles it?
-- [ ] "An admin can delete any post; a regular user can only delete their own" → where does that logic live?
-- [ ] "The create action always saves with a blank title" → where's the bug? (see `rails-debug-challenge` Scenario 1)
+- [ ] "Users can publish a post (flip it from draft to published)" → which mutation? what does the payload return?
+- [ ] "Get all posts by a specific user" → Query field or argument filter? how do you scope it to prevent reading other users' posts?
+- [ ] "Create a comment nested under a post" → which mutation? how does `postId` arrive — argument or input field?
+- [ ] "An admin can delete any post; a regular user can only delete their own" → where does that authorization logic live in the resolver?
+- [ ] "A createPost mutation always saves with a blank title" → where's the bug? input type missing the argument? resolver not reading it? model validation not present?
 
-**Companion exercises**: Run `ruby 01-rails-crud-api/level-1-routes-and-verbs.rb` to test your intuition on routes, then work through levels 2 and 3.
+**Companion exercises**: Run `ruby 01-rails-crud-api/level-1-routes-and-verbs.rb` to test your intuition on operations, then work through levels 2 and 3.

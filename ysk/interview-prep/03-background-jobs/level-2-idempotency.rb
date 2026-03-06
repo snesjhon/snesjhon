@@ -7,6 +7,20 @@
 # An idempotent job: running it 10 times has the same effect as running it once.
 # Why it matters: Sidekiq retries on failure. Your job WILL run more than once.
 
+require "set"
+
+# =============================================================================
+# Test harness
+# =============================================================================
+def test(desc, actual, expected)
+  pass = actual == expected
+  puts "#{pass ? 'PASS' : 'FAIL'} #{desc}"
+  unless pass
+    puts "  expected: #{expected.inspect}"
+    puts "  received: #{actual.inspect}"
+  end
+end
+
 # -----------------------------------------------------------------------------
 # Exercise 1
 # Simulate a job that's NOT idempotent.
@@ -16,27 +30,16 @@
 # Then implement an idempotent version using a "seen" set.
 # Return the count after N runs with a given event ID.
 # -----------------------------------------------------------------------------
-# Non-idempotent version
+
+# Non-idempotent version — increments every call
 def track_pageview_naive(page_id, runs)
-  count = 0
-  runs.times { count += 1 }
-  count
+  raise NotImplementedError, "TODO"
 end
 
 # Idempotent version — uses a set to track which events were already processed
 def track_pageview_idempotent(page_id, event_ids)
-  seen = Set.new
-  count = 0
-  event_ids.each do |event_id|
-    unless seen.include?(event_id)
-      seen.add(event_id)
-      count += 1
-    end
-  end
-  count
+  raise NotImplementedError, "TODO"
 end
-
-require "set"
 
 test("naive: 3 runs = count of 3 (wrong for retry scenario)",
   track_pageview_naive("home", 3), 3)
@@ -59,17 +62,7 @@ test("idempotent: 3 unique events = count of 3",
 # Return the number of times the charge was actually executed.
 # -----------------------------------------------------------------------------
 def charge_order(order, times_job_runs)
-  charge_count = 0
-  times_job_runs.times do
-    # Idempotency check: if already charged, skip
-    next if order[:charged]
-
-    # Process the charge
-    charge_count += 1
-    order[:charged] = true
-    order[:charge_id] = "ch_#{rand(10000)}"
-  end
-  charge_count
+  raise NotImplementedError, "TODO"
 end
 
 order_a = { id: 1, total: 100, charged: false }
@@ -93,39 +86,7 @@ test("uncharged order runs once job once",
 # end state as calling it once.
 # -----------------------------------------------------------------------------
 def is_idempotent?(implementation)
-  case implementation
-  when :create_record_without_check
-    # User.create!(email: email)
-    # On retry: creates a duplicate user -> NOT idempotent
-    :not_idempotent
-
-  when :find_or_create_by
-    # User.find_or_create_by(email: email)
-    # On retry: finds the existing user, doesn't create again -> idempotent
-    :idempotent
-
-  when :send_email_every_time
-    # UserMailer.welcome(user).deliver_now
-    # No check — sends on every run -> NOT idempotent
-    :not_idempotent
-
-  when :send_email_with_sent_at_check
-    # return if user.welcome_email_sent_at.present?
-    # UserMailer.welcome(user).deliver_now
-    # user.update_columns(welcome_email_sent_at: Time.current)
-    # Idempotent — checks before sending
-    :idempotent
-
-  when :increment_counter
-    # account.increment!(:login_count)
-    # On retry: increments again -> NOT idempotent
-    :not_idempotent
-
-  when :set_status_to_value
-    # account.update!(status: :active)
-    # On retry: sets to same value again -> idempotent (same result)
-    :idempotent
-  end
+  raise NotImplementedError, "TODO"
 end
 
 test("create without check: not idempotent",  is_idempotent?(:create_record_without_check),  :not_idempotent)
@@ -142,27 +103,7 @@ test("set status to value: idempotent",        is_idempotent?(:set_status_to_val
 # :after_create or :after_commit
 # -----------------------------------------------------------------------------
 def safe_callback_for(use_case)
-  case use_case
-  when :enqueue_background_job
-    # Jobs may run before transaction commits -> after_commit
-    :after_commit
-
-  when :send_email_via_job
-    # Same issue as enqueueing a job
-    :after_commit
-
-  when :update_in_memory_cache
-    # In-memory, no external process involved, after_create is fine
-    :after_create
-
-  when :trigger_webhook_to_external_service
-    # External call — must happen after commit or external service has data we haven't saved
-    :after_commit
-
-  when :log_to_local_logger
-    # Local, fast, no external dependency
-    :after_create
-  end
+  raise NotImplementedError, "TODO"
 end
 
 test("enqueue job: use after_commit",         safe_callback_for(:enqueue_background_job),        :after_commit)
@@ -170,15 +111,3 @@ test("send email via job: use after_commit",  safe_callback_for(:send_email_via_
 test("update memory cache: after_create ok",  safe_callback_for(:update_in_memory_cache),        :after_create)
 test("webhook: use after_commit",             safe_callback_for(:trigger_webhook_to_external_service), :after_commit)
 test("local log: after_create ok",            safe_callback_for(:log_to_local_logger),           :after_create)
-
-# =============================================================================
-# Test harness
-# =============================================================================
-def test(desc, actual, expected)
-  pass = actual == expected
-  puts "#{pass ? 'PASS' : 'FAIL'} #{desc}"
-  unless pass
-    puts "  expected: #{expected.inspect}"
-    puts "  received: #{actual.inspect}"
-  end
-end

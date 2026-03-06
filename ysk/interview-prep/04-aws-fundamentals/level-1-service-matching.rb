@@ -13,58 +13,25 @@
 #   CloudFront    -> CDN (edge caching, static assets close to users)
 #   IAM           -> access control (who can do what to which resource)
 
+# =============================================================================
+# Test harness
+# =============================================================================
+def test(desc, actual, expected)
+  pass = actual == expected
+  puts "#{pass ? 'PASS' : 'FAIL'} #{desc}"
+  unless pass
+    puts "  expected: #{expected.inspect}"
+    puts "  received: #{actual.inspect}"
+  end
+end
+
 # -----------------------------------------------------------------------------
 # Exercise 1
 # Map each requirement to the correct AWS service.
 # Return a symbol: :s3, :ec2, :rds, :elasticache, :sqs, :cloudfront, :iam
 # -----------------------------------------------------------------------------
 def service_for(requirement)
-  case requirement
-  when :store_user_uploaded_images
-    # Files that should survive server restarts and scale across servers
-    :s3
-
-  when :run_rails_app_code
-    # Virtual machine that runs your Puma process
-    :ec2
-
-  when :postgresql_database
-    # Managed relational DB — backups, failover, patching handled for you
-    :rds
-
-  when :redis_for_sidekiq
-    # Managed Redis — Sidekiq's backend queue
-    :elasticache
-
-  when :cache_user_profiles_for_1_hour
-    # In-memory key/value store with TTL
-    :elasticache
-
-  when :durable_job_queue_survives_redis_crash
-    # SQS messages are persisted — Redis messages can be lost
-    :sqs
-
-  when :serve_js_css_images_fast_globally
-    # CDN caches at edge locations close to users
-    :cloudfront
-
-  when :ec2_instance_needs_s3_write_access
-    # Attach a role to the EC2 instance — no credentials in code
-    :iam
-
-  when :session_storage_across_multiple_servers
-    # Sessions must be in a shared store; all app servers read from it
-    :elasticache
-
-  when :store_database_backups
-    # S3 is cheap, durable (11 nines), good for large binary files
-    :s3
-
-  when :distribute_traffic_across_10_app_servers
-    # Application Load Balancer sits in front of EC2 instances
-    # Note: ALB is part of EC2/ELB family — :ec2 as the compute category
-    :ec2
-  end
+  raise NotImplementedError, "TODO"
 end
 
 test("store user images -> S3",
@@ -103,23 +70,7 @@ test("store DB backups -> S3",
 # Return :multi_az or :read_replica for each scenario.
 # -----------------------------------------------------------------------------
 def rds_feature_for(scenario)
-  case scenario
-  when :primary_db_instance_goes_down
-    # Multi-AZ has a standby that automatically promotes -> use Multi-AZ
-    :multi_az
-
-  when :analytics_queries_overloading_primary
-    # Read replica offloads read traffic -> use Read Replica
-    :read_replica
-
-  when :reduce_downtime_during_maintenance
-    # Multi-AZ failover makes maintenance transparent
-    :multi_az
-
-  when :reporting_queries_taking_too_long
-    # Point reports at the read replica, not the primary
-    :read_replica
-  end
+  raise NotImplementedError, "TODO"
 end
 
 test("primary goes down -> Multi-AZ handles failover",
@@ -140,27 +91,7 @@ test("reporting queries -> Read Replica",
 # Return :public_url, :presigned_url, or :direct_upload
 # -----------------------------------------------------------------------------
 def s3_pattern_for(scenario)
-  case scenario
-  when :user_invoice_pdf_download
-    # Private file, should expire after 15 minutes, scoped to this user
-    :presigned_url
-
-  when :public_product_image_shown_on_homepage
-    # Public, cacheable, no auth needed
-    :public_url
-
-  when :user_uploads_large_video
-    # Skip your server — browser uploads directly to S3 via presigned URL
-    :direct_upload
-
-  when :company_logo_in_email_template
-    # Public asset, needs to be accessible by email clients without auth
-    :public_url
-
-  when :user_medical_record_download
-    # Sensitive, time-limited, user-specific
-    :presigned_url
-  end
+  raise NotImplementedError, "TODO"
 end
 
 test("invoice PDF -> presigned URL (private, expires)",
@@ -184,27 +115,7 @@ test("medical record -> presigned URL (sensitive)",
 # Return :sidekiq or :sqs
 # -----------------------------------------------------------------------------
 def queue_choice_for(scenario)
-  case scenario
-  when :rails_monolith_background_jobs
-    # Same codebase, want simplicity, Redis is fine
-    :sidekiq
-
-  when :jobs_must_survive_redis_crash
-    # SQS persists messages durably
-    :sqs
-
-  when :python_service_sends_jobs_to_ruby_worker
-    # Cross-language, cross-service -> SQS is language-agnostic
-    :sqs
-
-  when :send_welcome_emails_after_signup
-    # Rails job, fast, Redis-backed is fine
-    :sidekiq
-
-  when :compliance_requires_durable_audit_trail_of_all_messages
-    # SQS with FIFO + DLQ for compliance
-    :sqs
-  end
+  raise NotImplementedError, "TODO"
 end
 
 test("Rails monolith jobs -> Sidekiq",
@@ -221,15 +132,3 @@ test("welcome emails -> Sidekiq",
 
 test("compliance audit trail -> SQS",
   queue_choice_for(:compliance_requires_durable_audit_trail_of_all_messages), :sqs)
-
-# =============================================================================
-# Test harness
-# =============================================================================
-def test(desc, actual, expected)
-  pass = actual == expected
-  puts "#{pass ? 'PASS' : 'FAIL'} #{desc}"
-  unless pass
-    puts "  expected: #{expected.inspect}"
-    puts "  received: #{actual.inspect}"
-  end
-end

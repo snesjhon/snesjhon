@@ -161,13 +161,13 @@ Read QPS (10:1 read:write):
 
 ---
 
-**→ Bridge to Level 3**: You've clarified scope and estimated scale. Now you design the API. The first decision: REST or GraphQL?
+**→ Bridge to Level 3**: You've clarified scope and estimated scale. Now you design the API. For this stack (Rails + GraphQL + React), GraphQL is the primary choice — but you need to understand REST deeply enough to justify that decision and to know when REST is still the right call.
 
-### Level 3: REST API Design — The Default Choice
+### Level 3: REST API Design — Know It to Justify GraphQL
 
 **Why this level matters**
 
-REST is the right default for most systems. Interviewers want to see that you know REST deeply — not just "use HTTP verbs" but pagination strategy, versioning, error format, rate limiting. These are the details that separate senior from mid-level.
+Interviewers will ask "why GraphQL over REST?" You can't answer that confidently without understanding REST's strengths and limitations. They also want to see REST depth — pagination strategy, versioning, error format, rate limiting — because these concepts translate directly into GraphQL design decisions.
 
 **How to think about it**
 
@@ -252,13 +252,13 @@ When over limit (429 Too Many Requests):
 
 ---
 
-**→ Bridge to Level 4**: REST works great when clients know exactly what they need. But what when you have multiple clients (mobile, web, third-party) that each need different subsets of data from the same resources? That's where GraphQL shines.
+**→ Bridge to Level 4**: REST defines a fixed shape per endpoint. GraphQL lets the client declare exactly what it needs — and for a React frontend with diverse data requirements, that flexibility is the key reason to choose it.
 
-### Level 4: GraphQL — When Flexibility Outweighs Simplicity
+### Level 4: GraphQL — The Primary Choice for This Stack
 
 **Why this level matters**
 
-GraphQL is increasingly used in production systems, especially those with complex data graphs or multiple client types. Interviewers want to know: when would you choose it? How do you design a schema? And what's the GraphQL version of the N+1 problem?
+This stack uses GraphQL as its API layer. Interviewers want to see that you can design a schema confidently, explain *why* GraphQL is the right call here, and handle the hard parts — especially the GraphQL version of the N+1 problem.
 
 **How to think about it**
 
@@ -277,20 +277,21 @@ query {
 
 This eliminates over-fetching (getting 20 fields when you need 3) and under-fetching (having to make 3 API calls to get data that should come together).
 
-**When to choose GraphQL:**
+**Why GraphQL is the right fit for Rails + React:**
 
 ```
-Good fit:
-  - Complex, nested data (social graphs, e-commerce product catalog)
-  - Multiple client types with different data needs (mobile needs less than web)
-  - Rapid product iteration (add fields without versioning)
-  - Need to eliminate round trips (get user + posts + comments in one request)
+This stack's specific reasons:
+  ✓ React components declare exactly what they need — no over-fetching
+  ✓ Single endpoint (POST /graphql) — no route proliferation
+  ✓ Typed schema = self-documenting contract between Rails and React
+  ✓ Add new fields without versioning — React opts in by updating its query
+  ✓ Eliminate round trips — fetch post + author + comments in one request
 
-Poor fit:
-  - Simple CRUD (REST is simpler and less overhead)
-  - File uploads (REST handles multipart form data better)
-  - Teams without GraphQL experience (learning curve is real)
-  - Simple public API (REST is more widely understood)
+Still reach for REST when:
+  - File uploads (use a dedicated REST endpoint alongside /graphql)
+  - Public third-party API (REST is more universally understood)
+  - Webhooks / callbacks from external services (always REST)
+  - Simple one-shot integrations where GraphQL overhead isn't justified
 ```
 
 **Schema design:**
@@ -374,20 +375,21 @@ end
 
 ```mermaid
 graph TD
-    Q1{Multiple client types with different data needs?}
-    Q1 -- Yes --> Q2{Team familiar with GraphQL?}
-    Q1 -- No --> REST
+    Q0{What is the primary client?}
+    Q0 -- React SPA --> GraphQL[GraphQL — primary choice for this stack]
+    Q0 -- Third-party / webhooks / file upload --> REST[REST endpoint alongside /graphql]
 
-    Q2 -- Yes --> GraphQL
-    Q2 -- No --> REST
+    GraphQL --> Q1{Adding a new field to a type?}
+    Q1 -- Yes --> AddField[Add to schema — no versioning needed]
+    Q1 -- No, breaking change --> Deprecate[Deprecate old field, add new one]
 
-    REST --> Q3{Paginating a real-time feed?}
-    Q3 -- Yes --> Cursor[Use cursor-based pagination]
-    Q3 -- No --> Offset[Offset pagination is fine]
+    GraphQL --> Q2{Paginating a collection?}
+    Q2 -- Real-time feed --> Cursor[Cursor-based: first + after args]
+    Q2 -- Static list --> Either[Either cursor or offset is fine]
 
-    REST --> Q4{Breaking API change needed?}
-    Q4 -- Yes --> V2[Add /v2/ namespace]
-    Q4 -- No --> V1[Extend /v1/ safely]
+    GraphQL --> Q3{Nested association in type?}
+    Q3 -- Yes --> Includes[Add includes in resolver or use DataLoader]
+    Q3 -- No --> Done[No N+1 risk]
 ```
 
 ---

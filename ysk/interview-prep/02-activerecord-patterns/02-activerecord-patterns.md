@@ -336,9 +336,9 @@ graph TD
 
 ## 5. Common Gotchas
 
-**1. N+1 in the view, not the controller**
+**1. N+1 in the resolver, not the query field**
 
-The N+1 often happens in the view template, not the controller. The controller loads `@posts` cleanly, but the ERB calls `post.user.name`. The fix is always in the controller: add `includes`.
+The N+1 often happens inside a GraphQL type's field resolver, not in the query that loads the collection. The query loads `posts` cleanly with `Post.published.recent`, but then `PostType` exposes `author { name }` — and each post fires a separate `User.find`. The fix is always in the collection resolver: add `includes(:user)` before the records are returned. If the N+1 is deeply nested (e.g. `author.organization.name`), reach for the `graphql-batch` DataLoader pattern instead.
 
 **2. Counter cache confusion**
 

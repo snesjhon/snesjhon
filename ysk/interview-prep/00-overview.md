@@ -10,7 +10,7 @@ Two sessions. Two domains. One mental model each.
 
 | Topic | File | Key Concept |
 |-------|------|-------------|
-| Rails CRUD + API | `01-rails-crud-api.md` | Strong params, respond_to, RESTful design |
+| Rails CRUD + API | `01-rails-crud-api.md` | GraphQL mutations/queries, input types, auth/authz |
 | ActiveRecord patterns | `02-activerecord-patterns.md` | N+1, includes vs joins, transactions |
 | Background jobs | `03-background-jobs.md` | Sidekiq/ActiveJob, idempotency, retries |
 | AWS fundamentals | `04-aws-fundamentals.md` | S3, EC2, RDS, SQS basics |
@@ -23,13 +23,24 @@ Two sessions. Two domains. One mental model each.
 
 | Topic | File | Key Concept |
 |-------|------|-------------|
-| API design | `05-system-design-api-graphql.md` | REST vs GraphQL, versioning, rate limiting |
+| API design | `05-system-design-api-graphql.md` | GraphQL-first design, schema, resolvers, N+1 |
 | Back of envelope | `05-system-design-api-graphql.md` | QPS, storage, bandwidth estimates |
 | CAP theorem | `../system-design/03-cap-theorem.md` | CP vs AP, which data needs what |
 | Caching | `../system-design/04-caching-strategies.md` | Cache-aside, TTL, stampede |
 | Background jobs | `03-background-jobs.md` | Queue depth, retry, idempotency |
 | GraphQL schema | `05-system-design-api-graphql.md` | Types, resolvers, N+1 in GraphQL |
 | Scalable pipelines | `06-scalable-pipelines.md` | Partitioning, fan-out, observability |
+
+---
+
+## Stack Assumption
+
+All exercises and examples assume this architecture:
+- **Backend**: Rails (API-only mode, no ERB views)
+- **API layer**: GraphQL (`POST /graphql` single endpoint — no 7 REST routes)
+- **Frontend**: React (manages form state for create/edit; reads mutation responses)
+
+If a note mentions `respond_to`, `render :new`, or `redirect_to`, mentally replace it with the GraphQL equivalent (mutation payload with `errors:` array or `post:` on success).
 
 ---
 

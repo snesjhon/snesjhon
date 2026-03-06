@@ -12,49 +12,25 @@
 #   :retry        - transient failure, will work next time
 #   :discard      - permanent failure, retrying is pointless
 
+# =============================================================================
+# Test harness
+# =============================================================================
+def test(desc, actual, expected)
+  pass = actual == expected
+  puts "#{pass ? 'PASS' : 'FAIL'} #{desc}"
+  unless pass
+    puts "  expected: #{expected.inspect}"
+    puts "  received: #{actual.inspect}"
+  end
+end
+
 # -----------------------------------------------------------------------------
 # Exercise 1
 # Classify each scenario by pipeline pattern.
 # Return one of: :fan_out, :pipeline, :backpressure, :discard, :retry
 # -----------------------------------------------------------------------------
 def pipeline_pattern_for(scenario)
-  case scenario
-  when :user_signup_triggers_email_slack_analytics
-    # Three independent things happen. No ordering dependency.
-    :fan_out
-
-  when :upload_validate_then_transcode_then_thumbnail
-    # Each step depends on the previous step's output.
-    :pipeline
-
-  when :queue_has_500k_jobs_workers_cant_keep_up
-    # Producers are faster than consumers. Need to slow producers.
-    :backpressure
-
-  when :charge_fails_because_network_timeout
-    # Temporary. Retrying in 30 seconds will likely succeed.
-    :retry
-
-  when :charge_fails_because_card_permanently_declined
-    # Not temporary. Retrying will always fail. Notify user instead.
-    :discard
-
-  when :post_published_updates_search_sends_email_logs_activity
-    # Three independent updates triggered by one event.
-    :fan_out
-
-  when :import_fails_because_csv_is_malformed
-    # Structural issue with the data. Retrying won't fix it.
-    :discard
-
-  when :api_is_accepting_requests_faster_than_workers_process
-    # Queue growing unboundedly. Apply backpressure.
-    :backpressure
-
-  when :send_password_reset_email_after_verification_token_created
-    # Email step depends on token being created first (step 1 -> step 2).
-    :pipeline
-  end
+  raise NotImplementedError, "TODO"
 end
 
 test("signup -> email + slack + analytics is fan-out",
@@ -90,27 +66,7 @@ test("token then email is pipeline",
 # Return :independent (fan-out ok) or :dependent (pipeline needed)
 # -----------------------------------------------------------------------------
 def fan_out_safe?(jobs)
-  case jobs
-  when :email_and_slack_and_analytics
-    # None of these need the others to complete first.
-    :independent
-
-  when :charge_then_send_receipt_email
-    # Email should only be sent if charge succeeds. Dependent.
-    :dependent
-
-  when :update_search_index_and_increment_view_count
-    # Two unrelated counters/indexes. Independent.
-    :independent
-
-  when :create_order_then_decrement_inventory_then_notify_warehouse
-    # Each step depends on the previous.
-    :dependent
-
-  when :send_email_and_post_to_slack
-    # Two notifications, neither depends on the other.
-    :independent
-  end
+  raise NotImplementedError, "TODO"
 end
 
 test("email + slack + analytics: independent (fan-out ok)",
@@ -137,7 +93,7 @@ test("email + slack: independent (fan-out ok)",
 BACKPRESSURE_THRESHOLD = 10_000
 
 def backpressure_decision(queue_depth)
-  queue_depth <= BACKPRESSURE_THRESHOLD ? :accept : :reject
+  raise NotImplementedError, "TODO"
 end
 
 test("queue at 0: accept",          backpressure_decision(0),      :accept)
@@ -157,13 +113,7 @@ test("queue at 500000: reject",     backpressure_decision(500_000),:reject)
 #   Critical: queue_depth > 10000 OR error_rate > 0.05
 # -----------------------------------------------------------------------------
 def queue_health(queue_depth:, error_rate:)
-  if queue_depth > 10_000 || error_rate > 0.05
-    :critical
-  elsif queue_depth > 1_000 || error_rate > 0.01
-    :warning
-  else
-    :healthy
-  end
+  raise NotImplementedError, "TODO"
 end
 
 test("low depth, low errors: healthy",
@@ -180,15 +130,3 @@ test("high depth: critical",
 
 test("high error rate: critical",
   queue_health(queue_depth: 100, error_rate: 0.1), :critical)
-
-# =============================================================================
-# Test harness
-# =============================================================================
-def test(desc, actual, expected)
-  pass = actual == expected
-  puts "#{pass ? 'PASS' : 'FAIL'} #{desc}"
-  unless pass
-    puts "  expected: #{expected.inspect}"
-    puts "  received: #{actual.inspect}"
-  end
-end
