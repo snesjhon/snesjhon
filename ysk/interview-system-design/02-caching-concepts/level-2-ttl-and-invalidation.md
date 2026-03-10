@@ -13,6 +13,17 @@
 
 The right TTL balances: *how stale is acceptable* vs *how expensive is a cache miss*.
 
+```mermaid
+flowchart LR
+    A[Short TTL] --> B[More misses]
+    B --> C[More DB load]
+    C --> D[Fresher data]
+
+    E[Long TTL] --> F[Fewer misses]
+    F --> G[Less DB load]
+    G --> H[Staler data]
+```
+
 ---
 
 ## Exercise 1: TTL buckets
@@ -49,6 +60,19 @@ When data changes, how do you handle the stale cache entry?
 - **Event invalidate**: Active — delete the cache key after the DB update. Use when you control the write and the user expects to see their change.
 - **Write-through**: Update cache and DB together synchronously. Use when zero stale window is required.
 - **Version key**: Embed a version in the cache key (e.g., `user:42:v3`). Old keys become unreachable. Use when a schema change or deploy changes the shape of cached data.
+
+```mermaid
+flowchart TD
+    A[Data changed] --> B{Do you control\nthe write path?}
+    B -->|No| C[TTL expiry\npassive — wait it out]
+    B -->|Yes| D{User must see\nchange immediately?}
+    D -->|No| C
+    D -->|Yes| E{Deploy changed\ncache shape?}
+    E -->|Yes| F[Version key\nuser:42:v3]
+    E -->|No| G{Can tolerate\nbrief miss after write?}
+    G -->|No| H[Write-through\ncache + DB atomically]
+    G -->|Yes| I[Event invalidate\ncache.del after update]
+```
 
 | Scenario | Strategy | Why |
 |----------|----------|-----|

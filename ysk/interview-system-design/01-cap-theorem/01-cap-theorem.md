@@ -304,3 +304,83 @@ ruby level-1-consistency-models.rb
 ruby level-2-cp-vs-ap.rb
 ruby level-3-distributed-tradeoffs.rb
 ```
+
+---
+
+## Flashcards #flashcards
+
+What does CAP stand for?
+?
+Consistency, Availability, Partition Tolerance. A distributed system can guarantee at most two of the three simultaneously.
+
+---
+
+In CAP, why is Partition Tolerance non-negotiable?
+?
+The moment you have more than one node, network partitions are a physical reality — cables cut, nodes lose connectivity. You cannot engineer that away. So P is always assumed. The real choice is always between C and A when a partition occurs.
+
+---
+
+In CAP, what is the actual choice you're making?
+?
+Not "which 2 of 3" — P is always given. The real question is: when a partition happens, does my system refuse requests (CP) or serve stale data (AP)?
+
+---
+
+What does Consistency mean in CAP?
+?
+Every read returns the most recent write, or an error. A consistent system refuses to answer rather than answer wrong. Note: this is NOT the same as ACID consistency.
+
+---
+
+What does Availability mean in CAP?
+?
+Every request gets a non-error response — but that response may be stale. An available system always responds, even if its answer is outdated.
+
+---
+
+What is the difference between CAP consistency and ACID consistency?
+?
+CAP consistency: all nodes return the same value at the same point in time (cluster-wide agreement). ACID consistency: a single database enforces integrity constraints within a transaction (foreign keys, check constraints). You can have one without the other.
+
+---
+
+In the post office analogy, what does the partition represent? What is CP behavior? What is AP behavior?
+?
+Partition = the phone line between two city branches goes down. CP behavior = the branch closes its service window ("I can't verify your data right now — I refuse to serve you wrong info"). AP behavior = the branch stays open and serves you from yesterday's records ("here's what we have on file").
+
+---
+
+What are the four levels of the consistency spectrum, from strongest to weakest?
+?
+Strong > Read-your-writes > Monotonic reads > Eventual.
+
+---
+
+What is strong consistency?
+?
+Every read reflects the most recent write by anyone, anywhere. Reads and writes appear to happen in a single global order. High cost — requires coordination across all nodes. Use for: financial ledgers, inventory, distributed locks.
+
+---
+
+What is read-your-writes consistency?
+?
+After YOU write, YOU always see YOUR own change. Other users may still see old values temporarily. Low cost — just pin your reads to the node you wrote to. Use for: user settings, profile updates, anything that must feel instant to the person editing it.
+
+---
+
+What is monotonic reads consistency?
+?
+Once you've read a value, you will never read an older one. You might not get the latest, but you won't go backwards. Low cost. Use for: activity feeds, notification history, timelines.
+
+---
+
+What is eventual consistency?
+?
+All nodes will converge to the same value eventually. No guarantee on how fast. Lowest cost — replicate asynchronously. Use for: like counts, social feeds, search indexes, view counts.
+
+---
+
+What is the decision framework for CP vs AP?
+?
+Ask: "What is the consequence if this data is stale when acted upon?" If the consequence is irreversible (money moves, access granted, inventory allocated) → CP. If the consequence is recoverable or cosmetic → AP.

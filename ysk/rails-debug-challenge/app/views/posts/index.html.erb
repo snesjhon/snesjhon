@@ -1,0 +1,15 @@
+<h1>Latest Posts</h1>
+
+<% @posts.each do |post| %>
+  <article>
+    <h2><%= link_to post.title, post_path(post) %></h2>
+    <p class="meta">
+      By <%= post.user.display_name %> &mdash;
+      <%= post.created_at.strftime("%B %d, %Y") %>
+    </p>
+    <p><%= post.summary %></p>
+    <p><%= pluralize(post.comments.count, "comment") %></p>
+  </article>
+<% end %>
+
+<%= link_to "Write a Post", new_post_path %>

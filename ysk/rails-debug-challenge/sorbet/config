@@ -1,0 +1,8 @@
+--dir
+.
+--ignore=/tmp/
+--ignore=/vendor/bundle
+--ignore=/db/
+--ignore=/app/views/
+--ignore=/bin/
+--suppress-payload-superclass-redefinition-for=RDoc::Markup::Heading

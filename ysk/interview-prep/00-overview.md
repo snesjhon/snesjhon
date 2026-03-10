@@ -1,6 +1,6 @@
 # Interview Prep: Final Round Overview
 
-Two sessions. Two domains. One mental model each.
+Three sessions. Three domains. One mental model each.
 
 ---
 
@@ -67,6 +67,16 @@ If a note mentions `respond_to`, `render :new`, or `redirect_to`, mentally repla
 
 ---
 
+## React Frontend Interview (1hr)
+
+**Mental Model**: You are a senior engineer pairing with your interviewer. Design before you type. Narrate every decision.
+
+| Topic | File | Key Concept |
+|-------|------|-------------|
+| React component build | `07-react-interview/` | Hooks, state design, optimistic updates, a11y |
+
+---
+
 ## Files in This Directory
 
 ```
@@ -78,4 +88,12 @@ interview-prep/
   04-aws-fundamentals.md          <- S3, EC2, RDS, SQS, IAM
   05-system-design-api-graphql.md <- API design, back-of-envelope, GraphQL
   06-scalable-pipelines.md        <- Scalable system design patterns
+  07-react-interview/
+    00-overview.md                <- how to approach the interview
+    requirements.md               <- the spec (read this first, then code)
+    concepts.md                   <- key React patterns to know cold
+    starter/ActivityFeed.tsx      <- start here
+    solution/ActivityFeed.tsx     <- reference solution
+    solution/useActivityFeed.ts   <- extracted hook solution
+    solution/WALKTHROUGH.md       <- what to say for each decision
 ```

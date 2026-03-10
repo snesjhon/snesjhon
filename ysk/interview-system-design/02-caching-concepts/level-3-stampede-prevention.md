@@ -17,6 +17,24 @@ A **stampede** (also called thundering herd) occurs when a popular cached key ex
 
 If any one of these is absent, stampede risk is low.
 
+```mermaid
+sequenceDiagram
+    participant R as Many requests
+    participant C as Cache
+    participant DB as Database
+
+    Note over C: Key is warm
+    R->>C: Read — HIT
+    R->>C: Read — HIT
+    Note over C: TTL expires
+    R->>C: Read — MISS
+    R->>C: Read — MISS
+    R->>C: Read — MISS
+    Note over R,C: All concurrent requests see MISS
+    R->>DB: Simultaneous DB queries
+    Note over DB: DB overwhelmed — falls over
+```
+
 ---
 
 ## Exercise 1: Assess stampede risk
@@ -42,6 +60,16 @@ If any one of these is absent, stampede risk is low.
 - **Mutex lock**: One request recomputes, others wait. Ensures freshness. Can cause brief latency spike for waiting requests.
 - **Probabilistic expiry**: Randomly refresh the key slightly before it expires, distributing the recompute across time. Good for distributed systems.
 - **No action**: If stampede risk is not present, don't add complexity.
+
+```mermaid
+flowchart TD
+    A[Cache MISS on\nhigh-traffic key] --> B{Stale data\nacceptable?}
+    B -->|Yes| C[Stale-while-revalidate\nserve stale, refresh async]
+    B -->|No| D{Traffic very high\nor blocking unacceptable?}
+    D -->|Yes| C
+    D -->|No| E[Mutex lock\none recomputes, others wait]
+    A2[Cache MISS on\nlow-traffic key] --> F[No action needed]
+```
 
 | Scenario | Strategy | Why |
 |----------|----------|-----|

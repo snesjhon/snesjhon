@@ -30,9 +30,148 @@ Back-of-envelope is your 1-kilometer GPS. You don't need to know you'll have 3,8
 
 **Why this level matters**
 
-You cannot do back-of-envelope without a mental reference table. If you don't know that Redis handles ~100,000 req/sec and Postgres handles ~1,000 complex queries/sec, you can't say whether a cache is needed. Memorize these. They recur in every interview.
+Every infrastructure decision reduces to one question: *can this component handle the load?* To answer that, you need a mental map of what each system can handle. Without it, "we need a cache" is a guess. With it, it's a calculation. The numbers below recur in every interview — but a number without context is just noise. Understand what each system *is* first, then the numbers stick.
 
-**Latency reference table**
+**The four building blocks of almost every system design**
+
+Every system design is some combination of these: an app server handling requests, a database storing data, a cache making reads fast, and an async layer decoupling work. Know the role of each, and you know when your back-of-envelope numbers are telling you to add one.
+
+---
+
+**App server (Rails) — ~1,000 req/sec (simple) / ~100–300 req/sec (DB-heavy)**
+
+**What it is:** The layer that runs your application code. It receives an HTTP request, executes business logic, calls the database, and returns a response. Nothing is stored here — it is stateless by design.
+
+**What it's used for:**
+- Handling every user-facing HTTP request — API calls, page loads, form submissions
+- Orchestrating work: calling the DB, calling Redis, calling downstream services, assembling the response
+
+**Why the range:** "Simple requests" return quickly because they hit a cache or do minimal work. "DB-heavy requests" block while waiting on Postgres — the server sits idle during that wait. That idle time is why throughput collapses from 1,000 to 100–300: it is not doing ten things at once, it is doing one thing and waiting.
+
+**Mental model:** One app server is one worker. When load exceeds its capacity, you add more servers horizontally behind a load balancer. The DB-heavy number is usually your real ceiling — most production requests touch the database.
+
+---
+
+**Database (PostgreSQL) — ~10,000 qry/sec (simple) / ~500–1,000 qry/sec (complex)**
+
+**What it is:** The source of truth. Persists data to disk, manages transactions, enforces constraints, and answers queries using indexes or full table scans.
+
+**What it's used for:**
+- Storing and retrieving anything that must survive a server restart
+- Enforcing data integrity — foreign keys, uniqueness, transactions
+- Answering structured queries with filters, joins, and aggregations
+
+**Why the range:** A simple indexed query (`SELECT * FROM users WHERE id = 123`) hits a B-tree index and returns in microseconds — Postgres handles ~10K of these per second. A complex query (joins across multiple tables, aggregations over millions of rows) scans and sorts large amounts of data, taking 50–100ms each — so you only get 500–1,000 per second.
+
+Simple lookups are also easy to cache: the cache key is predictable (`user:123`), the result is stable until that row changes, and hit rates are high. Complex analytical queries are hard to cache for the opposite reason — the inputs vary so much (different date ranges, filters, groupings) that almost every query produces a unique cache key, hit rates are near zero, and the underlying data changes constantly. The slowness makes you *want* to cache them; the variability makes it impractical.
+
+**Mental model:** Postgres is your workhorse but it has a ceiling. Once read QPS approaches that ceiling, you add a cache layer before you add read replicas — caching is cheaper and faster to implement.
+
+---
+
+**Cache (Redis) — ~100,000 req/sec**
+
+**What it is:** An in-memory key-value store. A giant dictionary that lives entirely in RAM — no disk, no joins, no query planning.
+
+**What it's used for:**
+- **Caching** — store a DB query result so you don't re-run it on every request
+- **Sessions** — "is this user logged in?" needs an answer in under 1ms on every request
+- **Rate limiting** — increment a counter per user per minute; check if they've hit their limit
+- **Leaderboards** — sorted sets by score, O(log n) updates and reads
+
+**Why it's fast:** No disk I/O at all. Every operation is a direct memory lookup. Redis runs a single-threaded event loop — no lock contention. `GET`/`SET` are O(1). The ~1ms latency you see is almost entirely network round-trip, not computation. The CPU is barely involved.
+
+**Mental model:** Redis is the fast lane *in front of* your database. It is never your source of truth — if the server restarts, the data may be gone, and that's fine. Use Redis when the question is "what is X right now?" and waiting 10ms for a DB round-trip is too slow.
+
+---
+
+**Async layer: Kafka vs. SQS**
+
+Both Kafka and SQS sit between services and let them communicate without being directly coupled. A producer puts a message in; a consumer processes it later. That is where the similarity ends — they solve different problems, which is why their throughput numbers look so different.
+
+**Kafka — ~100,000 msg/sec (per partition)**
+
+**What it is:** A durable, append-only event log. Think of it as a file on disk that only ever grows — every event your system produces gets appended to the end, in order, forever (or until you configure it to expire). Nothing is ever overwritten or deleted mid-stream.
+
+Three terms you need to know:
+- **Producer** — your application code that writes to Kafka. When a user places an order, your order service has a line of code that constructs a JSON blob and sends it to Kafka. That code is the producer.
+- **Message** — the JSON blob itself. It's just structured data describing what happened: `{ "event": "order_placed", "order_id": "ord_123", "user_id": "usr_456", "total": 49.99, "timestamp": "..." }`. That's it — a record of a thing that occurred.
+- **Consumer** — any service that reads from Kafka. Your billing service, inventory service, and email service are all consumers. Each one reads the same message independently, at its own pace, and tracks its own position in the log (called an **offset**). If one consumer crashes, it just picks back up from where it left off when it restarts.
+
+**The problem it solves:** Without Kafka, your order service has to directly call every other service that cares about an order — billing, inventory, email, analytics, fraud detection. If email is down, the order fails. If you add a new service next month, you have to edit the order service to call it. Every service is tightly coupled to every other.
+
+With Kafka, the order service does one thing: write a message and move on. It has no idea who reads it or when. Billing reads it. Inventory reads it. Email reads it. Each independently. If email crashes and comes back an hour later, it just reads the message it missed — it's still in the log.
+
+**What it's used for:**
+- **Fan-out to multiple consumers** — one event, many independent readers, each at their own pace
+- **Event sourcing** — instead of storing only current state (balance = $150), store every event that led to it ("deposited $200", "spent $50"). You can replay the full history to rebuild state at any point in time, or feed it to a new service added months later
+- **Data pipelines** — stream events from your app into a data warehouse, analytics system, or search index without touching your production database
+- **Async decoupling** — services announce what happened without knowing or caring who acts on it
+
+**Why it's fast:** Kafka writes to disk but only ever *appends* — no seeking, no overwriting, just adding to the end. This is the cheapest possible disk operation. The OS page cache means recent reads usually never even touch disk. And producers don't wait for consumers to process anything — they write and move on immediately. Throughput scales linearly by adding partitions: 10 partitions × 100K = 1M msg/sec cluster-wide.
+
+**Mental model:** Kafka is a public announcement board. Your order service pins a note — "order placed, here are the details." Anyone who cares walks up and reads it on their own schedule. The note stays on the board whether one person reads it or ten. Use Kafka when something happens and multiple systems need to know about it, or when you need to go back and re-read history.
+
+**Why not just use Postgres?**
+
+At small scale, you can — and many companies do. Tools like Good Job (Postgres-backed) and Sidekiq (Redis-backed) use your existing database as a simple job queue, and that works fine up to a few hundred events per second. Kafka becomes the right answer when any of these are true:
+
+- **Polling load adds up** — every consumer has to ask Postgres "any new rows?" every few hundred milliseconds. With 5 services polling at 100ms intervals, that's 50 queries/sec just for checking, competing directly with your application traffic.
+- **You have to track "who has seen what" yourself** — Kafka tracks each consumer's position automatically (the offset). With Postgres, you'd need to build and maintain that tracking logic yourself: a `service_offsets` table, queries like "give me all events with id > 4521 that billing hasn't processed yet." That's complex state management you own.
+- **The events table grows forever** — delete processed rows and you lose replay; keep them all and you have billions of rows slowing down queries and running up storage costs on expensive SSD.
+- **Event traffic competes with app traffic** — a spike in events eats into the same DB connections and I/O budget your user-facing app depends on. Kafka is a completely separate system — your event pipeline can be overwhelmed without touching your application database at all.
+
+The decision:
+```
+Need fan-out to multiple independent consumers?
+  No  → Postgres job queue (Good Job) or Redis queue (Sidekiq) is fine
+  Yes → What's the event volume?
+          < ~1,000/sec, < 3–4 consumers → Postgres works, with effort
+          > ~1,000/sec, or need replay  → Kafka is the right tool
+```
+
+---
+
+**SQS — ~3,000 msg/sec (per queue)**
+
+**What it is:** A managed work queue. Think of it as a to-do list that lives in the cloud. One piece of code drops a task onto the list; a separate piece of code (a worker) picks it up, does the work, and checks it off. Once checked off, it's gone — deleted permanently.
+
+Three terms you need to know:
+- **Producer** — the code that adds a task to the queue. When a user uploads a photo, your app adds a message to SQS: `{ "job": "resize_image", "image_id": "img_789", "user_id": "usr_456" }`. The app doesn't resize the image itself — it just drops the task and moves on.
+- **Message** — the task description. Same as Kafka — a JSON blob describing what needs to be done.
+- **Worker** — a separate process (usually running on a background server) that polls SQS for new tasks. It picks one up, does the work (resizes the image, sends the email, charges the card), and tells SQS "done, delete it." Unlike Kafka consumers, only one worker processes each message — whoever claims it first.
+
+**The problem it solves:** Some work takes too long to do inside a web request. Resizing an image might take 2 seconds — you can't make the user wait. So instead: accept the upload instantly, drop a task into SQS, return a response to the user. A worker picks it up in the background and does the slow work. The user experience is fast; the work still gets done.
+
+SQS also absorbs traffic spikes. If 10,000 uploads arrive in one minute and your workers can only process 3,000/min, the extras sit in the queue and get processed over the next few minutes. Nothing is dropped, nothing crashes — the queue acts as a buffer.
+
+**What it's used for:**
+- **Background jobs** — "resize this image," "send this email," "charge this card" — any work that doesn't need to happen before your app responds to the user
+- **Load leveling** — absorb traffic spikes so your workers process at a steady rate instead of getting overwhelmed
+- **At-least-once delivery** — if a worker crashes mid-job, SQS automatically makes the message visible again so another worker retries it
+
+**Why it's slower than Kafka:** SQS is built around reliability guarantees, not raw throughput. The moment a worker claims a message, SQS marks it "invisible" so no other worker double-processes it. If the worker crashes before finishing, SQS waits for a timeout and re-queues it. All that coordination — visibility timeouts, deduplication checks, polling overhead — adds cost per message. It trades throughput for operational simplicity: no servers to manage, no partitions to configure, just a queue that works.
+
+**Mental model:** SQS is a ticket queue at a deli counter. You take a number (drop a task), a worker calls your number (claims the task), does the work, and the ticket is thrown away. No one else gets that ticket. No history. Use SQS when you need one worker to do one job reliably, and you'd rather not manage any infrastructure to make that happen.
+
+---
+
+**Kafka vs. SQS — side-by-side**
+
+|                         | **Kafka**                   | **SQS**                                      |
+| ----------------------- | --------------------------- | -------------------------------------------- |
+| **Abstraction**         | Durable event log           | Work queue                                   |
+| **Messages persist?**   | Yes (replayable)            | No (deleted after ack)                       |
+| **Multiple consumers?** | Yes (all see all)           | No (one consumer per msg)                    |
+| **Ordering?**           | Strict (per partition)      | Not guaranteed                               |
+| **Throughput**          | ~100K/sec/partition         | ~3K/sec/queue                                |
+| **When to pick**        | Fan-out, replay, durability | Managed, reliable background task processing |
+
+---
+
+**Reference tables** — now that you know what each system is, use these as a quick-recall cheat sheet.
+
+**Latency**
 
 ```
 Operation                                    Latency
@@ -45,7 +184,7 @@ Cross-datacenter round trip (same continent)  ~50-100 ms
 Cross-region round trip                       ~150 ms
 ```
 
-**Throughput reference table**
+**Throughput**
 
 ```
 System                                         Throughput
@@ -59,7 +198,7 @@ Kafka (single partition)                        ~100,000 msg/sec
 SQS (per queue)                                 ~3,000 msg/sec
 ```
 
-**Storage reference table**
+**Storage sizes**
 
 ```
 Item                                    Size
@@ -73,7 +212,7 @@ Photo (compressed, mobile)              ~300 KB
 1 minute of video (1080p)               ~130 MB
 ```
 
-**Time reference table**
+**Time conversions**
 
 ```
 Period          Seconds         Easy approximation
@@ -97,25 +236,87 @@ Period          Seconds         Easy approximation
 
 "100 million daily active users" is meaningless until you convert it to requests per second. That conversion is what tells you whether you need 1 server or 1,000, whether caching is optional or mandatory.
 
+**What is QPS?**
+
+QPS stands for **Queries Per Second** (also called RPS — Requests Per Second). It is the single most important unit in system design estimation.
+
+Think of QPS as the *heartbeat rate* of your system. A resting adult has ~60 beats per minute. A sprinting athlete hits 180. Your infrastructure is the heart — it has a maximum rate it can sustain. The moment requests per second exceed what your components can handle, you get failures, timeouts, and queuing.
+
+```
+QPS is the bridge between user behavior and infrastructure.
+
+User behavior:       "100 million people use this every day"
+                                    ↓  (back-of-envelope)
+QPS:                 "~1,000 writes/sec, ~10,000 reads/sec at average"
+                                    ↓  (reference table)
+Infrastructure:      "One Postgres node handles 1,000 complex reads/sec.
+                      We're 10x over — we need a cache layer."
+```
+
+Every number you calculate — servers needed, cache hit rate required, replica count — is derived from QPS. Get this number wrong and every downstream decision is wrong. Get it approximately right and everything else follows.
+
+**Read QPS vs. Write QPS**: These are always separate.
+- **Write QPS**: How fast new data arrives (inserts, updates). Drives DB write throughput and queue sizing.
+- **Read QPS**: How fast data is fetched. Usually much higher than write QPS. Drives cache strategy and read replica count.
+
 **The QPS formula**
 
 ```
-Average QPS = daily_events / 100_000
-
-Why 100,000 not 86,400?
-  86,400 seconds/day is accurate. But in an interview, you're doing mental math.
-  100,000 is close enough and far easier to divide. Use it.
-
-Peak QPS = average_QPS * 3
-  Traffic is not flat. Lunch hour, viral events, marketing campaigns
-  create spikes ~3x the average. Always size for peak, not average.
-
-Example: Twitter
-  100M tweets/day
-  Average write QPS:  100M / 100K = 1,000 writes/sec
-  Peak write QPS:     1,000 * 3   = 3,000 writes/sec
-  Read QPS (10:1):    10,000 avg, 30,000 peak
+Average QPS = daily_events / 100,000
+Peak QPS    = average_QPS × 3
 ```
+
+Those two lines are the whole formula. Everything below is the intuition for why they work, so you can apply them without second-guessing yourself.
+
+**Step 1: Daily events → average QPS**
+
+A day has 86,400 seconds. In an interview you round that to 100,000 — it's only 15% off, which is irrelevant for order-of-magnitude math, and it makes mental division dramatically easier.
+
+```
+100M events/day ÷ 100K seconds = 1,000 events/sec (average)
+ 10M events/day ÷ 100K seconds =   100 events/sec (average)
+  1M events/day ÷ 100K seconds =    10 events/sec (average)
+```
+
+The pattern: drop 5 zeros. 100M → 1,000. 10M → 100. 1M → 10.
+
+**Step 2: Average → peak (the 3x rule)**
+
+Traffic is never flat across 24 hours. Think about your own behavior — you don't use apps equally at 3am and 7pm. A social app sees almost nothing at 3am and a surge during evening prime time. When you divide total daily events by 86,400 seconds, you're averaging that surge with those dead hours — which means the average seriously understates what your system faces during the busy period.
+
+The 3x rule captures this: peak traffic is roughly 3x the 24-hour average. This is a widely observed pattern across consumer apps, not a magic number. Some systems spike harder — a viral tweet, a product launch, a holiday sale can hit 10x — but 3x is your baseline, and you size infrastructure for peak, not average. An average-sized system fails exactly when you need it most.
+
+```
+Average QPS = 1,000/sec
+Peak QPS    = 1,000 × 3 = 3,000/sec   ← this is what your infrastructure must survive
+```
+
+**Step 3: Separate reads from writes**
+
+Most systems handle far more reads than writes. A user posting a tweet (1 write) triggers dozens of feed refreshes (many reads). If the problem doesn't give you a ratio, use the read:write ratios below. Apply the ratio to your average write QPS to get read QPS, then multiply both by 3 for peak.
+
+**Putting it together — worked example**
+
+```
+Problem: Twitter. 100M tweets posted per day.
+
+1. Daily write events: 100M tweets/day
+   Average write QPS: 100M / 100K = 1,000 writes/sec
+   Peak write QPS:    1,000 × 3   = 3,000 writes/sec
+
+2. Read:write ratio for social feed = 10:1
+   Average read QPS:  1,000 × 10  = 10,000 reads/sec
+   Peak read QPS:     10,000 × 3  = 30,000 reads/sec
+
+3. What do these numbers tell you?
+   Writes: 3,000/sec peak — a single Postgres node handles ~10K simple writes/sec.
+           Writes alone won't overwhelm the DB.
+   Reads:  30,000/sec peak — Postgres handles ~1,000 complex reads/sec.
+           We're 30x over. We need aggressive caching or read replicas.
+           → Redis cache with ~97% hit rate drops DB read load to ~900/sec. Feasible.
+```
+
+The numbers don't just describe the system — they force the infrastructure decision. 30,000 reads/sec is the reason you add Redis. Without the calculation, "we should add a cache" is a guess. With it, it's a requirement.
 
 **Read:write ratios**
 
@@ -131,23 +332,104 @@ Use these when the problem doesn't specify:
 **The storage formula**
 
 ```
-Daily storage = event_count * bytes_per_event
-
-Units (1000-based, not 1024):
-  1 KB = 1,000 bytes
-  1 MB = 1,000,000 bytes
-  1 GB = 1,000,000,000 bytes
-  1 TB = 1,000,000,000,000 bytes
-  1 PB = 1,000,000,000,000,000 bytes
-
-Example: Twitter text storage
-  100M tweets/day * 500 bytes/tweet = 50,000,000,000 bytes/day = 50 GB/day
-  Annual: 50 GB * 365 = 18,250 GB = ~18 TB/year
-
-Example: photo storage
-  10M uploads/day * 300 KB/photo = 3,000,000,000,000 bytes/day = 3 TB/day
-  Annual: 3 TB * 365 = ~1 PB/year
+Daily storage = event_count × bytes_per_event
 ```
+
+Two inputs. That's it. The first comes from the problem. The second you estimate from the size reference table. The output tells you *where the data lives* and *whether you need a CDN* — those are the decisions the number forces.
+
+**How to intuit sizes before doing the math**
+
+The size reference table gives you anchors, but you need to know *why* they're those sizes to apply them confidently to anything the interviewer throws at you:
+
+- **~500 bytes** — pure text with metadata. A tweet is 280 characters (280 bytes) plus user_id, timestamp, id fields. ~500 bytes total. Any short user-generated text lives here.
+- **~5 KB** — a longer document: a blog post, a product description, a JSON API response with nested data. Still text, just more of it.
+- **~50 KB** — a thumbnail or avatar image. Small enough that your browser loads dozens of them on a page without you noticing.
+- **~300 KB** — a compressed mobile photo. Your phone compresses a raw 12MP shot down to roughly this. The reference number for "user uploaded a photo."
+- **~5 MB** — a PDF slide deck (text-heavy). Slides with mostly text and simple graphics. Image-heavy decks can be 20–50 MB, but 5 MB is a safe average for back-of-envelope.
+- **~1 MB/min** — compressed audio (128kbps MP3). A 3-minute song ≈ 3 MB.
+- **~60 MB/min** — 720p video. A 10-minute YouTube video ≈ 600 MB.
+
+**The mental shortcut for unit conversion**
+
+Use 1000-based units (not 1024 — close enough and far easier mentally):
+
+```
+bytes → KB:  ÷ 1,000     (drop 3 zeros)
+KB → MB:     ÷ 1,000     (drop 3 zeros)
+MB → GB:     ÷ 1,000     (drop 3 zeros)
+GB → TB:     ÷ 1,000     (drop 3 zeros)
+TB → PB:     ÷ 1,000     (drop 3 zeros)
+```
+
+When multiplying event counts by sizes, cancel zeros in your head:
+
+```
+100M events × 500 bytes
+= 100,000,000 × 500
+= 50,000,000,000 bytes
+= 50 GB   (drop 9 zeros for GB, 50 remains)
+```
+
+**Worked example: Twitter — text-only**
+
+```
+100M tweets/day × 500 bytes/tweet
+= 50,000,000,000 bytes/day
+= 50 GB/day
+
+Annual: 50 GB × 365 ≈ 18 TB/year
+```
+
+18 TB/year of text. What does this tell you?
+- 18 TB in Postgres = expensive SSD storage. Feasible but you don't want years of history there.
+- Decision: keep 90 days hot in Postgres (~4.5 TB), move older data to S3 (~$0.02/GB/month), archive after 2 years to S3 Glacier (~$0.004/GB/month).
+- The files are tiny text blobs — no CDN needed. Postgres and S3 are enough.
+
+**Worked example: Instagram — photos**
+
+```
+100M photo uploads/day × 300 KB/photo
+= 30,000,000,000,000 bytes/day
+= 30 TB/day
+
+Annual: 30 TB × 365 ≈ 10 PB/year
+```
+
+10 petabytes/year. What does this tell you?
+- Never touches Postgres. Photos go straight to S3 on upload — object storage is the only viable answer at this scale.
+- 10 PB/year at $0.02/GB = ~$200M/year in raw S3 costs (this is why Instagram uses aggressive compression and tiered storage).
+- Photos are large files served globally to users — CDN is mandatory. Without it you're streaming 300 KB files across continents for every view.
+
+**Worked example: SlideShare — PDF decks**
+
+```
+1M deck uploads/day × 5 MB/deck
+= 5,000,000,000,000 bytes/day
+= 5 TB/day
+
+Annual: 5 TB × 365 ≈ 1.8 PB/year
+```
+
+1.8 PB/year. What does this tell you?
+- Same answer as photos: S3 from day one, never Postgres.
+- But here the CDN case is even stronger — a 5 MB PDF is 17× larger than a photo. Serving it from a data center 150ms away is painful; serving from an edge node 5ms away is instant.
+- Postgres only stores metadata: deck title, owner, view count, tags. The actual file is an S3 key.
+
+**The storage decision tree**
+
+```
+Daily storage output     Where it lives
+─────────────────────────────────────────────────────
+< 1 GB/day               Postgres is fine for years
+1–100 GB/day             Postgres for hot data (90 days),
+                         S3 for the rest
+> 100 GB/day             S3 from day one, Postgres for
+                         metadata only
+Any large files          CDN in front of S3
+(photos, video, PDFs)    (file size matters, not just volume)
+```
+
+The number you calculate doesn't just tell you *how much* storage you need — it tells you *what kind* and *where it lives*. That's the decision the math is forcing.
 
 **Saying it in an interview**
 

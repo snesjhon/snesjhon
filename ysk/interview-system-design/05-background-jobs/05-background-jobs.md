@@ -1,4 +1,4 @@
-# Background Jobs: Async Patterns, Idempotency, and Reliable Queue Design
+							# Background Jobs: Async Patterns, Idempotency, and Reliable Queue Design
 
 > **Goal**: Know when to defer work, how to make deferred work reliable, and how to operate a job queue at scale.
 >

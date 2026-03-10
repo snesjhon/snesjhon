@@ -1,0 +1,29 @@
+<article>
+  <h1><%= @post.title %></h1>
+  <p class="meta">
+    By <%= link_to @post.user.display_name, user_path(@post.user) %>
+  </p>
+  <div class="body">
+    <%= simple_format @post.body %>
+  </div>
+</article>
+
+<section id="comments">
+  <h2><%= pluralize(@post.comments.count, "comment") %></h2>
+
+  <% @comments.each do |comment| %>
+    <div class="comment">
+      <strong><%= comment.author.display_name %></strong>
+      <p><%= comment.body %></p>
+      <% if comment.user_id == current_user.id %>
+        <%= button_to "Delete", post_comment_path(@post, comment), method: :delete, data: { confirm: "Sure?" } %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <h3>Leave a Comment</h3>
+  <%= form_with url: post_comments_path(@post) do |f| %>
+    <%= f.text_area :body, placeholder: "Your comment..." %>
+    <%= f.submit "Post Comment" %>
+  <% end %>
+</section>

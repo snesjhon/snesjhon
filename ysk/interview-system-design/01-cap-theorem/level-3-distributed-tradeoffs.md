@@ -143,3 +143,101 @@ In a replicated system, where should reads go?
 | News feed, global users | Local replica |
 
 </details>
+
+---
+
+## Flashcards #flashcards
+
+What is the rule for whether two services must share a consistency model?
+?
+If they exchange data with hard correctness requirements (money, inventory, auth) they must match. If they exchange data with soft requirements (search, feeds, analytics) they can differ independently.
+
+---
+
+Payment service and order service — must they share a consistency model?
+?
+Yes — must match. A payment can only be confirmed once an order is durably recorded. An AP order service with a CP payment service creates a gap where money is charged but the order is lost.
+
+---
+
+Auth service and session store — must they share a consistency model?
+?
+Yes — must match. Both are CP. A session token that doesn't reflect the auth service's state means a logged-out user can still authenticate.
+
+---
+
+Product catalog and recommendation engine — must they share a consistency model?
+?
+No — independent. Recommendations can be stale (AP); slightly outdated suggestions cause no harm. The catalog can be its own model without coupling to recommendations.
+
+---
+
+Inventory service is CP, order service is AP. A customer orders an out-of-stock item. What happens? Who's responsible?
+?
+The AP order service accepts the order without confirming stock. The CP inventory service would have rejected it, but they weren't coupled. The order service is responsible — it should have queried the CP inventory service before accepting, or matched its consistency model.
+
+---
+
+During a partition, what is the correct action for a financial write?
+?
+reject_request — refuse the write rather than risk an inconsistent transaction. Money movement requires both sides to agree.
+
+---
+
+During a partition, what is the correct action for a product description read?
+?
+serve_from_cache — return the last known value. A slightly outdated description causes no harm.
+
+---
+
+During a partition, what is the correct action for an analytics event write?
+?
+queue_for_later — accept it locally and sync when the partition heals. Analytics data doesn't need to be immediately consistent.
+
+---
+
+During a partition, what is the correct action for a feature flag read?
+?
+fail_open — proceed with a safe default. Feature flag staleness is low-stakes; blocking on it would be worse than defaulting.
+
+---
+
+What is synchronous replication? When do you use it?
+?
+The primary waits for ALL replicas to acknowledge before confirming the write. Zero data loss on failover, but write latency equals the slowest replica. Use for: bank transactions, auth credentials — anything where data loss is unacceptable.
+
+---
+
+What is asynchronous replication? When do you use it?
+?
+The primary confirms immediately and replicates in the background. Fast writes, but data can be lost if the primary crashes before replication completes. Use for: high-volume feeds, analytics, user-generated content where brief data loss is acceptable.
+
+---
+
+What is semi-synchronous replication? When do you use it?
+?
+The primary waits for at least one replica to acknowledge. Balances durability and speed. Use for: order records — you need durability but can't afford the latency of waiting for all replicas.
+
+---
+
+Where should session token reads be routed, and why?
+?
+Primary only. Session tokens are CP — any replica lag creates a window where an invalidated token is still accepted.
+
+---
+
+Where should account balance reads be routed, and why?
+?
+Primary only. Balance reads are CP — a replica that's even 50ms behind could serve a stale balance that causes an overdraft.
+
+---
+
+Where should reads go for a globally distributed product catalog?
+?
+Local replica. Product catalog is AP — stale descriptions are harmless, and routing to a local replica dramatically reduces cross-region latency for users worldwide.
+
+---
+
+Your checkout flow hits the inventory service, which is partitioned. Do you reject the order or allow it and risk overselling? What's your reasoning?
+?
+CP — reject the order. Return a 503 and ask the user to retry. The cost of overselling (real customer harm, fulfillment failures) is higher than the cost of a brief "try again" error. The user experience is worse, but the failure is recoverable. Overselling is not.

@@ -12,13 +12,39 @@ Before you start, write a one-line definition of each pattern in your own words:
 
 > _Your definition:_
 
+```mermaid
+flowchart LR
+    A[Request] --> B{Cache?}
+    B -->|HIT| C[Return]
+    B -->|MISS| D[DB fetch]
+    D --> E[Populate cache]
+    E --> C
+```
+
 **Write-through** (on write, update cache AND DB synchronously):
 
 > _Your definition:_
 
+```mermaid
+flowchart LR
+    A[Write] --> B[DB]
+    A --> C[Cache]
+    B --> D[Confirm]
+    C --> D
+```
+
 **Write-behind** (on write, update cache only → async DB flush later):
 
 > _Your definition:_
+
+```mermaid
+flowchart LR
+    A[Write] --> B[Cache]
+    B --> C[Confirm immediately]
+    B --> D[Async flush]
+    D --> E[DB]
+    D -->|Crash before flush| F[DATA LOSS]
+```
 
 ---
 
