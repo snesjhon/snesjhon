@@ -2013,3 +2013,801 @@ FOREIGN KEY ("user_id")
   [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
   [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
   [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" ORDER BY "users"."id" ASC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to AddStatusToPosts (20260310192144)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mALTER TABLE "posts" ADD "status" varchar[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.0ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260310192144') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mComment Delete All (0.1ms)[0m  [1m[31mDELETE FROM "comments"[0m
+  [1m[36mPost Delete All (0.1ms)[0m  [1m[31mDELETE FROM "posts"[0m
+  [1m[36mUser Delete All (0.0ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Create (0.1ms)[0m  [1m[32mINSERT INTO "users" ("name", "email", "password_digest", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["name", "alice smith"], ["email", "alice@example.com"], ["password_digest", "$2a$12$lIYWB6.CW21WJMASpei2Iu9OCxDheIBv5K26EVTmtunpflM0tajva"], ["created_at", "2026-03-10 20:45:12.689824"], ["updated_at", "2026-03-10 20:45:12.689824"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Create (0.1ms)[0m  [1m[32mINSERT INTO "users" ("name", "email", "password_digest", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["name", "bob jones"], ["email", "bob@example.com"], ["password_digest", "$2a$12$Q.LtNqUr16hGPUoJRgS78.x.2WHt88KIGYRiPjjvLHGjLqKMJoeAm"], ["created_at", "2026-03-10 20:45:12.855457"], ["updated_at", "2026-03-10 20:45:12.855457"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Create (0.1ms)[0m  [1m[32mINSERT INTO "users" ("name", "email", "password_digest", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["name", "carol white"], ["email", "carol@example.com"], ["password_digest", "$2a$12$bzGN3gLBcinxxmOJxnTTpujOU2x.A5MzWtLtb1YmUpOlQ0WyR7KBK"], ["created_at", "2026-03-10 20:45:13.020393"], ["updated_at", "2026-03-10 20:45:13.020393"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.1ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 1: Rails is a web framework that makes building web applications fast and fun"], ["body", "Rails is a web framework that makes building web applications fast and fun. It follows convention over configuration and has a rich ecosystem of gems."], ["excerpt", nil], ["user_id", 7], ["published", 1], ["created_at", "2026-03-10 20:45:13.026754"], ["updated_at", "2026-03-10 20:45:13.026754"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 1. Great read!"], ["post_id", 62], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.031184"], ["updated_at", "2026-03-10 20:45:13.031184"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 9ea3a194-02b9-4e4e-bc81-39688d6dec74) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001222e2930 @uri=#<URI::GID gid://rails-debug-challenge/Comment/115>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 1. Great read!"], ["post_id", 62], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.056425"], ["updated_at", "2026-03-10 20:45:13.056425"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 2b18a76b-c2d3-4f59-9079-7f9b1cc0025e) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001222a11b0 @uri=#<URI::GID gid://rails-debug-challenge/Comment/116>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 3 on post 1. Great read!"], ["post_id", 62], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.057153"], ["updated_at", "2026-03-10 20:45:13.057153"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: c834627b-74ec-475e-bec8-a4fdd6dfb5ae) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001221662a0 @uri=#<URI::GID gid://rails-debug-challenge/Comment/117>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 4 on post 1. Great read!"], ["post_id", 62], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.057874"], ["updated_at", "2026-03-10 20:45:13.057874"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 182cbcdb-80d7-42af-85e0-9f7f55a01249) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x000000012244d2e8 @uri=#<URI::GID gid://rails-debug-challenge/Comment/118>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.1ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 2: ActiveRecord is Rails' ORM layer"], ["body", "ActiveRecord is Rails' ORM layer. It maps database tables to Ruby classes and provides a clean API for querying and persisting data."], ["excerpt", nil], ["user_id", 8], ["published", 1], ["created_at", "2026-03-10 20:45:13.058437"], ["updated_at", "2026-03-10 20:45:13.058437"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 2. Great read!"], ["post_id", 63], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.059172"], ["updated_at", "2026-03-10 20:45:13.059172"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 5659343d-d833-4f29-8114-a30dd099a4b4) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x000000012240d1e8 @uri=#<URI::GID gid://rails-debug-challenge/Comment/119>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 2. Great read!"], ["post_id", 63], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.059876"], ["updated_at", "2026-03-10 20:45:13.059876"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: e37eddbc-759a-4f41-8aee-0e59ca65e310) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001224035d0 @uri=#<URI::GID gid://rails-debug-challenge/Comment/120>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 3 on post 2. Great read!"], ["post_id", 63], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.060702"], ["updated_at", "2026-03-10 20:45:13.060702"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 5a57c290-3c30-4598-b821-97947063aeee) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001225ab2c0 @uri=#<URI::GID gid://rails-debug-challenge/Comment/121>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.1ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 3: N+1 queries are one of the most common performance problems in Rails apps"], ["body", "N+1 queries are one of the most common performance problems in Rails apps. They occur when you load a collection and then query an association for each record."], ["excerpt", nil], ["user_id", 9], ["published", 1], ["created_at", "2026-03-10 20:45:13.061298"], ["updated_at", "2026-03-10 20:45:13.061298"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 3. Great read!"], ["post_id", 64], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.062079"], ["updated_at", "2026-03-10 20:45:13.062079"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: c63e3d6b-0d7e-4ce3-91f9-62f6cb8f6ec5) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x000000012254d378 @uri=#<URI::GID gid://rails-debug-challenge/Comment/122>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 3. Great read!"], ["post_id", 64], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.062786"], ["updated_at", "2026-03-10 20:45:13.062786"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 588df999-5f4c-4f0a-a588-928d8aee41fe) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000122543300 @uri=#<URI::GID gid://rails-debug-challenge/Comment/123>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 3 on post 3. Great read!"], ["post_id", 64], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.063671"], ["updated_at", "2026-03-10 20:45:13.063671"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 0307e6f5-031b-4f9e-99e7-dfeaafd806a4) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x000000012250ab68 @uri=#<URI::GID gid://rails-debug-challenge/Comment/124>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 4 on post 3. Great read!"], ["post_id", 64], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.064634"], ["updated_at", "2026-03-10 20:45:13.064634"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 9f714996-c47b-4ad8-bf93-8f239ba10bd8) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000122501b30 @uri=#<URI::GID gid://rails-debug-challenge/Comment/125>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.1ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 4: Eager loading with includes, preload, or eager_load can solve N+1 queries by fetching all associated records in one or two SQL queries instead of N"], ["body", "Eager loading with includes, preload, or eager_load can solve N+1 queries by fetching all associated records in one or two SQL queries instead of N."], ["excerpt", nil], ["user_id", 7], ["published", 1], ["created_at", "2026-03-10 20:45:13.065260"], ["updated_at", "2026-03-10 20:45:13.065260"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 4. Great read!"], ["post_id", 65], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.066081"], ["updated_at", "2026-03-10 20:45:13.066081"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 8be5ac14-5501-49a3-a170-dc95664d7355) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001223aff48 @uri=#<URI::GID gid://rails-debug-challenge/Comment/126>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 4. Great read!"], ["post_id", 65], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.066925"], ["updated_at", "2026-03-10 20:45:13.066925"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: a75fb798-a601-4883-ab0c-3a949959ee42) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001223a8c20 @uri=#<URI::GID gid://rails-debug-challenge/Comment/127>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 3 on post 4. Great read!"], ["post_id", 65], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.067713"], ["updated_at", "2026-03-10 20:45:13.067713"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 3606661a-479d-4fb0-b3f0-21711d3c1659) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x000000012222cc98 @uri=#<URI::GID gid://rails-debug-challenge/Comment/128>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.1ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 5: Caching is another tool for improving performance"], ["body", "Caching is another tool for improving performance. Fragment caching, counter caches, and HTTP caching all have their place in a Rails app."], ["excerpt", nil], ["user_id", 8], ["published", 1], ["created_at", "2026-03-10 20:45:13.068259"], ["updated_at", "2026-03-10 20:45:13.068259"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 5. Great read!"], ["post_id", 66], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.069113"], ["updated_at", "2026-03-10 20:45:13.069113"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: a208ecd9-1902-49eb-a275-2c9c74b038d7) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x000000012214def8 @uri=#<URI::GID gid://rails-debug-challenge/Comment/129>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 5. Great read!"], ["post_id", 66], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.070018"], ["updated_at", "2026-03-10 20:45:13.070018"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 419273f5-b8a3-4577-86a7-04c3dd19ca59) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000122144128 @uri=#<URI::GID gid://rails-debug-challenge/Comment/130>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 3 on post 5. Great read!"], ["post_id", 66], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.070829"], ["updated_at", "2026-03-10 20:45:13.070829"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: d5cc73d8-298d-4d4a-b944-7c921605cfd3) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x000000012212d090 @uri=#<URI::GID gid://rails-debug-challenge/Comment/131>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 4 on post 5. Great read!"], ["post_id", 66], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.071686"], ["updated_at", "2026-03-10 20:45:13.071686"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 7cecf37a-c0b4-4f97-8f3e-2863bafc46da) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001221218d0 @uri=#<URI::GID gid://rails-debug-challenge/Comment/132>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.1ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 6: Rails is a web framework that makes building web applications fast and fun"], ["body", "Rails is a web framework that makes building web applications fast and fun. It follows convention over configuration and has a rich ecosystem of gems."], ["excerpt", nil], ["user_id", 9], ["published", 1], ["created_at", "2026-03-10 20:45:13.072255"], ["updated_at", "2026-03-10 20:45:13.072255"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 6. Great read!"], ["post_id", 67], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.073252"], ["updated_at", "2026-03-10 20:45:13.073252"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 7b9d6065-4b09-4f78-82fe-387f9dd874ca) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000121fe0a48 @uri=#<URI::GID gid://rails-debug-challenge/Comment/133>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 6. Great read!"], ["post_id", 67], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.074215"], ["updated_at", "2026-03-10 20:45:13.074215"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 35e687c7-dd98-4a72-894a-a3c238f80b3e) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000121dc9980 @uri=#<URI::GID gid://rails-debug-challenge/Comment/134>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.2ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 7: ActiveRecord is Rails' ORM layer"], ["body", "ActiveRecord is Rails' ORM layer. It maps database tables to Ruby classes and provides a clean API for querying and persisting data."], ["excerpt", nil], ["user_id", 7], ["published", 1], ["created_at", "2026-03-10 20:45:13.074853"], ["updated_at", "2026-03-10 20:45:13.074853"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 7. Great read!"], ["post_id", 68], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.075883"], ["updated_at", "2026-03-10 20:45:13.075883"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 7f9f1f6d-9970-4a9e-8edb-7b0c7cbf0fe0) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000120961588 @uri=#<URI::GID gid://rails-debug-challenge/Comment/135>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 7. Great read!"], ["post_id", 68], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.076909"], ["updated_at", "2026-03-10 20:45:13.076909"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 2f00d26b-c65b-4618-b785-af1d95bc0faf) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001202d7a50 @uri=#<URI::GID gid://rails-debug-challenge/Comment/136>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.1ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 8: N+1 queries are one of the most common performance problems in Rails apps"], ["body", "N+1 queries are one of the most common performance problems in Rails apps. They occur when you load a collection and then query an association for each record."], ["excerpt", nil], ["user_id", 8], ["published", 1], ["created_at", "2026-03-10 20:45:13.077484"], ["updated_at", "2026-03-10 20:45:13.077484"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 8. Great read!"], ["post_id", 69], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.078454"], ["updated_at", "2026-03-10 20:45:13.078454"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: b9226945-d97e-4690-a260-2851a87d992a) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000122688e40 @uri=#<URI::GID gid://rails-debug-challenge/Comment/137>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.1ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 9: Eager loading with includes, preload, or eager_load can solve N+1 queries by fetching all associated records in one or two SQL queries instead of N"], ["body", "Eager loading with includes, preload, or eager_load can solve N+1 queries by fetching all associated records in one or two SQL queries instead of N."], ["excerpt", nil], ["user_id", 9], ["published", 1], ["created_at", "2026-03-10 20:45:13.079027"], ["updated_at", "2026-03-10 20:45:13.079027"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 9. Great read!"], ["post_id", 70], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.081832"], ["updated_at", "2026-03-10 20:45:13.081832"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 6e7aee4f-91ac-4423-98f6-e6895a8507dc) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000121ceade8 @uri=#<URI::GID gid://rails-debug-challenge/Comment/138>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 9. Great read!"], ["post_id", 70], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.082723"], ["updated_at", "2026-03-10 20:45:13.082723"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: f873698f-a7ba-4b86-9517-42ff9cbee4a7) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000121913850 @uri=#<URI::GID gid://rails-debug-challenge/Comment/139>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 3 on post 9. Great read!"], ["post_id", 70], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.083526"], ["updated_at", "2026-03-10 20:45:13.083526"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 208ec165-228f-4b7d-8f65-f2bfada05c05) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001209eff18 @uri=#<URI::GID gid://rails-debug-challenge/Comment/140>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.1ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 10: Caching is another tool for improving performance"], ["body", "Caching is another tool for improving performance. Fragment caching, counter caches, and HTTP caching all have their place in a Rails app."], ["excerpt", nil], ["user_id", 7], ["published", 1], ["created_at", "2026-03-10 20:45:13.084174"], ["updated_at", "2026-03-10 20:45:13.084174"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 10. Great read!"], ["post_id", 71], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.084953"], ["updated_at", "2026-03-10 20:45:13.084953"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: e09b8597-7a33-47f1-af36-7c4faa450b1f) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000121fc7ca0 @uri=#<URI::GID gid://rails-debug-challenge/Comment/141>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.1ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 11: Rails is a web framework that makes building web applications fast and fun"], ["body", "Rails is a web framework that makes building web applications fast and fun. It follows convention over configuration and has a rich ecosystem of gems."], ["excerpt", nil], ["user_id", 8], ["published", 1], ["created_at", "2026-03-10 20:45:13.085506"], ["updated_at", "2026-03-10 20:45:13.085506"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 11. Great read!"], ["post_id", 72], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.086176"], ["updated_at", "2026-03-10 20:45:13.086176"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 0d82ff6e-0292-43eb-a8e4-90a6424029cc) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000122142a80 @uri=#<URI::GID gid://rails-debug-challenge/Comment/142>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 11. Great read!"], ["post_id", 72], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.086777"], ["updated_at", "2026-03-10 20:45:13.086777"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: a0d8bdf2-d5a3-443c-bdfb-be13bfc35bee) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x000000012212b470 @uri=#<URI::GID gid://rails-debug-challenge/Comment/143>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 3 on post 11. Great read!"], ["post_id", 72], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.087382"], ["updated_at", "2026-03-10 20:45:13.087382"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 7ed1aca1-242c-4882-8d07-6f95088cc52a) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001220ed238 @uri=#<URI::GID gid://rails-debug-challenge/Comment/144>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.1ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 12: ActiveRecord is Rails' ORM layer"], ["body", "ActiveRecord is Rails' ORM layer. It maps database tables to Ruby classes and provides a clean API for querying and persisting data."], ["excerpt", nil], ["user_id", 9], ["published", 1], ["created_at", "2026-03-10 20:45:13.087774"], ["updated_at", "2026-03-10 20:45:13.087774"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 12. Great read!"], ["post_id", 73], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.088364"], ["updated_at", "2026-03-10 20:45:13.088364"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 47be34df-a030-4c88-8fc9-7c6986d95b04) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000121f478e8 @uri=#<URI::GID gid://rails-debug-challenge/Comment/145>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 12. Great read!"], ["post_id", 73], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.088996"], ["updated_at", "2026-03-10 20:45:13.088996"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: f160b3cc-673e-41c9-8b0d-9a063caaabbf) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001222aa670 @uri=#<URI::GID gid://rails-debug-challenge/Comment/146>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.1ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 13: N+1 queries are one of the most common performance problems in Rails apps"], ["body", "N+1 queries are one of the most common performance problems in Rails apps. They occur when you load a collection and then query an association for each record."], ["excerpt", nil], ["user_id", 7], ["published", 1], ["created_at", "2026-03-10 20:45:13.089493"], ["updated_at", "2026-03-10 20:45:13.089493"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 13. Great read!"], ["post_id", 74], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.090081"], ["updated_at", "2026-03-10 20:45:13.090081"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: dce983fc-18ba-423d-9165-7ea5b5e057d7) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000122408c88 @uri=#<URI::GID gid://rails-debug-challenge/Comment/147>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 13. Great read!"], ["post_id", 74], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.090650"], ["updated_at", "2026-03-10 20:45:13.090650"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 79f8a3bc-f6e2-4230-a7df-279a43b4fc8e) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001223af908 @uri=#<URI::GID gid://rails-debug-challenge/Comment/148>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.1ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 14: Eager loading with includes, preload, or eager_load can solve N+1 queries by fetching all associated records in one or two SQL queries instead of N"], ["body", "Eager loading with includes, preload, or eager_load can solve N+1 queries by fetching all associated records in one or two SQL queries instead of N."], ["excerpt", nil], ["user_id", 8], ["published", 1], ["created_at", "2026-03-10 20:45:13.090988"], ["updated_at", "2026-03-10 20:45:13.090988"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 14. Great read!"], ["post_id", 75], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.091526"], ["updated_at", "2026-03-10 20:45:13.091526"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: e3ce7f33-21fb-40bf-9528-513a0ec535dd) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001223a1178 @uri=#<URI::GID gid://rails-debug-challenge/Comment/149>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 14. Great read!"], ["post_id", 75], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.092068"], ["updated_at", "2026-03-10 20:45:13.092068"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 7ab84dea-ca36-40e1-ba1d-87a1b76517ef) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000122227900 @uri=#<URI::GID gid://rails-debug-challenge/Comment/150>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 3 on post 14. Great read!"], ["post_id", 75], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.092582"], ["updated_at", "2026-03-10 20:45:13.092582"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 31514a8f-b347-475b-a490-10630cbb370e) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001221ed700 @uri=#<URI::GID gid://rails-debug-challenge/Comment/151>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.1ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 15: Caching is another tool for improving performance"], ["body", "Caching is another tool for improving performance. Fragment caching, counter caches, and HTTP caching all have their place in a Rails app."], ["excerpt", nil], ["user_id", 9], ["published", 1], ["created_at", "2026-03-10 20:45:13.092913"], ["updated_at", "2026-03-10 20:45:13.092913"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 15. Great read!"], ["post_id", 76], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.093441"], ["updated_at", "2026-03-10 20:45:13.093441"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 44aa8e84-3634-4b62-b8cd-6ec1029a4ca5) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x000000012250b1f8 @uri=#<URI::GID gid://rails-debug-challenge/Comment/152>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.1ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 16: Rails is a web framework that makes building web applications fast and fun"], ["body", "Rails is a web framework that makes building web applications fast and fun. It follows convention over configuration and has a rich ecosystem of gems."], ["excerpt", nil], ["user_id", 7], ["published", 1], ["created_at", "2026-03-10 20:45:13.093771"], ["updated_at", "2026-03-10 20:45:13.093771"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 16. Great read!"], ["post_id", 77], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.094260"], ["updated_at", "2026-03-10 20:45:13.094260"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 56c0f934-5283-49bf-8874-2a2d7f92fc53) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001224ae318 @uri=#<URI::GID gid://rails-debug-challenge/Comment/153>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 16. Great read!"], ["post_id", 77], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.094747"], ["updated_at", "2026-03-10 20:45:13.094747"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 22cca02b-f0ff-4651-afef-c40fea41592b) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001224a0d08 @uri=#<URI::GID gid://rails-debug-challenge/Comment/154>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 3 on post 16. Great read!"], ["post_id", 77], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.095100"], ["updated_at", "2026-03-10 20:45:13.095100"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: b21c87d3-7ae2-46d9-9fc7-e4044d3837d1) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x000000012268a740 @uri=#<URI::GID gid://rails-debug-challenge/Comment/155>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 4 on post 16. Great read!"], ["post_id", 77], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.095448"], ["updated_at", "2026-03-10 20:45:13.095448"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 7b0645fe-0823-4a56-83ed-fa8c6e1847d4) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000122683d50 @uri=#<URI::GID gid://rails-debug-challenge/Comment/156>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 17: ActiveRecord is Rails' ORM layer"], ["body", "ActiveRecord is Rails' ORM layer. It maps database tables to Ruby classes and provides a clean API for querying and persisting data."], ["excerpt", nil], ["user_id", 8], ["published", 1], ["created_at", "2026-03-10 20:45:13.095677"], ["updated_at", "2026-03-10 20:45:13.095677"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 17. Great read!"], ["post_id", 78], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.096039"], ["updated_at", "2026-03-10 20:45:13.096039"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 3a905481-f78b-4969-a6a4-afdf33c60324) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001225a74b8 @uri=#<URI::GID gid://rails-debug-challenge/Comment/157>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 18: N+1 queries are one of the most common performance problems in Rails apps"], ["body", "N+1 queries are one of the most common performance problems in Rails apps. They occur when you load a collection and then query an association for each record."], ["excerpt", nil], ["user_id", 9], ["published", 1], ["created_at", "2026-03-10 20:45:13.096253"], ["updated_at", "2026-03-10 20:45:13.096253"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 18. Great read!"], ["post_id", 79], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.096596"], ["updated_at", "2026-03-10 20:45:13.096596"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 3e3eaf24-5310-4362-ba5d-a3c90afd107c) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x000000012254ae48 @uri=#<URI::GID gid://rails-debug-challenge/Comment/158>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 18. Great read!"], ["post_id", 79], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.096949"], ["updated_at", "2026-03-10 20:45:13.096949"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 1941381b-5164-494b-b648-7b06df3fd379) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001225400b0 @uri=#<URI::GID gid://rails-debug-challenge/Comment/159>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 3 on post 18. Great read!"], ["post_id", 79], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.097296"], ["updated_at", "2026-03-10 20:45:13.097296"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: f77078dc-0e55-4ee8-98c4-814493ad0b9d) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000122446a60 @uri=#<URI::GID gid://rails-debug-challenge/Comment/160>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 19: Eager loading with includes, preload, or eager_load can solve N+1 queries by fetching all associated records in one or two SQL queries instead of N"], ["body", "Eager loading with includes, preload, or eager_load can solve N+1 queries by fetching all associated records in one or two SQL queries instead of N."], ["excerpt", nil], ["user_id", 7], ["published", 1], ["created_at", "2026-03-10 20:45:13.097506"], ["updated_at", "2026-03-10 20:45:13.097506"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 19. Great read!"], ["post_id", 80], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.097854"], ["updated_at", "2026-03-10 20:45:13.097854"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 3a8bd93c-2414-4424-935b-b719f20d99e6) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001222edd08 @uri=#<URI::GID gid://rails-debug-challenge/Comment/161>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 20: Caching is another tool for improving performance"], ["body", "Caching is another tool for improving performance. Fragment caching, counter caches, and HTTP caching all have their place in a Rails app."], ["excerpt", nil], ["user_id", 8], ["published", 1], ["created_at", "2026-03-10 20:45:13.098071"], ["updated_at", "2026-03-10 20:45:13.098071"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 20. Great read!"], ["post_id", 81], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.098413"], ["updated_at", "2026-03-10 20:45:13.098413"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: c20e45b8-96f0-42d2-90f1-e6cb0652131e) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001221a7c28 @uri=#<URI::GID gid://rails-debug-challenge/Comment/162>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 20. Great read!"], ["post_id", 81], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.098762"], ["updated_at", "2026-03-10 20:45:13.098762"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 4f7e4acb-4b0d-4cd6-87db-dc77382019d2) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x000000012216a918 @uri=#<URI::GID gid://rails-debug-challenge/Comment/163>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 3 on post 20. Great read!"], ["post_id", 81], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.099117"], ["updated_at", "2026-03-10 20:45:13.099117"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 5333ba6b-c29a-4fb9-bd71-f3df4e44479c) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000122161ca0 @uri=#<URI::GID gid://rails-debug-challenge/Comment/164>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 21: Rails is a web framework that makes building web applications fast and fun"], ["body", "Rails is a web framework that makes building web applications fast and fun. It follows convention over configuration and has a rich ecosystem of gems."], ["excerpt", nil], ["user_id", 9], ["published", 1], ["created_at", "2026-03-10 20:45:13.099327"], ["updated_at", "2026-03-10 20:45:13.099327"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 21. Great read!"], ["post_id", 82], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.099674"], ["updated_at", "2026-03-10 20:45:13.099674"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 163b6748-5252-4500-8810-472c0570260f) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x000000012204dc10 @uri=#<URI::GID gid://rails-debug-challenge/Comment/165>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 21. Great read!"], ["post_id", 82], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.100035"], ["updated_at", "2026-03-10 20:45:13.100035"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: e3433e16-b66f-487a-82c3-d13a80889995) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000121e2f938 @uri=#<URI::GID gid://rails-debug-challenge/Comment/166>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 3 on post 21. Great read!"], ["post_id", 82], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.101822"], ["updated_at", "2026-03-10 20:45:13.101822"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 19f330de-3400-4274-8938-62c993c709ec) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000121d67410 @uri=#<URI::GID gid://rails-debug-challenge/Comment/167>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 22: ActiveRecord is Rails' ORM layer"], ["body", "ActiveRecord is Rails' ORM layer. It maps database tables to Ruby classes and provides a clean API for querying and persisting data."], ["excerpt", nil], ["user_id", 7], ["published", 1], ["created_at", "2026-03-10 20:45:13.102062"], ["updated_at", "2026-03-10 20:45:13.102062"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 22. Great read!"], ["post_id", 83], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.102412"], ["updated_at", "2026-03-10 20:45:13.102412"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: b85f2eb4-8aa2-4d9e-b02b-42d4c157f819) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001219f6a10 @uri=#<URI::GID gid://rails-debug-challenge/Comment/168>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 23: N+1 queries are one of the most common performance problems in Rails apps"], ["body", "N+1 queries are one of the most common performance problems in Rails apps. They occur when you load a collection and then query an association for each record."], ["excerpt", nil], ["user_id", 8], ["published", 1], ["created_at", "2026-03-10 20:45:13.102634"], ["updated_at", "2026-03-10 20:45:13.102634"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 23. Great read!"], ["post_id", 84], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.102979"], ["updated_at", "2026-03-10 20:45:13.102979"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: bbd192a6-c6de-47a1-b4b0-ad3595136cb7) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000122009e98 @uri=#<URI::GID gid://rails-debug-challenge/Comment/169>>]}
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 24: Eager loading with includes, preload, or eager_load can solve N+1 queries by fetching all associated records in one or two SQL queries instead of N"], ["body", "Eager loading with includes, preload, or eager_load can solve N+1 queries by fetching all associated records in one or two SQL queries instead of N."], ["excerpt", nil], ["user_id", 9], ["published", 1], ["created_at", "2026-03-10 20:45:13.103653"], ["updated_at", "2026-03-10 20:45:13.103653"], ["status", nil]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 24. Great read!"], ["post_id", 85], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.104101"], ["updated_at", "2026-03-10 20:45:13.104101"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 67dd0c11-1778-4ea5-8629-56e3c1d59a94) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000121fa3350 @uri=#<URI::GID gid://rails-debug-challenge/Comment/170>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 25: Caching is another tool for improving performance"], ["body", "Caching is another tool for improving performance. Fragment caching, counter caches, and HTTP caching all have their place in a Rails app."], ["excerpt", nil], ["user_id", 7], ["published", 1], ["created_at", "2026-03-10 20:45:13.104323"], ["updated_at", "2026-03-10 20:45:13.104323"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 26: Rails is a web framework that makes building web applications fast and fun"], ["body", "Rails is a web framework that makes building web applications fast and fun. It follows convention over configuration and has a rich ecosystem of gems."], ["excerpt", nil], ["user_id", 8], ["published", 1], ["created_at", "2026-03-10 20:45:13.104510"], ["updated_at", "2026-03-10 20:45:13.104510"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 26. Great read!"], ["post_id", 87], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.104934"], ["updated_at", "2026-03-10 20:45:13.104934"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: c8524e3f-70c9-4a2e-9f88-02e533f69dbe) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000122148c50 @uri=#<URI::GID gid://rails-debug-challenge/Comment/171>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 26. Great read!"], ["post_id", 87], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.105288"], ["updated_at", "2026-03-10 20:45:13.105288"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 08e8ad4c-1760-4cac-8995-3711df6d7800) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001221419a0 @uri=#<URI::GID gid://rails-debug-challenge/Comment/172>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 27: ActiveRecord is Rails' ORM layer"], ["body", "ActiveRecord is Rails' ORM layer. It maps database tables to Ruby classes and provides a clean API for querying and persisting data."], ["excerpt", nil], ["user_id", 9], ["published", 1], ["created_at", "2026-03-10 20:45:13.105503"], ["updated_at", "2026-03-10 20:45:13.105503"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 28: N+1 queries are one of the most common performance problems in Rails apps"], ["body", "N+1 queries are one of the most common performance problems in Rails apps. They occur when you load a collection and then query an association for each record."], ["excerpt", nil], ["user_id", 7], ["published", 1], ["created_at", "2026-03-10 20:45:13.105694"], ["updated_at", "2026-03-10 20:45:13.105694"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 28. Great read!"], ["post_id", 89], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.106036"], ["updated_at", "2026-03-10 20:45:13.106036"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: f41d5944-05da-4b18-bfb0-8b25c0c6af29) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001220eae48 @uri=#<URI::GID gid://rails-debug-challenge/Comment/173>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 28. Great read!"], ["post_id", 89], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.106448"], ["updated_at", "2026-03-10 20:45:13.106448"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 4648c87d-330d-4cf7-b98f-4fe61833224f) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001222a6390 @uri=#<URI::GID gid://rails-debug-challenge/Comment/174>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 29: Eager loading with includes, preload, or eager_load can solve N+1 queries by fetching all associated records in one or two SQL queries instead of N"], ["body", "Eager loading with includes, preload, or eager_load can solve N+1 queries by fetching all associated records in one or two SQL queries instead of N."], ["excerpt", nil], ["user_id", 8], ["published", 1], ["created_at", "2026-03-10 20:45:13.106663"], ["updated_at", "2026-03-10 20:45:13.106663"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 29. Great read!"], ["post_id", 90], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.107023"], ["updated_at", "2026-03-10 20:45:13.107023"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: e46d1987-e230-4d7b-8863-2e963a9b20f0) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001222249a8 @uri=#<URI::GID gid://rails-debug-challenge/Comment/175>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 29. Great read!"], ["post_id", 90], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.107373"], ["updated_at", "2026-03-10 20:45:13.107373"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: e120d819-f21f-4381-9260-8b0936a4d936) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001221e70d0 @uri=#<URI::GID gid://rails-debug-challenge/Comment/176>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 3 on post 29. Great read!"], ["post_id", 90], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.107765"], ["updated_at", "2026-03-10 20:45:13.107765"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: d31ecf16-bc08-4e64-9fe5-0a5ce37e5426) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x000000012240bb40 @uri=#<URI::GID gid://rails-debug-challenge/Comment/177>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 4 on post 29. Great read!"], ["post_id", 90], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.108113"], ["updated_at", "2026-03-10 20:45:13.108113"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 84ae13d2-5661-4f09-994e-3179453dbf34) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000122401eb0 @uri=#<URI::GID gid://rails-debug-challenge/Comment/178>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 30: Caching is another tool for improving performance"], ["body", "Caching is another tool for improving performance. Fragment caching, counter caches, and HTTP caching all have their place in a Rails app."], ["excerpt", nil], ["user_id", 9], ["published", 1], ["created_at", "2026-03-10 20:45:13.108331"], ["updated_at", "2026-03-10 20:45:13.108331"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 30. Great read!"], ["post_id", 91], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.108682"], ["updated_at", "2026-03-10 20:45:13.108682"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: e632ea3f-da23-4d1c-99a3-41c3af233121) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001223a3d10 @uri=#<URI::GID gid://rails-debug-challenge/Comment/179>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 30. Great read!"], ["post_id", 91], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.109087"], ["updated_at", "2026-03-10 20:45:13.109087"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: bbda3c7d-98a4-486b-bf54-20504f06c343) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x000000012254b410 @uri=#<URI::GID gid://rails-debug-challenge/Comment/180>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 31: Rails is a web framework that makes building web applications fast and fun"], ["body", "Rails is a web framework that makes building web applications fast and fun. It follows convention over configuration and has a rich ecosystem of gems."], ["excerpt", nil], ["user_id", 7], ["published", 1], ["created_at", "2026-03-10 20:45:13.109303"], ["updated_at", "2026-03-10 20:45:13.109303"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 31. Great read!"], ["post_id", 92], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.109649"], ["updated_at", "2026-03-10 20:45:13.109649"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: e56e4ce1-eafd-42e3-ac52-2183a419764e) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x000000012250ca58 @uri=#<URI::GID gid://rails-debug-challenge/Comment/181>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 32: ActiveRecord is Rails' ORM layer"], ["body", "ActiveRecord is Rails' ORM layer. It maps database tables to Ruby classes and provides a clean API for querying and persisting data."], ["excerpt", nil], ["user_id", 8], ["published", 1], ["created_at", "2026-03-10 20:45:13.109863"], ["updated_at", "2026-03-10 20:45:13.109863"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 33: N+1 queries are one of the most common performance problems in Rails apps"], ["body", "N+1 queries are one of the most common performance problems in Rails apps. They occur when you load a collection and then query an association for each record."], ["excerpt", nil], ["user_id", 9], ["published", 1], ["created_at", "2026-03-10 20:45:13.110045"], ["updated_at", "2026-03-10 20:45:13.110045"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 34: Eager loading with includes, preload, or eager_load can solve N+1 queries by fetching all associated records in one or two SQL queries instead of N"], ["body", "Eager loading with includes, preload, or eager_load can solve N+1 queries by fetching all associated records in one or two SQL queries instead of N."], ["excerpt", nil], ["user_id", 7], ["published", 1], ["created_at", "2026-03-10 20:45:13.110224"], ["updated_at", "2026-03-10 20:45:13.110224"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 34. Great read!"], ["post_id", 95], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.110596"], ["updated_at", "2026-03-10 20:45:13.110596"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 20c34181-53cf-4b84-a676-9a3415c6101c) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000122689778 @uri=#<URI::GID gid://rails-debug-challenge/Comment/182>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 35: Caching is another tool for improving performance"], ["body", "Caching is another tool for improving performance. Fragment caching, counter caches, and HTTP caching all have their place in a Rails app."], ["excerpt", nil], ["user_id", 8], ["published", 1], ["created_at", "2026-03-10 20:45:13.110818"], ["updated_at", "2026-03-10 20:45:13.110818"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 35. Great read!"], ["post_id", 96], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.111165"], ["updated_at", "2026-03-10 20:45:13.111165"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: d53a1f2d-8d26-430f-ab16-f5a0895d5344) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001225afaa0 @uri=#<URI::GID gid://rails-debug-challenge/Comment/183>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 35. Great read!"], ["post_id", 96], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.111518"], ["updated_at", "2026-03-10 20:45:13.111518"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: fc0ae0ea-1317-4058-a380-e7d35fe21fa1) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001225a65e0 @uri=#<URI::GID gid://rails-debug-challenge/Comment/184>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 3 on post 35. Great read!"], ["post_id", 96], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.111865"], ["updated_at", "2026-03-10 20:45:13.111865"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: c37bb042-e919-4c33-a937-dd86e4bb005f) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001224aec78 @uri=#<URI::GID gid://rails-debug-challenge/Comment/185>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 36: Rails is a web framework that makes building web applications fast and fun"], ["body", "Rails is a web framework that makes building web applications fast and fun. It follows convention over configuration and has a rich ecosystem of gems."], ["excerpt", nil], ["user_id", 9], ["published", 1], ["created_at", "2026-03-10 20:45:13.112077"], ["updated_at", "2026-03-10 20:45:13.112077"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 36. Great read!"], ["post_id", 97], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.112417"], ["updated_at", "2026-03-10 20:45:13.112417"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 85c0d750-052c-4c37-ac01-8e2365600274) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x000000012244d5e0 @uri=#<URI::GID gid://rails-debug-challenge/Comment/186>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 37: ActiveRecord is Rails' ORM layer"], ["body", "ActiveRecord is Rails' ORM layer. It maps database tables to Ruby classes and provides a clean API for querying and persisting data."], ["excerpt", nil], ["user_id", 7], ["published", 1], ["created_at", "2026-03-10 20:45:13.112635"], ["updated_at", "2026-03-10 20:45:13.112635"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 37. Great read!"], ["post_id", 98], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.112982"], ["updated_at", "2026-03-10 20:45:13.112982"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: cc0a2e9f-09fa-4a2f-b788-0c7f90cc6b44) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x000000012234ca88 @uri=#<URI::GID gid://rails-debug-challenge/Comment/187>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 37. Great read!"], ["post_id", 98], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.113334"], ["updated_at", "2026-03-10 20:45:13.113334"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: a6dc3768-2eac-4ca6-a7fe-83c5a956d14f) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001222e9410 @uri=#<URI::GID gid://rails-debug-challenge/Comment/188>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 3 on post 37. Great read!"], ["post_id", 98], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.113680"], ["updated_at", "2026-03-10 20:45:13.113680"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: cf079304-5be7-4e3d-81f4-be6fb9df16f5) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001221aa888 @uri=#<URI::GID gid://rails-debug-challenge/Comment/189>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 38: N+1 queries are one of the most common performance problems in Rails apps"], ["body", "N+1 queries are one of the most common performance problems in Rails apps. They occur when you load a collection and then query an association for each record."], ["excerpt", nil], ["user_id", 8], ["published", 1], ["created_at", "2026-03-10 20:45:13.113914"], ["updated_at", "2026-03-10 20:45:13.113914"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 38. Great read!"], ["post_id", 99], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.114271"], ["updated_at", "2026-03-10 20:45:13.114271"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: e636eb9b-c92f-452e-acde-6725d5771d82) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000122166db8 @uri=#<URI::GID gid://rails-debug-challenge/Comment/190>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 38. Great read!"], ["post_id", 99], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.114622"], ["updated_at", "2026-03-10 20:45:13.114622"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: d54842c7-d84e-4076-8bcd-084f4263d76c) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001220a5320 @uri=#<URI::GID gid://rails-debug-challenge/Comment/191>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 39: Eager loading with includes, preload, or eager_load can solve N+1 queries by fetching all associated records in one or two SQL queries instead of N"], ["body", "Eager loading with includes, preload, or eager_load can solve N+1 queries by fetching all associated records in one or two SQL queries instead of N."], ["excerpt", nil], ["user_id", 9], ["published", 1], ["created_at", "2026-03-10 20:45:13.114837"], ["updated_at", "2026-03-10 20:45:13.114837"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 39. Great read!"], ["post_id", 100], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.115181"], ["updated_at", "2026-03-10 20:45:13.115181"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 83b7620e-6fb8-4136-988e-bac6caa2a34c) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000122040420 @uri=#<URI::GID gid://rails-debug-challenge/Comment/192>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 40: Caching is another tool for improving performance"], ["body", "Caching is another tool for improving performance. Fragment caching, counter caches, and HTTP caching all have their place in a Rails app."], ["excerpt", nil], ["user_id", 7], ["published", 1], ["created_at", "2026-03-10 20:45:13.115395"], ["updated_at", "2026-03-10 20:45:13.115395"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 40. Great read!"], ["post_id", 101], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.115757"], ["updated_at", "2026-03-10 20:45:13.115757"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 66a9276f-7e5c-40f6-9282-c44b17ce62fb) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000121d86270 @uri=#<URI::GID gid://rails-debug-challenge/Comment/193>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 41: Rails is a web framework that makes building web applications fast and fun"], ["body", "Rails is a web framework that makes building web applications fast and fun. It follows convention over configuration and has a rich ecosystem of gems."], ["excerpt", nil], ["user_id", 8], ["published", 1], ["created_at", "2026-03-10 20:45:13.115968"], ["updated_at", "2026-03-10 20:45:13.115968"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 42: ActiveRecord is Rails' ORM layer"], ["body", "ActiveRecord is Rails' ORM layer. It maps database tables to Ruby classes and provides a clean API for querying and persisting data."], ["excerpt", nil], ["user_id", 9], ["published", 1], ["created_at", "2026-03-10 20:45:13.116164"], ["updated_at", "2026-03-10 20:45:13.116164"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 42. Great read!"], ["post_id", 103], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.116513"], ["updated_at", "2026-03-10 20:45:13.116513"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: ec549783-1fa2-4194-851b-7325cfb5fad2) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001226eea88 @uri=#<URI::GID gid://rails-debug-challenge/Comment/194>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 42. Great read!"], ["post_id", 103], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.116872"], ["updated_at", "2026-03-10 20:45:13.116872"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: dfd5e820-cce5-4a49-8091-22c5f34e9734) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001226e8688 @uri=#<URI::GID gid://rails-debug-challenge/Comment/195>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 3 on post 42. Great read!"], ["post_id", 103], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.117211"], ["updated_at", "2026-03-10 20:45:13.117211"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 8c2df1f5-4f83-438b-895e-01a0794ec281) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001226e2288 @uri=#<URI::GID gid://rails-debug-challenge/Comment/196>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 4 on post 42. Great read!"], ["post_id", 103], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.118519"], ["updated_at", "2026-03-10 20:45:13.118519"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: cb0e192e-b5c4-42f0-ac79-4673d438b9a6) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000121d604f8 @uri=#<URI::GID gid://rails-debug-challenge/Comment/197>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 43: N+1 queries are one of the most common performance problems in Rails apps"], ["body", "N+1 queries are one of the most common performance problems in Rails apps. They occur when you load a collection and then query an association for each record."], ["excerpt", nil], ["user_id", 7], ["published", 1], ["created_at", "2026-03-10 20:45:13.118750"], ["updated_at", "2026-03-10 20:45:13.118750"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 43. Great read!"], ["post_id", 104], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.119099"], ["updated_at", "2026-03-10 20:45:13.119099"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 906139c6-a0a6-4343-8dc2-b7cabaa6e2eb) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001219134e0 @uri=#<URI::GID gid://rails-debug-challenge/Comment/198>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 43. Great read!"], ["post_id", 104], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.119442"], ["updated_at", "2026-03-10 20:45:13.119442"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: b5883768-03e0-45f9-8661-867ddb7abed0) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x000000012200f938 @uri=#<URI::GID gid://rails-debug-challenge/Comment/199>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 3 on post 43. Great read!"], ["post_id", 104], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.119893"], ["updated_at", "2026-03-10 20:45:13.119893"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 2c05bf7c-d2fc-41b7-8cde-026c6f7d4c57) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000121fe98a0 @uri=#<URI::GID gid://rails-debug-challenge/Comment/200>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 44: Eager loading with includes, preload, or eager_load can solve N+1 queries by fetching all associated records in one or two SQL queries instead of N"], ["body", "Eager loading with includes, preload, or eager_load can solve N+1 queries by fetching all associated records in one or two SQL queries instead of N."], ["excerpt", nil], ["user_id", 8], ["published", 1], ["created_at", "2026-03-10 20:45:13.120099"], ["updated_at", "2026-03-10 20:45:13.120099"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 44. Great read!"], ["post_id", 105], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.120437"], ["updated_at", "2026-03-10 20:45:13.120437"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 189b0020-7dfe-420f-a7c2-dab12f4ad93e) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000121f48838 @uri=#<URI::GID gid://rails-debug-challenge/Comment/201>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 44. Great read!"], ["post_id", 105], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.120778"], ["updated_at", "2026-03-10 20:45:13.120778"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: b5c5cd1d-4349-4c01-917e-3e3007f894e6) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x000000012214c648 @uri=#<URI::GID gid://rails-debug-challenge/Comment/202>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 45: Caching is another tool for improving performance"], ["body", "Caching is another tool for improving performance. Fragment caching, counter caches, and HTTP caching all have their place in a Rails app."], ["excerpt", nil], ["user_id", 9], ["published", 1], ["created_at", "2026-03-10 20:45:13.121057"], ["updated_at", "2026-03-10 20:45:13.121057"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 45. Great read!"], ["post_id", 106], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.121393"], ["updated_at", "2026-03-10 20:45:13.121393"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 5e161cee-0595-491d-9158-414feae83005) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x000000012212e9e0 @uri=#<URI::GID gid://rails-debug-challenge/Comment/203>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 45. Great read!"], ["post_id", 106], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.121731"], ["updated_at", "2026-03-10 20:45:13.121731"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: c4cdbf4e-844b-4b8f-a2e1-32b4d2970d0a) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000122124760 @uri=#<URI::GID gid://rails-debug-challenge/Comment/204>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 3 on post 45. Great read!"], ["post_id", 106], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.122069"], ["updated_at", "2026-03-10 20:45:13.122069"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: cc3c7b17-742b-4e32-a598-5a499bbe6ef0) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001220e4958 @uri=#<URI::GID gid://rails-debug-challenge/Comment/205>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 4 on post 45. Great read!"], ["post_id", 106], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.122461"], ["updated_at", "2026-03-10 20:45:13.122461"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 886994df-f48c-4050-a580-4415452f4d38) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x000000012222f4c0 @uri=#<URI::GID gid://rails-debug-challenge/Comment/206>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 46: Rails is a web framework that makes building web applications fast and fun"], ["body", "Rails is a web framework that makes building web applications fast and fun. It follows convention over configuration and has a rich ecosystem of gems."], ["excerpt", nil], ["user_id", 7], ["published", 1], ["created_at", "2026-03-10 20:45:13.122672"], ["updated_at", "2026-03-10 20:45:13.122672"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 46. Great read!"], ["post_id", 107], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.123009"], ["updated_at", "2026-03-10 20:45:13.123009"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: a307b565-5210-43b0-9d88-4ece6c1e9d1b) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001222203f8 @uri=#<URI::GID gid://rails-debug-challenge/Comment/207>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 47: ActiveRecord is Rails' ORM layer"], ["body", "ActiveRecord is Rails' ORM layer. It maps database tables to Ruby classes and provides a clean API for querying and persisting data."], ["excerpt", nil], ["user_id", 8], ["published", 1], ["created_at", "2026-03-10 20:45:13.123217"], ["updated_at", "2026-03-10 20:45:13.123217"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 47. Great read!"], ["post_id", 108], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.123593"], ["updated_at", "2026-03-10 20:45:13.123593"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: cdd046bc-ebd2-4ed9-9dfc-f9d8f2ab75d7) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x000000012240bf28 @uri=#<URI::GID gid://rails-debug-challenge/Comment/208>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 47. Great read!"], ["post_id", 108], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.123973"], ["updated_at", "2026-03-10 20:45:13.123973"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 04b15b9e-641d-43bf-939d-52b4bfd00e51) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000122402108 @uri=#<URI::GID gid://rails-debug-challenge/Comment/209>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 3 on post 47. Great read!"], ["post_id", 108], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.124343"], ["updated_at", "2026-03-10 20:45:13.124343"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: a5d20018-22f2-4113-9e8a-6a17b8852c9d) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001223aae80 @uri=#<URI::GID gid://rails-debug-challenge/Comment/210>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 48: N+1 queries are one of the most common performance problems in Rails apps"], ["body", "N+1 queries are one of the most common performance problems in Rails apps. They occur when you load a collection and then query an association for each record."], ["excerpt", nil], ["user_id", 9], ["published", 1], ["created_at", "2026-03-10 20:45:13.124561"], ["updated_at", "2026-03-10 20:45:13.124561"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 49: Eager loading with includes, preload, or eager_load can solve N+1 queries by fetching all associated records in one or two SQL queries instead of N"], ["body", "Eager loading with includes, preload, or eager_load can solve N+1 queries by fetching all associated records in one or two SQL queries instead of N."], ["excerpt", nil], ["user_id", 7], ["published", 1], ["created_at", "2026-03-10 20:45:13.124748"], ["updated_at", "2026-03-10 20:45:13.124748"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 49. Great read!"], ["post_id", 110], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.125149"], ["updated_at", "2026-03-10 20:45:13.125149"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 1f21c302-d313-4178-9f20-fb6a9a1e9c12) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000122546000 @uri=#<URI::GID gid://rails-debug-challenge/Comment/211>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 7], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 49. Great read!"], ["post_id", 110], ["user_id", 7], ["created_at", "2026-03-10 20:45:13.125507"], ["updated_at", "2026-03-10 20:45:13.125507"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: d4fd727c-603b-4acf-9dac-3cb5bc2920c2) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x000000012250d110 @uri=#<URI::GID gid://rails-debug-challenge/Comment/212>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 50: Caching is another tool for improving performance"], ["body", "Caching is another tool for improving performance. Fragment caching, counter caches, and HTTP caching all have their place in a Rails app."], ["excerpt", nil], ["user_id", 8], ["published", 1], ["created_at", "2026-03-10 20:45:13.125722"], ["updated_at", "2026-03-10 20:45:13.125722"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 50. Great read!"], ["post_id", 111], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.126070"], ["updated_at", "2026-03-10 20:45:13.126070"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 1eedfcfc-d64f-4c1d-8fb7-5d543d130c3d) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001226efd20 @uri=#<URI::GID gid://rails-debug-challenge/Comment/213>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 51: Rails is a web framework that makes building web applications fast and fun"], ["body", "Rails is a web framework that makes building web applications fast and fun. It follows convention over configuration and has a rich ecosystem of gems."], ["excerpt", nil], ["user_id", 9], ["published", 1], ["created_at", "2026-03-10 20:45:13.126329"], ["updated_at", "2026-03-10 20:45:13.126329"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 52: ActiveRecord is Rails' ORM layer"], ["body", "ActiveRecord is Rails' ORM layer. It maps database tables to Ruby classes and provides a clean API for querying and persisting data."], ["excerpt", nil], ["user_id", 7], ["published", 1], ["created_at", "2026-03-10 20:45:13.126515"], ["updated_at", "2026-03-10 20:45:13.126515"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 52. Great read!"], ["post_id", 113], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.126869"], ["updated_at", "2026-03-10 20:45:13.126869"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 167ef8c4-2cb5-486b-8527-ce3e833d2ea3) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001226e2a30 @uri=#<URI::GID gid://rails-debug-challenge/Comment/214>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 52. Great read!"], ["post_id", 113], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.127225"], ["updated_at", "2026-03-10 20:45:13.127225"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: ccc0f301-c822-4ce6-8629-d57c8e7d8c8b) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x000000012268c310 @uri=#<URI::GID gid://rails-debug-challenge/Comment/215>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 53: N+1 queries are one of the most common performance problems in Rails apps"], ["body", "N+1 queries are one of the most common performance problems in Rails apps. They occur when you load a collection and then query an association for each record."], ["excerpt", nil], ["user_id", 8], ["published", 1], ["created_at", "2026-03-10 20:45:13.127438"], ["updated_at", "2026-03-10 20:45:13.127438"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 53. Great read!"], ["post_id", 114], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.127795"], ["updated_at", "2026-03-10 20:45:13.127795"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: e99573c0-8ca8-49f2-8774-5b38fe9f41d9) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001226821f8 @uri=#<URI::GID gid://rails-debug-challenge/Comment/216>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 53. Great read!"], ["post_id", 114], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.128146"], ["updated_at", "2026-03-10 20:45:13.128146"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 3228b296-1d5f-4209-902d-d88ceab6b659) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001225a9a60 @uri=#<URI::GID gid://rails-debug-challenge/Comment/217>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 3 on post 53. Great read!"], ["post_id", 114], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.128497"], ["updated_at", "2026-03-10 20:45:13.128497"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 60f8da02-8846-4d69-8ffa-66193554a5f8) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001225a12c0 @uri=#<URI::GID gid://rails-debug-challenge/Comment/218>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 4 on post 53. Great read!"], ["post_id", 114], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.128844"], ["updated_at", "2026-03-10 20:45:13.128844"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 2831e6c6-429c-4ac4-8d12-203b767ac7af) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001224a5d08 @uri=#<URI::GID gid://rails-debug-challenge/Comment/219>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 54: Eager loading with includes, preload, or eager_load can solve N+1 queries by fetching all associated records in one or two SQL queries instead of N"], ["body", "Eager loading with includes, preload, or eager_load can solve N+1 queries by fetching all associated records in one or two SQL queries instead of N."], ["excerpt", nil], ["user_id", 9], ["published", 1], ["created_at", "2026-03-10 20:45:13.129058"], ["updated_at", "2026-03-10 20:45:13.129058"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 54. Great read!"], ["post_id", 115], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.129406"], ["updated_at", "2026-03-10 20:45:13.129406"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 61d5bc73-3e1b-48f7-b879-c18593021a2c) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000122445890 @uri=#<URI::GID gid://rails-debug-challenge/Comment/220>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 54. Great read!"], ["post_id", 115], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.129758"], ["updated_at", "2026-03-10 20:45:13.129758"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: fe03e449-81d0-4b23-92a1-2dbcc31fe13b) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x000000012234ba70 @uri=#<URI::GID gid://rails-debug-challenge/Comment/221>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 3 on post 54. Great read!"], ["post_id", 115], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.130106"], ["updated_at", "2026-03-10 20:45:13.130106"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 7ab001e2-58e7-418b-b4c5-7a2f7e42a4a8) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001222e7fc0 @uri=#<URI::GID gid://rails-debug-challenge/Comment/222>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 55: Caching is another tool for improving performance"], ["body", "Caching is another tool for improving performance. Fragment caching, counter caches, and HTTP caching all have their place in a Rails app."], ["excerpt", nil], ["user_id", 7], ["published", 1], ["created_at", "2026-03-10 20:45:13.130318"], ["updated_at", "2026-03-10 20:45:13.130318"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 55. Great read!"], ["post_id", 116], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.130671"], ["updated_at", "2026-03-10 20:45:13.130671"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: cdc6e995-c0d1-4730-87da-12386c9ec7a4) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x000000012216fb98 @uri=#<URI::GID gid://rails-debug-challenge/Comment/223>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 56: Rails is a web framework that makes building web applications fast and fun"], ["body", "Rails is a web framework that makes building web applications fast and fun. It follows convention over configuration and has a rich ecosystem of gems."], ["excerpt", nil], ["user_id", 8], ["published", 1], ["created_at", "2026-03-10 20:45:13.130886"], ["updated_at", "2026-03-10 20:45:13.130886"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 56. Great read!"], ["post_id", 117], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.131230"], ["updated_at", "2026-03-10 20:45:13.131230"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 3792840c-a8c0-43d7-b133-26593b9f2a21) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x00000001220aefb0 @uri=#<URI::GID gid://rails-debug-challenge/Comment/224>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 56. Great read!"], ["post_id", 117], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.131579"], ["updated_at", "2026-03-10 20:45:13.131579"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 12beffba-3116-4aeb-bb50-41574cd25414) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000122082280 @uri=#<URI::GID gid://rails-debug-challenge/Comment/225>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 57: ActiveRecord is Rails' ORM layer"], ["body", "ActiveRecord is Rails' ORM layer. It maps database tables to Ruby classes and provides a clean API for querying and persisting data."], ["excerpt", nil], ["user_id", 9], ["published", 1], ["created_at", "2026-03-10 20:45:13.131794"], ["updated_at", "2026-03-10 20:45:13.131794"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 57. Great read!"], ["post_id", 118], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.132156"], ["updated_at", "2026-03-10 20:45:13.132156"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: b4483d77-ae1a-463b-ad1b-f2718a0f80d7) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000121def680 @uri=#<URI::GID gid://rails-debug-challenge/Comment/226>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 57. Great read!"], ["post_id", 118], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.132513"], ["updated_at", "2026-03-10 20:45:13.132513"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: e957598e-4bf1-461a-a4b7-ae979d5d3875) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000121d853e8 @uri=#<URI::GID gid://rails-debug-challenge/Comment/227>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 3 on post 57. Great read!"], ["post_id", 118], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.132865"], ["updated_at", "2026-03-10 20:45:13.132865"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 6b940dc3-45e5-4f36-9551-125ebab43576) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000121d87ee0 @uri=#<URI::GID gid://rails-debug-challenge/Comment/228>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 58: N+1 queries are one of the most common performance problems in Rails apps"], ["body", "N+1 queries are one of the most common performance problems in Rails apps. They occur when you load a collection and then query an association for each record."], ["excerpt", nil], ["user_id", 7], ["published", 1], ["created_at", "2026-03-10 20:45:13.133573"], ["updated_at", "2026-03-10 20:45:13.133573"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 58. Great read!"], ["post_id", 119], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.133928"], ["updated_at", "2026-03-10 20:45:13.133928"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 31ec1981-b15e-40ab-af53-f5a50dee0b7b) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000121ceadc0 @uri=#<URI::GID gid://rails-debug-challenge/Comment/229>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 58. Great read!"], ["post_id", 119], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.134278"], ["updated_at", "2026-03-10 20:45:13.134278"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: b033b4e5-14e2-4231-a10e-bac11849fa80) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000121912f18 @uri=#<URI::GID gid://rails-debug-challenge/Comment/230>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 59: Eager loading with includes, preload, or eager_load can solve N+1 queries by fetching all associated records in one or two SQL queries instead of N"], ["body", "Eager loading with includes, preload, or eager_load can solve N+1 queries by fetching all associated records in one or two SQL queries instead of N."], ["excerpt", nil], ["user_id", 8], ["published", 1], ["created_at", "2026-03-10 20:45:13.134494"], ["updated_at", "2026-03-10 20:45:13.134494"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Create (0.0ms)[0m  [1m[32mINSERT INTO "posts" ("title", "body", "excerpt", "user_id", "published", "created_at", "updated_at", "status") VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["title", "Post 60: Caching is another tool for improving performance"], ["body", "Caching is another tool for improving performance. Fragment caching, counter caches, and HTTP caching all have their place in a Rails app."], ["excerpt", nil], ["user_id", 9], ["published", 1], ["created_at", "2026-03-10 20:45:13.134678"], ["updated_at", "2026-03-10 20:45:13.134678"], ["status", nil]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 9], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 1 on post 60. Great read!"], ["post_id", 121], ["user_id", 9], ["created_at", "2026-03-10 20:45:13.135131"], ["updated_at", "2026-03-10 20:45:13.135131"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 17d98207-999c-4752-99eb-1aade7b087d7) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000122006ef0 @uri=#<URI::GID gid://rails-debug-challenge/Comment/231>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 8], ["LIMIT", 1]]
+  [1m[36mComment Create (0.0ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Comment 2 on post 60. Great read!"], ["post_id", 121], ["user_id", 8], ["created_at", "2026-03-10 20:45:13.135481"], ["updated_at", "2026-03-10 20:45:13.135481"]]
+[ActiveJob] Enqueued ActionMailer::MailDeliveryJob (Job ID: 8661d468-deb8-4e8b-9d52-89782a4bb298) to Async(default) with arguments: "PostMailer", "new_comment", "deliver_now", {:args=>[#<GlobalID:0x0000000121fca838 @uri=#<URI::GID gid://rails-debug-challenge/Comment/232>>]}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mUser Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "users"[0m
+  [1m[36mPost Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "posts"[0m
+  [1m[36mComment Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "comments"[0m

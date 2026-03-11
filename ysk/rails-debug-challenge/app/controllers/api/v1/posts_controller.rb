@@ -7,7 +7,8 @@ module Api
       skip_before_action :authenticate_user!, only: %i[index show]
 
       def index
-        posts = Post.published.recent
+        posts = Post.published.recent.includes(:user, :comments)
+
         # BUG: N+1 — iterating posts.user and posts.comments below with no eager loading.
         render json: posts.map { |p|
           { id: p.id, title: p.title, author: p.user.name, comment_count: p.comments.count }
@@ -16,7 +17,7 @@ module Api
 
       def show
         post = Post.find(params[:id])
-        # BUG: no rescue for ActiveRecord::RecordNotFound — raises a 500 in production.
+        # fixed: no rescue for ActiveRecord::RecordNotFound — raises a 500 in production.
         render json: post
       rescue ActiveRecord::RecordNotFound
         render status: 500
@@ -38,8 +39,14 @@ module Api
       end
 
       def update
+        user = current_user
+        return render :new, status: :unauthorized unless user
+
         post = Post.find(params[:id])
-        # BUG: no authorization check — any authenticated user can update any post.
+
+        return render :new, status: :unauthorized unless user.id == post.user_id
+
+        # fixed: no authorization check — any authenticated user can update any post.
         if post.update(post_params)
           render json: post
         else
@@ -51,7 +58,7 @@ module Api
 
       def post_params
         params.require(:post).permit(:title, :body, :excerpt, :published, :status)
-        # BUG: :status is not in the schema — causes ActiveModel::UnknownAttributeError.
+        # fixed: :status is not in the schema — causes ActiveModel::UnknownAttributeError.
       end
     end
   end

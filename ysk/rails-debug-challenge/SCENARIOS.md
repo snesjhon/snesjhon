@@ -20,7 +20,9 @@ For each scenario: read the code, name the bug, explain how you'd fix it and why
 > What is the correct REST status for a newly created resource?
 
 - I should return a 201, right? Because 201 means created.
-  > What status does a failed save return right now — and why is that a problem?
+
+> What status does a failed save return right now — and why is that a problem?
+
 - It returns 200, but that's a problem if there's an error. We should return a 403 or a 404.
 
 ---
@@ -30,7 +32,12 @@ For each scenario: read the code, name the bug, explain how you'd fix it and why
 **Start here:** `app/controllers/api/v1/posts_controller.rb` → `show` action
 
 > How do you rescue `ActiveRecord::RecordNotFound` in a controller?
+
+- What I didn't know is that you have a begin, rescue, end, but if you just add a rescue after a definition start, aka a function start, you can just bypass those, which then allows you to rescue based on what we're trying to rescue, the the rescue type.
+
 > Where's the right place to put it — per-action, per-controller, or application-wide?
+
+- CLAUDE: I'm not sure how to judge this really. Like per action, per control, or application wide. Like theoretically, if it's application wide, then I'll put it on the top, but not every action is getting a record. So, do I have to do it through every record? But I suppose it's like if a function meets this error, then therefore I can rescue it.
 
 ---
 
@@ -39,7 +46,12 @@ For each scenario: read the code, name the bug, explain how you'd fix it and why
 **Start here:** `app/controllers/api/v1/posts_controller.rb` → `update` action
 
 > How do you scope the find to the current user?
+
+- I suppose you scope the current user by then looking at the post cur current user or user ID and then compare it to the ID that we have right now, the ID of the current user that we have right now
+
 > What status code do you return when the resource exists but the user isn't authorized?
+
+- That'll be a 401 because it isn't authorized.
 
 ---
 
@@ -49,7 +61,12 @@ For each scenario: read the code, name the bug, explain how you'd fix it and why
 Relevant: `db/schema.rb`
 
 > How do you track down which permitted field is causing the mismatch?
+
+- You look at the schema, right? You look at the schema file, and then from the schema file you see that it's not there. Therefore we have to run a migration.
+
 > Is the fix in strong params, in the schema, or both?
+
+- Theoretically, it would be as a migration. The params are getting the right thing that it expects, but if the migration is not if the schema is not there with it, then I assume that it shouldn't be there.
 
 ---
 

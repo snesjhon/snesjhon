@@ -1,0 +1,21 @@
+# frozen_string_literal: true
+
+source 'https://rubygems.org'
+
+ruby '3.3.6'
+
+gem 'bcrypt', '~> 3.1'
+gem 'puma', '~> 6.0'
+gem 'rails', '~> 7.1.0'
+gem 'sqlite3', '~> 1.6'
+
+# Lesson 3: Uncomment when you reach Background Jobs
+# gem 'sidekiq', '~> 7.0'
+
+# Lesson 4: Uncomment when you reach AWS
+# gem 'aws-sdk-s3', '~> 1.0'
+
+group :development, :test do
+  gem 'minitest'
+  gem 'ruby-lsp'
+end
