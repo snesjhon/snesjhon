@@ -10,11 +10,8 @@ Rails.application.routes.draw do
 
       # Lesson 2 — ActiveRecord (uncomment as you progress)
       #
-      # resources :posts, only: [:index, :show, :create, :update, :destroy] do
-      #   resources :comments, only: [:create, :destroy]
-      # end
       resources :posts, only: %i[index show create update destroy] do
-        resources :comments, only: %i[create destroy]
+        resources :comments, only: %i[index create destroy]
       end
     end
   end

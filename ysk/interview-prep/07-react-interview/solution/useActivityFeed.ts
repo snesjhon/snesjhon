@@ -60,7 +60,9 @@ export function useActivityFeed(): UseActivityFeedReturn {
     load();
 
     // Cleanup: if filter changes before fetch completes, ignore stale result
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [activeFilter]);
 
   // ─── Level 3: Load more ───────────────────────────────────────────────────
@@ -85,7 +87,7 @@ export function useActivityFeed(): UseActivityFeedReturn {
   const handleMarkRead = useCallback(async (id: string) => {
     // Optimistically flip to read immediately
     setActivities((prev) =>
-      prev.map((a) => (a.id === id ? { ...a, read: true } : a))
+      prev.map((a) => (a.id === id ? { ...a, read: true } : a)),
     );
 
     try {
@@ -93,7 +95,7 @@ export function useActivityFeed(): UseActivityFeedReturn {
     } catch {
       // Rollback on failure
       setActivities((prev) =>
-        prev.map((a) => (a.id === id ? { ...a, read: false } : a))
+        prev.map((a) => (a.id === id ? { ...a, read: false } : a)),
       );
       setToast('Could not mark as read. Please try again.');
     }

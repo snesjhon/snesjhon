@@ -2,65 +2,116 @@
 
 ## The Mental Model
 
-AWS is a collection of managed infrastructure services. For a Rails backend, you'll interact
-with a handful of them constantly:
+AWS is a collection of managed infrastructure services — think of it as renting pieces of a data center instead of running your own. For a Rails backend, you'll interact with a handful of them constantly:
 
-| Service | What it is | Rails analogy |
-|---|---|---|
-| **S3** | File storage in the cloud | Like a hard drive, but infinitely scalable and accessible via URL |
-| **IAM** | Identity & Access Management | Who is allowed to do what |
-| **SQS** | Managed job queue | Like Redis for Sidekiq, but AWS-managed |
-| **RDS** | Managed relational database | Your Postgres/MySQL, but AWS runs the server |
-| **EC2** | Virtual servers | The machine your Rails app runs on |
-| **ECS/EKS** | Container orchestration | Running your Docker containers at scale |
+| Service     | What it is                   | Rails analogy                                                     |
+| ----------- | ---------------------------- | ----------------------------------------------------------------- |
+| **S3**      | File storage in the cloud    | Like a hard drive, but infinitely scalable and accessible via URL |
+| **IAM**     | Identity & Access Management | Who is allowed to do what                                         |
+| **SQS**     | Managed job queue            | Like Redis for Sidekiq, but AWS-managed                           |
+| **RDS**     | Managed relational database  | Your Postgres/MySQL, but AWS runs the server                      |
+| **EC2**     | Virtual servers              | The machine your Rails app runs on                                |
+| **ECS/EKS** | Container orchestration      | Running your Docker containers at scale                           |
 
 For this interview prep, we focus on **S3, IAM, and SQS** — the most common in API interviews.
+
+**Why interviewers ask about AWS:** Most production Rails apps run on AWS. Interviewers want to know you understand not just how to write Rails code, but how that code behaves in a real infrastructure — where files live, how secrets are managed, and how background jobs get processed reliably.
 
 ---
 
 ## Part 1: S3 — File Storage
 
-### The Basics
+### What is S3?
 
-S3 stores **objects** (files) in **buckets** (namespaced containers). Each object has a key
-(essentially a path), a value (the file), and metadata.
+S3 (Simple Storage Service) is AWS's file storage. You can store any file — images, videos, PDFs, CSVs — and retrieve them via a URL. It's infinitely scalable and highly durable (AWS replicates your files across multiple physical locations).
+
+S3 organizes files into **buckets** (like top-level folders, globally unique across all of AWS) and **objects** (the files themselves). Each object is identified by a **key** — essentially its path within the bucket:
 
 ```
 Bucket: my-app-uploads
-  Key:  uploads/users/123/avatar.jpg
+  Key:  uploads/users/123/avatar.jpg    ← path within the bucket
   Key:  uploads/posts/456/cover.png
 ```
 
+You never store the actual file in your database — you store the key, and use it to generate a URL when you need to serve the file.
+
 ### Two Upload Patterns
 
+This is the most common S3 interview topic. Interviewers want to know you understand the tradeoff between simplicity and performance.
+
+---
+
 **Pattern A: Server-side upload** — client → your Rails server → S3
-- Simple, you control the file before it hits S3
-- Bottleneck: large files go through your server (wasted CPU/bandwidth)
-- Good for: small files, server-side processing needed (resize, virus scan)
 
-**Pattern B: Presigned URL** — client → presigned URL → S3 directly
-- Rails generates a temporary signed URL; client uploads directly to S3
-- Your server never touches the file bytes
-- Good for: large files, high throughput, video/audio
+The file goes through your server first. Rails receives it, then forwards it to S3.
+
+- Simple to implement — Rails handles everything
+- **Bottleneck:** large files occupy your server's memory and CPU while transferring
+- If 100 users upload simultaneously, your server absorbs all that traffic
+- Good for: small files, or cases where you need to process the file before storing it (resize, virus scan, validate contents)
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant R as Rails Server
+    participant S as S3
+
+    C->>R: POST /api/v1/posts (with file bytes)
+    R->>R: receive & validate file
+    R->>S: upload file bytes to S3
+    S-->>R: 200 OK (stored at key)
+    R->>R: save S3 key to DB
+    R-->>C: 201 Created { id, url }
+```
+
+---
+
+**Pattern B: Presigned URL** — client → S3 directly
+
+Rails generates a temporary, cryptographically signed URL. The client uses that URL to upload the file directly to S3 — your server never touches the file bytes.
+
+- Rails stays free to handle other requests
+- S3 absorbs the upload traffic, not your server
+- The signed URL expires (e.g. 15 minutes), so it can't be reused or shared
 - **This is the preferred pattern in modern APIs**
+- Good for: large files, video/audio, high-throughput upload endpoints
 
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant R as Rails Server
+    participant S as S3
+
+    C->>R: POST /api/v1/upload_url { filename, content_type }
+    R->>R: generate presigned URL (AWS SDK)
+    R-->>C: { upload_url, key }
+
+    C->>S: PUT <presigned_url> (file bytes go directly to S3)
+    S-->>C: 200 OK
+
+    C->>R: POST /api/v1/posts { avatar_key }
+    R->>R: save S3 key to DB
+    R-->>C: 200 OK { id, avatar_url }
 ```
-1. Client: POST /api/v1/upload_url  { filename: "avatar.jpg", content_type: "image/jpeg" }
-2. Rails: generates a presigned PUT URL from AWS SDK → returns { url: "https://s3.aws.../...", key: "..." }
-3. Client: PUT <presigned_url> with file bytes directly to S3
-4. Client: POST /api/v1/posts/1  { avatar_key: "uploads/users/123/avatar.jpg" }
-5. Rails: stores the S3 key in the database
-```
+
+Rails has three lightweight responsibilities in this flow:
+1. **Generate the URL** — a quick cryptographic operation, no file involved
+2. **Issue the permission** — the signed URL is the authorization; Rails doesn't verify the upload itself
+3. **Save the key** — a single DB write after the client confirms success
+
+**Interview tip:** "I'd use presigned URLs because large files shouldn't pass through the app server — it wastes bandwidth and blocks the server from handling other requests. Rails only handles auth and the key handoff; S3 and the client do the heavy lifting."
+
+---
 
 ### In Rails: Active Storage
 
-Rails has built-in S3 integration via Active Storage:
+Active Storage is Rails' built-in abstraction over S3 (and other storage services). It implements the presigned URL pattern for you so you don't have to write the service yourself.
 
 ```ruby
 # Gemfile
 gem 'aws-sdk-s3', '~> 1.0'
 
-# config/storage.yml
+# config/storage.yml — tell Rails which S3 bucket to use
 amazon:
   service: S3
   access_key_id: <%= ENV['AWS_ACCESS_KEY_ID'] %>
@@ -73,15 +124,68 @@ config.active_storage.service = :amazon
 
 # app/models/post.rb
 class Post < ApplicationRecord
-  has_one_attached :cover_image   # Active Storage handles everything
+  has_one_attached :cover_image
 end
-
-# Usage
-post.cover_image.attach(io: file, filename: 'cover.jpg')
-post.cover_image.url   # generates a presigned URL for access
 ```
 
+#### What Active Storage actually does under the hood
+
+When you add `has_one_attached`, Active Storage manages two of its own DB tables — your `posts` table never stores a file path or S3 key directly:
+
+```
+active_storage_blobs       — metadata: filename, content_type, byte size, checksum, S3 key
+active_storage_attachments — polymorphic join: connects any model (Post, User, etc.) to a blob
+```
+
+A **polymorphic** join table means one table can belong to many different model types. Instead of a separate attachments table per model, Active Storage uses `record_type` and `record_id` to point to any model:
+
+```
+record_type | record_id | blob_id
+------------|-----------|--------
+"Post"      | 1         | 42
+"User"      | 5         | 43
+```
+
+When you call `.attach` or `.url`, here's what actually happens:
+
+```ruby
+# Attaching a file:
+post.cover_image.attach(io: file, filename: 'cover.jpg')
+# 1. Uploads the file bytes to S3
+# 2. Creates an ActiveStorage::Blob with the S3 key + metadata
+# 3. Creates an ActiveStorage::Attachment linking that blob to this post
+
+# Generating a URL:
+post.cover_image.url
+# 1. Looks up the blob to get the S3 key
+# 2. Calls the AWS SDK to generate a presigned GET URL
+# 3. Returns the temporary URL — same pattern as doing it manually
+```
+
+```ruby
+post.cover_image.attached?  # check if a file exists
+
+has_one_attached :cover_image   # single file
+has_many_attached :photos       # collection of files
+```
+
+#### When to use Active Storage vs rolling your own
+
+| | Active Storage | Custom service |
+|---|---|---|
+| Setup | Minimal | More code |
+| Control | Limited | Full |
+| Transformations | Built-in (ImageMagick) | You handle it |
+| Multi-cloud | Config only | Code changes |
+| Good for | Standard file attachments | Custom upload flows, presigned URL APIs |
+
+Active Storage is the right default for most apps. Roll your own when you need to return the presigned URL to the client for direct upload — Active Storage's `.attach` uploads server-side, which defeats the point of Pattern B.
+
+---
+
 ### Presigned URL Service (without Active Storage)
+
+Use this when you want the client to upload directly to S3 and need full control over the URL lifecycle:
 
 ```ruby
 # app/services/s3_presigned_url_service.rb
@@ -117,59 +221,82 @@ end
 
 ## Part 2: IAM — Credentials and Access
 
+### What is IAM?
+
+IAM (Identity and Access Management) is how AWS controls *who* can do *what*. Every call to an AWS service — uploading a file to S3, reading from SQS, querying RDS — must be authenticated and authorized through IAM.
+
+There are two concepts to keep separate:
+
+- **Authentication** — proving who you are (credentials, roles)
+- **Authorization** — what you're allowed to do (policies)
+
 **The cardinal rule: never hardcode AWS credentials in your code.**
 
-Credentials can rotate. Code is committed to git. Secrets in git are a breach.
+Credentials can rotate. Code is committed to git. Secrets in git are a breach — and AWS actively scans public repos for leaked keys and will alert you (and sometimes revoke them automatically).
 
-### The hierarchy (best to worst):
+### Credentials: How your Rails app proves who it is
+
+There's a hierarchy from best to worst. Interviewers will specifically ask about this.
 
 **1. IAM Roles (best — no credentials at all)**
-When your Rails app runs on EC2 or ECS, assign an IAM role to the instance/task.
-The AWS SDK picks up credentials automatically from the instance metadata service.
-No access keys anywhere. No rotation needed.
+
+When your Rails app runs on EC2 (a virtual machine) or ECS (a container), you attach an IAM role directly to that machine or container. Think of it like a badge — the server itself has an identity, and AWS grants it permissions based on that identity.
 
 ```
-EC2 Instance → IAM Role → S3 permissions
-Your Rails app reads from the instance metadata: no credentials needed in code
+EC2 instance  → IAM role attached → S3 permissions granted
+ECS task      → IAM role attached → S3 permissions granted
 ```
 
-**2. Environment variables (good)**
+The AWS SDK automatically picks up the role's credentials from AWS's internal metadata service. No access keys in your code, no secrets to rotate, no risk of accidental exposure.
+
+**2. Environment variables (good for development)**
+
 ```bash
 AWS_ACCESS_KEY_ID=...
 AWS_SECRET_ACCESS_KEY=...
 AWS_REGION=us-east-1
 ```
 
-Rails credentials or `.env` (gitignored). The AWS SDK picks these up automatically.
+Store these in a `.env` file (gitignored) locally, or in your hosting platform's environment config in production. The AWS SDK reads these automatically.
 
-**3. Rails credentials (good for Rails apps)**
+**3. Rails credentials (good for Rails apps without IAM roles)**
+
 ```bash
 rails credentials:edit
 ```
+
 ```yaml
 aws:
   access_key_id: ...
   secret_access_key: ...
 ```
+
 ```ruby
-# Access via:
 Rails.application.credentials.aws[:access_key_id]
 ```
 
+Encrypted at rest, stored in `credentials.yml.enc`. Safer than `.env` because the encrypted file can be committed — only someone with the master key can decrypt it.
+
 **4. Hardcoded in code (never)**
+
 ```ruby
 # DO NOT DO THIS
 Aws::S3::Client.new(access_key_id: 'AKIA...', secret_access_key: 'abc123')
 ```
 
-**Interview tip:** "In production I'd use an IAM role attached to the instance or container —
-no credentials to rotate or accidentally leak. In dev I use environment variables via dotenv."
+If this ever hits git — even in a private repo — treat it as compromised immediately.
+
+**Interview tip:** "In production I'd use an IAM role attached to the EC2 instance or ECS task — the AWS SDK picks up credentials automatically, there are no keys to rotate or leak. In development I use environment variables via dotenv."
 
 ---
 
 ## Part 3: IAM — Least Privilege
 
-Each IAM policy should grant **only what the application needs**.
+### What is least privilege?
+
+Every IAM policy should grant **only the permissions the application actually needs** — nothing more. This limits the blast radius if credentials are ever compromised.
+
+Think of it like a key card at an office. A developer gets access to their floor and the kitchen. Not the server room. Not the CEO's office. Not the entire building.
 
 ```json
 {
@@ -177,11 +304,7 @@ Each IAM policy should grant **only what the application needs**.
   "Statement": [
     {
       "Effect": "Allow",
-      "Action": [
-        "s3:PutObject",
-        "s3:GetObject",
-        "s3:DeleteObject"
-      ],
+      "Action": ["s3:PutObject", "s3:GetObject", "s3:DeleteObject"],
       "Resource": "arn:aws:s3:::my-app-uploads/*"
     }
   ]
@@ -189,61 +312,74 @@ Each IAM policy should grant **only what the application needs**.
 ```
 
 This policy:
-- Allows: upload, read, delete objects
-- Denies (by default): listing bucket contents, deleting the bucket, accessing other buckets
-- Scoped to: a specific bucket only
+- **Allows:** upload, read, delete objects in one specific bucket
+- **Denies by default:** listing bucket contents, deleting the bucket, accessing any other bucket or AWS service
+- **Scoped to:** `my-app-uploads` only — not all of S3, not all of AWS
 
 **What NOT to do:**
+
 ```json
 {
-  "Action": "*",    // full admin access — never for an application
-  "Resource": "*"   // every resource in your account
+  "Action": "*",    // full admin — can do anything in your AWS account
+  "Resource": "*"   // on every resource
 }
 ```
 
-**Interview tip:** "I apply least privilege — the IAM role for my Rails app only gets
-`s3:PutObject`, `s3:GetObject` on the specific bucket it needs. Not `s3:*`. Not `*:*`."
+If these credentials leak, an attacker has full control of your AWS account. With least privilege, the worst case is limited to what that one policy allows.
+
+**Interview tip:** "I apply least privilege — the IAM policy for my Rails app only gets `s3:PutObject` and `s3:GetObject` on the specific bucket it needs. Not `s3:*`. Not `*:*`. If the credentials leak, the damage is contained."
 
 ---
 
 ## Part 4: SQS — Managed Job Queue
 
-SQS is Amazon's managed message queue. For Rails, it can replace Redis+Sidekiq as the
-queue backend. Common when you're already deeply in AWS and don't want to manage Redis.
+### What is SQS?
+
+SQS (Simple Queue Service) is AWS's managed message queue. In Rails, background jobs are typically handled by Sidekiq + Redis — SQS is an alternative where AWS manages the queue infrastructure instead of you managing Redis.
+
+The core idea is the same: your app enqueues a job, a worker picks it up and processes it asynchronously. The difference is operational — with SQS, AWS handles durability, scaling, and availability of the queue itself.
 
 ### How it works
 
 ```
-Rails: SqsJob.perform_later(id)  →  SQS queue (AWS-managed)
-                                           ↓
-                          Worker polls SQS, picks up the message, calls perform(id)
+Rails: SqsJob.perform_later(id)  →  SQS queue (AWS-managed, durable)
+                                            ↓
+                           Worker polls SQS, picks up the message, calls perform(id)
 ```
 
-### Visibility Timeout
+### Visibility Timeout — the key SQS concept
 
-When a worker picks up a message, SQS hides it from other workers for a **visibility timeout**
-window (default: 30 seconds). If the job completes, the message is deleted. If the job
-crashes, the message becomes visible again and another worker picks it up.
+When a worker picks up a message from SQS, SQS doesn't delete it immediately. Instead, it **hides** the message from other workers for a configurable window called the **visibility timeout** (default: 30 seconds).
+
+- If the job **completes** within that window → worker deletes the message → done
+- If the job **crashes** and doesn't delete → timeout expires → message becomes visible again → another worker picks it up
+
+This is how SQS guarantees **at-least-once delivery** — jobs will always be retried if they fail, but this also means your jobs need to be **idempotent** (safe to run more than once with the same result).
 
 **Set visibility timeout longer than your longest expected job runtime:**
+
 ```
-If your job takes up to 2 minutes: set visibility timeout to at least 5 minutes
+Job takes up to 2 minutes → set visibility timeout to at least 5 minutes
 ```
 
+If the timeout is too short, SQS will re-deliver the message while the original job is still running — causing duplicate processing.
+
 ### SQS as ActiveJob adapter
+
+The Rails interface doesn't change at all — just the adapter:
 
 ```ruby
 # Gemfile
 gem 'aws-sdk-sqs'
-gem 'activejob-sqs-adapter'   # third party, or use shoryuken
+gem 'activejob-sqs-adapter'
 
 # config/application.rb
 config.active_job.queue_adapter = :sqs
 
-# Your jobs don't change at all — ActiveJob abstraction handles it
+# Your jobs are identical — ActiveJob abstracts the queue backend
 class NotificationJob < ApplicationJob
   queue_as :default   # maps to an SQS queue name
-  def perform(id)
+  def perform(user_id)
     # same as before
   end
 end
@@ -251,28 +387,32 @@ end
 
 **SQS vs Sidekiq:**
 
-| | Sidekiq | SQS |
-|---|---|---|
-| Persistence | Redis | AWS-managed, durable |
-| Scaling | You manage Redis | Fully managed |
-| Monitoring | Sidekiq Web UI | AWS CloudWatch |
-| Cost | Redis server | Pay per message |
-| Guarantee | At-least-once | At-least-once |
-| Best for | High throughput, complex workflows | AWS-native, simple queuing |
+|             | Sidekiq                            | SQS                        |
+| ----------- | ---------------------------------- | -------------------------- |
+| Persistence | Redis                              | AWS-managed, durable       |
+| Scaling     | You manage Redis                   | Fully managed              |
+| Monitoring  | Sidekiq Web UI                     | AWS CloudWatch             |
+| Cost        | Redis server cost                  | Pay per message            |
+| Guarantee   | At-least-once                      | At-least-once              |
+| Best for    | High throughput, complex workflows | AWS-native, simple queuing |
+
+**Interview tip:** "SQS and Sidekiq solve the same problem — async job processing. The choice is operational: if I'm already deep in AWS and don't want to manage Redis, SQS removes that overhead. For high-throughput or complex job workflows, Sidekiq gives more control and better visibility."
 
 ---
 
 ## Part 5: Security Response — What to Do When Keys Leak
 
+This is a common interview scenario question. Interviewers want to see that you have a clear, ordered response — not panic.
+
 If AWS credentials are accidentally committed to git:
 
-1. **Immediately revoke the key** in IAM console — treat it as compromised the moment it's seen
-2. **Check CloudTrail** for any API calls made with that key
-3. **Rotate to a new key** (or better: switch to IAM roles so there are no keys)
-4. **Purge from git history** with `git filter-branch` or BFG Repo Cleaner
-5. **Notify your security team** — even if no unauthorized usage is found
+1. **Immediately revoke the key** in the IAM console — treat it as compromised the moment it's seen, before investigating anything else
+2. **Check CloudTrail** for any API calls made with that key — CloudTrail is AWS's audit log of every API action taken in your account
+3. **Rotate to a new key** — or better, take this opportunity to switch to IAM roles so there are no long-lived keys to leak
+4. **Purge from git history** with `git filter-branch` or BFG Repo Cleaner — deleting the commit isn't enough, the key is in the history
+5. **Notify your security team** — even if CloudTrail shows no unauthorized usage, the key was exposed and the team needs to know
 
-**Interview tip:** "The first step is to deactivate the key immediately. Not after investigating — immediately. Then I'd check CloudTrail to understand what, if anything, was accessed. Then I'd make sure we switch to IAM roles so this can't happen again."
+**Interview tip:** "The first step is to deactivate the key immediately — not after investigating, immediately. A key that's been public even for minutes could have been scraped by bots. Then I'd check CloudTrail to understand what was accessed, and use this as the forcing function to move to IAM roles so there are no keys to leak in the future."
 
 ---
 
@@ -287,6 +427,7 @@ Before looking at any reference material, design the full flow yourself:
 3. Design the IAM policy for this feature: which specific S3 actions does your Rails app need? Which resource ARN should the policy scope to?
 
 **Guiding questions:**
+
 1. If you use a presigned URL, the client uploads directly to S3 — but how does your Rails app then know the upload succeeded and which S3 key to store on the user record?
 2. Where do the AWS credentials live in your Rails app? Walk through the hierarchy from best to worst option and explain why IAM roles are preferred over access keys.
 3. A junior developer proposes using `"Action": "s3:*"` on `"Resource": "*"` to "keep it simple". What's wrong with this, and what would you specify instead?
@@ -297,18 +438,21 @@ Add the route and service skeleton to your app after working through your design
 
 ## AWS Interview Checklist
 
-- [ ] Can you explain the difference between S3 server-side upload and presigned URLs?
+- [ ] Can you explain the difference between S3 server-side upload and presigned URLs — and when you'd choose each?
 - [ ] Where do credentials live? (IAM role → env vars → Rails credentials — never hardcoded)
-- [ ] What is least privilege and how do you apply it in IAM?
+- [ ] What is least privilege and how do you apply it in an IAM policy?
 - [ ] What is SQS and how does it compare to Sidekiq/Redis?
-- [ ] What do you do if a credential is leaked?
-- [ ] What is Active Storage and when would you use it vs direct S3 SDK?
+- [ ] What is a visibility timeout and why does it matter?
+- [ ] What do you do if a credential is leaked? Walk through the steps in order.
+- [ ] What is Active Storage and when would you use it vs a custom presigned URL service?
 
 **Final interview tip — thinking aloud:**
-Always explain your *why* before your *what*.
-"I'd use a presigned URL **because** large files shouldn't pass through the app server —
-it wastes bandwidth and introduces a bottleneck."
-The interviewer wants to hear that you understand the tradeoffs, not just that you know the API.
+
+Interviewers asking AWS questions aren't testing whether you've memorized the SDK. They're testing whether you understand *why* things are done a certain way. Always lead with the reason before the solution:
+
+> "I'd use a presigned URL **because** large files shouldn't pass through the app server — it wastes bandwidth and blocks the server. The tradeoff is a slightly more complex flow, but the scalability benefit is worth it for anything beyond small files."
+
+The interviewer wants to hear that you understand tradeoffs, not just that you know the API.
 
 ---
 
@@ -317,15 +461,17 @@ The interviewer wants to hear that you understand the tradeoffs, not just that y
 Once you've designed the flow yourself, compare against this structured answer.
 
 **Full presigned URL flow:**
+
 1. "I'd use presigned URLs so the file goes directly from client to S3 without passing through my server..."
 2. "The client calls `POST /api/v1/upload_url` with the filename and content type..."
 3. "Rails generates a presigned PUT URL using the AWS SDK and returns it with the S3 key..."
 4. "The client uploads directly to S3 using that URL — my server never sees the bytes..."
-5. "After upload, the client sends the S3 key to Rails, which saves it to the user record..."
-6. "For credentials: I'd use an IAM role on the EC2 instance, no access keys in code..."
-7. "The IAM policy would allow `s3:PutObject` on the specific bucket only..."
+5. "After upload, the client sends the S3 key to Rails, which saves it to the user record and returns 200..."
+6. "For credentials: I'd use an IAM role on the EC2 instance or ECS task, no access keys in code..."
+7. "The IAM policy would allow `s3:PutObject` and `s3:GetObject` on the specific bucket only..."
 
 **Controller action for generating the presigned URL:**
+
 ```ruby
 def upload_url
   key = "uploads/#{current_user.id}/#{SecureRandom.uuid}/#{params[:filename]}"
@@ -339,16 +485,14 @@ end
 ```
 
 **Minimal IAM policy (least privilege):**
+
 ```json
 {
   "Version": "2012-10-17",
   "Statement": [
     {
       "Effect": "Allow",
-      "Action": [
-        "s3:PutObject",
-        "s3:GetObject"
-      ],
+      "Action": ["s3:PutObject", "s3:GetObject"],
       "Resource": "arn:aws:s3:::my-app-uploads/uploads/*"
     }
   ]

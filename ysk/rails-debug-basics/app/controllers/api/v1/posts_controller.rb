@@ -8,11 +8,11 @@ module Api
       # Returns all published posts with their author name and comment count.
       # Notice: includes(:user, :comments) prevents N+1 queries — Lesson 2 covers why.
       def index
-        # get all posts, regardless of user
-        posts = Post.published.includes(:user, :comments).recent
-
-        status = params[:status]
-        posts = current_user.posts.by_status(status).includes(:user, :comments) unless status.nil?
+        posts = if params[:status].present?
+                  current_user.posts.by_status(status)
+                else
+                  Post.published
+                end.includes(:user, :comments).recent
 
         render json: posts.map { |post|
           {
