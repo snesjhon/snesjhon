@@ -127,6 +127,38 @@ Feed reads:       50M × 5 opens/day = 250M reads/day → 3,000 RPS
 
 ---
 
+## CAP Theorem Classification
+
+**Overall: AP (Availability + Partition Tolerance)**
+
+A news aggregator prioritizes availability — users should always get a feed, even if it's slightly stale. Brief inconsistency (seeing an article twice, or missing the last 60 seconds of news) is acceptable. This makes it **AP**.
+
+### Component-Level Breakdown
+
+| Component | CAP Type | Reasoning |
+|-----------|----------|-----------|
+| Articles DB | CP | Deduplication requires uniqueness constraints; a duplicate article is data corruption |
+| Redis Feed Cache | AP | Stale feeds are fine; user can refresh; availability beats freshness here |
+| User Prefs DB | CP | User subscription changes must stick — stale prefs cause wrong feeds |
+| Crawler Scheduler | AP | Polling delays are acceptable; brief outage just means slightly older news |
+
+### What Happens During a Partition
+
+- **Feed reads**: Serve from Redis cache even if stale → availability preserved
+- **Article ingestion**: Crawlers retry with backoff; feeds may lag slightly → partition tolerance
+- **Dedup checks**: If Articles DB is unreachable, crawlers block writes rather than risk duplicate inserts → CP behavior only here
+
+### Why Not CP?
+
+A news aggregator has no critical consistency requirements:
+- Seeing a 2-minute-old feed doesn't harm the user
+- Duplicate articles are annoying but not catastrophic (dedup handles it at write time anyway)
+- No financial or inventory constraints that require exact counts
+
+> **Interview answer**: "This is an AP system. We always serve feeds from cache and tolerate brief staleness. The only CP component is the dedup check in the ingestion pipeline, where we need a uniqueness guarantee to avoid inserting the same article twice."
+
+---
+
 ## What to Study Next
 
 ➜ **[06 · Local Delivery Service](06-local-delivery.md)** — introduces geolocation and proximity matching. The geo indexing fundamentals here are the prerequisite for Tinder (Q12), Yelp (Q13), and Uber (Q23).
