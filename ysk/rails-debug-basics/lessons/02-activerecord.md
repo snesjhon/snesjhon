@@ -414,6 +414,22 @@ Before you can reason about `joins`, `group`, and `count`, you need to picture w
 
 A database table is just rows and columns. When you `JOIN` two tables, SQL produces a **new, flat table** by stitching matching rows together side by side. Everything — filtering, grouping, counting — happens on that stitched result.
 
+The Rails query that produces this:
+
+```ruby
+Post.joins(:comments)
+```
+
+Which generates:
+
+```sql
+SELECT posts.*
+FROM posts
+INNER JOIN comments ON comments.post_id = posts.id
+```
+
+Here's what the database is actually doing internally before it hands results back:
+
 ```bash
 posts                          comments
 id | title    | user_id        id | post_id | body        | user_id
@@ -422,16 +438,23 @@ id | title    | user_id        id | post_id | body        | user_id
 2  | "React"  | 11             2  | 1       | "Agreed"    | 21
 3  | "SQL"    | 10             3  | 2       | "Nice"      | 20
 
-After JOIN posts ON comments.post_id = posts.id:
-post.id | post.title | comment.id | comment.body
---------+------------+------------+-------------
-1       | "Rails"    | 1          | "Great!"
-1       | "Rails"    | 2          | "Agreed"       ← post 1 appears TWICE
-2       | "React"    | 3          | "Nice"
-3       | "SQL"      | (nothing)  | (nothing)      ← dropped if INNER JOIN
+Intermediate flat result (what SQL works with internally):
+posts.id | posts.title | comments.id | comments.body
+---------+-------------+-------------+--------------
+1        | "Rails"     | 1           | "Great!"
+1        | "Rails"     | 2           | "Agreed"       ← post 1 appears TWICE
+2        | "React"     | 3           | "Nice"
+3        | "SQL"       | (nothing)   | (nothing)      ← dropped because INNER JOIN
+
+Final result Rails receives (SELECT posts.* trims it back):
+posts.id | posts.title | posts.user_id
+---------+-------------+--------------
+1        | "Rails"     | 10            ← duplicate — one per matching comment
+1        | "Rails"     | 10
+2        | "React"     | 11
 ```
 
-This flat result is what every subsequent `.where`, `.group`, and `.count` operates on. Keep this picture in your head — it explains why you get duplicates, why you need `distinct`, and why LEFT JOIN matters.
+This flat intermediate result is what every subsequent `.where`, `.group`, and `.count` operates on — before `SELECT` trims it down to what Rails actually returns. Keep this picture in your head: it explains why you get duplicates, why you need `distinct`, and why LEFT JOIN matters.
 
 ---
 
@@ -542,7 +565,7 @@ Post.eager_load(:user).where(users: { verified: true })
 
 #### Decision tree
 
-```
+```bash
 Do I need to access post.user (or any association attribute) while rendering?
   YES → includes (or eager_load if also filtering by that association)
   NO  → joins is enough
@@ -553,14 +576,46 @@ Am I just checking existence or filtering on a column in another table?
 
 ---
 
+## Exercise 5: Posts the current user has commented on
+
+Add `GET /api/v1/posts/commented_on` — returns all posts where `current_user` has left at least one comment.
+
+First, add the route as a collection action on posts (no `:id` — it operates on the whole collection):
+
+```ruby
+resources :posts do
+  collection do
+    get :commented_on
+  end
+end
+```
+
+The response shape should match the existing index — id, title, status, author name.
+
+**What to think through before writing the query:**
+
+The question is: _which posts has this user commented on?_ You need to cross the posts ↔ comments relationship. The key constraints are:
+
+- Filter by `comments.user_id = current_user.id`
+- A user might have commented multiple times on the same post — the post should only appear once
+- You don't need to render any comment data, just the post
+
+**Guiding questions:**
+
+1. Should you use `joins` or `includes` here? You're filtering on a condition in the comments table but the response only needs post fields — which is the right tool?
+2. If a user commented 3 times on one post, how many times does that post appear in the raw joined result? What do you add to collapse it back to one?
+3. Why would `includes(:comments)` be the wrong choice here even though you're involving the comments table?
+
+---
+
 ### `left_joins` (LEFT OUTER JOIN) — keep everything, even with no match
 
 **Mental model:** _Keep all rows from the left table. Fill in NULLs on the right side when there's no match._
 
-```
+```bash
 posts LEFT JOIN comments:
-post.id | post.title | comment.id | comment.body
---------+------------+------------+-------------
+posts.id | posts.title | comments.id | comments.body
+---------+-------------+-------------+--------------
 1       | "Rails"    | 1          | "Great!"
 1       | "Rails"    | 2          | "Agreed"
 2       | "React"    | 3          | "Nice"
@@ -582,11 +637,17 @@ On its own this isn't very useful — you'd still get duplicates and NULLs. `lef
 
 **Mental model:** _Sort the flat joined result into buckets, one bucket per unique value. Aggregate functions then apply per bucket._
 
-Without `group`, `COUNT(comments.id)` counts everything in the entire flat table — one number for the whole query. With `group('posts.id')`, SQL first sorts rows into per-post buckets, then counts per bucket.
+`group` maps to SQL's `GROUP BY`. It takes all the rows in your result and collapses rows that share the same value in a column into a single row. Once rows are collapsed into groups, aggregate functions like `COUNT` and `SUM` run independently on each group instead of across the entire table.
 
-```
-Without group:                     With group('posts.id'):
-post.id | comment.id               Bucket: post 1 → 2 comments
+#### Why `group` exists
+
+Without `group`, `COUNT` sees every row as one big pile and returns a single number for the whole query. That's fine when you want a global total. But most of the time you want a number _per record_ — comments per post, orders per user, posts per tag. `group` is what creates those per-record buckets.
+
+Think of it like a spreadsheet pivot: take a long flat list of rows, sort them into named piles, and compute a number for each pile.
+
+```bash
+Without group:                         With group('posts.id'):
+posts.id | comments.id               Bucket: post 1 → 2 comments
 1       | 1                        Bucket: post 2 → 1 comment
 1       | 2            →           Bucket: post 3 → 0 comments
 2       | 3
@@ -594,7 +655,15 @@ post.id | comment.id               Bucket: post 1 → 2 comments
 COUNT = 3 (wrong, across all)      COUNT per bucket = [2, 1, 0] (right)
 ```
 
-This is the canonical pattern to count how many of something belongs to each parent record:
+The flat joined table (from `left_joins`) has one row per comment. Without `group`, `COUNT` sees three comment rows and says "3". With `group('posts.id')`, SQL first sorts those rows into per-post piles, then runs `COUNT` inside each pile independently.
+
+---
+
+#### The three cases where `group` is the right choice
+
+**Case 1: Count how many child records each parent has**
+
+The most common use. You have posts; you want to know how many comments each one has — without firing N separate COUNT queries.
 
 ```ruby
 Post.left_joins(:comments)
@@ -602,33 +671,223 @@ Post.left_joins(:comments)
     .select('posts.*, COUNT(comments.id) AS comment_count')
 ```
 
-Breaking this down piece by piece:
+What SQL this generates:
 
-| Piece                   | What it does                                                                                     |
-| ----------------------- | ------------------------------------------------------------------------------------------------ |
-| `left_joins(:comments)` | Stitch posts and comments into a flat table, keep posts with 0 comments                          |
-| `group('posts.id')`     | Sort that flat table into per-post buckets                                                       |
-| `COUNT(comments.id)`    | Count non-NULL comment IDs per bucket (NULLs from LEFT JOIN don't count — exactly what you want) |
-| `AS comment_count`      | Name the computed value so you can access it as `post.comment_count` in Ruby                     |
-| `posts.*`               | Include all post columns alongside the computed count                                            |
+```sql
+SELECT posts.*, COUNT(comments.id) AS comment_count
+FROM posts
+LEFT JOIN comments ON comments.post_id = posts.id
+GROUP BY posts.id
+```
+
+Breaking it down:
+
+**`left_joins(:comments)`** — produces the flat intermediate table by stitching each post row to its matching comment rows. Critically, this is a LEFT join, not INNER. INNER join would silently drop posts that have zero comments — they'd simply not appear in the result. LEFT join keeps every post and fills the comment columns with `NULL` when there's no match. That `NULL` matters for the next piece.
+
+**`group('posts.id')`** — takes that flat table (which has one row per comment, so a post with 3 comments appears 3 times) and collapses it. Every row sharing the same `posts.id` gets folded into a single bucket. After this step, there's one bucket per post regardless of how many comments it has.
+
+**`COUNT(comments.id)`** — runs inside each bucket and counts how many non-NULL `comments.id` values it finds. This is why LEFT join matters: posts with zero comments have `NULL` in the comment columns, and `COUNT` skips NULLs by design. So a post with no comments gets 0, not 1. If you wrote `COUNT(*)` instead, it would count the NULL row and return 1 for posts with no comments — wrong.
+
+**`AS comment_count`** — gives the computed value a name in the result set. Without it, Rails has no way to surface it as a method on the object. With it, `post.comment_count` works in Ruby even though no such column exists in the database.
+
+**`posts.*`** — tells SQL to include all real post columns (id, title, body, created_at, etc.) alongside the computed count. Without this you'd only get the count back with no post data to render.
 
 Accessing the virtual attribute in Ruby:
 
 ```ruby
-posts = Post.left_joins(:comments).group('posts.id').select('posts.*, COUNT(comments.id) AS comment_count')
+posts = Post.left_joins(:comments)
+            .group('posts.id')
+            .select('posts.*, COUNT(comments.id) AS comment_count')
+
 posts.each { |p| puts "#{p.title}: #{p.comment_count} comments" }
 # post.comment_count is NOT a real column — Rails reads it from the SELECT result
 ```
 
-**Grouping by multiple columns.** When you `select` a column that isn't an aggregate and isn't in the `GROUP BY`, most databases will reject the query. The rule: every column in `SELECT` must either be in `GROUP BY` or wrapped in an aggregate function.
+**Case 2: Summarize with aggregates other than COUNT**
+
+`group` works with any aggregate function — `SUM`, `AVG`, `MAX`, `MIN`:
 
 ```ruby
-# ❌ Will fail in PostgreSQL — post.title is selected but not grouped
+# Total revenue per product
+Order.group('product_id').sum(:amount)
+# { 1 => 4500, 2 => 1200, 3 => 890 }  — returns a hash, not AR objects
+
+# Average post length per user
+Post.group('user_id').average(:body_length)
+
+# Most recent activity per user
+Post.group('user_id').maximum(:created_at)
+```
+
+When you call `.sum`, `.average`, `.maximum`, etc. at the end of a `group` chain, Rails returns a plain Ruby hash (`{ group_value => aggregate_result }`) rather than AR objects. No `select` or virtual attributes needed — Rails handles it.
+
+**Case 3: Count occurrences of a value across rows**
+
+Sometimes you're not joining — you just want to count how many times each distinct value appears in a column:
+
+```ruby
+# How many posts exist per status
+Post.group(:status).count
+# { "published" => 42, "draft" => 17, "archived" => 5 }
+
+# How many users signed up per day
+User.group("DATE(created_at)").count
+```
+
+No join needed. `group` works on the base table alone. Rails returns a hash.
+
+---
+
+#### The trap: forgetting `group` after a join and getting inflated counts
+
+This is the most common `group` mistake. You join to get access to comment data, then count — but you're counting the flat joined rows, not the posts.
+
+```ruby
+# ❌ Looks right but counts all comment rows, not one per post
+Post.joins(:comments).count
+# Returns 3 (total comment rows) — not 2 (total posts with comments)
+```
+
+The flat JOIN result has one row per comment, so `COUNT` inflates. The fix is `group` + `COUNT` per bucket, or `.distinct` if you just want a deduplicated count of posts:
+
+```ruby
+# ✅ Count distinct posts that have comments
+Post.joins(:comments).distinct.count
+
+# ✅ Count comments per post
+Post.left_joins(:comments).group('posts.id').select('posts.*, COUNT(comments.id) AS comment_count')
+```
+
+---
+
+#### `HAVING` — filtering on aggregate results
+
+`WHERE` filters rows _before_ grouping. `HAVING` filters buckets _after_ the aggregate is computed. You can't use `WHERE` on a computed value like `comment_count` because it doesn't exist until after `GROUP BY` runs.
+
+```ruby
+# ❌ Can't filter on comment_count with WHERE — it doesn't exist yet at that stage
+Post.left_joins(:comments)
+    .group('posts.id')
+    .where('comment_count > 5')  # will raise an error
+
+# ✅ Use HAVING to filter on the aggregated result
+Post.left_joins(:comments)
+    .group('posts.id')
+    .having('COUNT(comments.id) > 5')
+    .select('posts.*, COUNT(comments.id) AS comment_count')
+```
+
+A realistic use: find power users whose posts have received more than 10 comments on average.
+
+```ruby
+User.joins(posts: :comments)
+    .group('users.id')
+    .having('COUNT(comments.id) > 10')
+    .select('users.*, COUNT(comments.id) AS total_comments_received')
+```
+
+The rule: use `WHERE` to filter rows before grouping (on real columns), use `HAVING` to filter on computed aggregate values.
+
+---
+
+#### The PostgreSQL rule: every selected column must be grouped or aggregated
+
+When you list individual columns in `select`, PostgreSQL (and strict SQL databases) require that every non-aggregate column appears in `GROUP BY`. SQLite is more lenient and will let this slide, which makes it a common gotcha when deploying to production.
+
+```ruby
+# ❌ Will fail in PostgreSQL — post.title and post.user_id are selected but not in GROUP BY
 .group('posts.id').select('posts.id, posts.title, posts.user_id, COUNT(comments.id)')
 
-# ✅ Include all non-aggregate columns in group, or use posts.*
+# ✅ Use posts.* — PostgreSQL allows this because id is the primary key (all columns are functionally dependent on it)
 .group('posts.id').select('posts.*, COUNT(comments.id) AS comment_count')
+
+# ✅ Or list every selected column in GROUP BY
+.group('posts.id', 'posts.title', 'posts.user_id').select('posts.id, posts.title, posts.user_id, COUNT(comments.id) AS comment_count')
 ```
+
+`posts.*` works in PostgreSQL when you're grouping by the primary key because the database knows all other post columns are uniquely determined by `posts.id`.
+
+---
+
+#### Decision tree
+
+```
+Do I want one number for the entire query?
+  YES → .count / .sum / .average alone (no group needed)
+
+Do I want a number per record?
+  YES → group('table.id') + COUNT/SUM/etc in select, or group + .count/.sum (returns hash)
+
+Do I need to filter based on that computed number?
+  YES → add .having('COUNT(...) > N') after group
+
+Am I getting inflated counts after a join?
+  → Add group, or add .distinct if you just need deduplicated records
+```
+
+**Interview tip:** "When I need a per-record aggregate — like comment count per post — I reach for `left_joins` + `group` + `COUNT` in a custom `select`. If I just need a hash of totals, I use `group(:column).count`. If I need to filter on the aggregate, I add `having`."
+
+---
+
+## Exercise 6: Post feed with SQL-computed comment counts
+
+Add `GET /api/v1/posts/feed` — returns all published posts, each with a `comment_count` computed in SQL. Posts with zero comments should still appear.
+
+Add the route as a collection action alongside Exercise 5:
+
+```ruby
+resources :posts do
+  collection do
+    get :commented_on
+    get :feed
+  end
+end
+```
+
+The response for each post should include: id, title, author name, status, and `comment_count`.
+
+**What to think through before writing the query:**
+
+You need one query that returns post data plus a per-post comment count. The challenge is that computing this in Ruby (loading posts, then calling `post.comments.count` in a loop) fires N+1 queries. You want the database to do the counting.
+
+**Guiding questions:**
+
+1. Why must you use `left_joins` instead of `joins` here? What happens to posts with zero comments if you use an INNER JOIN?
+2. After `left_joins`, a post with 3 comments appears 3 times in the flat result. What do you add to collapse those rows into one per post?
+3. `COUNT(comments.id)` vs `COUNT(*)` — for posts with zero comments, `left_joins` produces a row with `NULL` in the comment columns. Which COUNT correctly returns 0 for those posts, and why?
+4. You want `post.comment_count` to be accessible in Ruby on the returned objects. What two things do you need in the query to make that work?
+5. You still need `post.user.name` in the response. Does `left_joins` + `group` load the user into memory? What do you add so you're not firing an N+1 on users?
+
+---
+
+## Exercise 7: Popular posts
+
+Add `GET /api/v1/posts/popular?min_comments=2` — returns published posts that have received at least `min_comments` comments. Default to 1 if the param isn't sent (at least one comment means someone engaged).
+
+Add the route:
+
+```ruby
+resources :posts do
+  collection do
+    get :commented_on
+    get :feed
+    get :popular
+  end
+end
+```
+
+The response should include: id, title, author name, and `comment_count`.
+
+**What to think through before writing the query:**
+
+This builds directly on Exercise 6 — you need comment counts per post — but now you also need to filter _on_ that count. That's the key new wrinkle: `comment_count` doesn't exist as a real column, so you can't filter it the normal way.
+
+**Guiding questions:**
+
+1. Why can't you add `.where('comment_count >= ?', min_comments)` after the `group`? What does Rails complain about, and why?
+2. `having` takes a raw SQL string. Write the condition to filter on the comment count — what does that string look like?
+3. Should `published` scope go before or after `group`? Does the order matter for correctness, or is it just style?
+4. `params[:min_comments]` comes in as a string from the URL. What do you need to do before passing it to `having`?
 
 ---
 
@@ -713,6 +972,46 @@ Each piece is independently readable and each condition lives in the right model
 
 ---
 
+## Exercise 8: Posts by engaged users
+
+First, add a scope to the `User` model:
+
+```ruby
+scope :with_comments, -> { joins(:comments).distinct }
+```
+
+This scope returns users who have left at least one comment anywhere on the platform.
+
+Then add `GET /api/v1/posts/by_engaged_users` — returns published posts written by users who have the `with_comments` scope (i.e., users who have engaged with the platform by commenting).
+
+Add the route:
+
+```ruby
+resources :posts do
+  collection do
+    get :commented_on
+    get :feed
+    get :popular
+    get :by_engaged_users
+  end
+end
+```
+
+The response should include: id, title, author name, and status.
+
+**What to think through before writing the query:**
+
+You're filtering posts based on a property of their author — specifically, whether that author has commented on anything. The condition (has comments) lives logically on the `User` model. `merge` lets you apply that scope without leaking user-table conditions into the posts query.
+
+**Guiding questions:**
+
+1. Without `merge`, how would you write this filter inline? What's wrong with that approach if the definition of "engaged user" changes later?
+2. `merge(User.with_comments)` requires that posts already be joined to users. What method creates that join, and which JOIN type should it be — INNER or LEFT?
+3. The `User.with_comments` scope itself uses `joins(:comments).distinct`. When you compose this with `Post.joins(:user).merge(User.with_comments)`, how many tables are being joined in the final SQL?
+4. After writing this, check the query with `.to_sql` in the Rails console. Read the generated SQL and verify it matches your mental model.
+
+---
+
 ### Putting it together — reading a complex query
 
 When you encounter a chain like this, read it in layers:
@@ -770,14 +1069,21 @@ When talking through a query in an interview:
 - [ ] Do multiple writes need to be atomic? (Wrap in a transaction, use bang methods)
 - [ ] Am I counting in Ruby or in SQL? (Always prefer SQL)
 - [ ] Does this logic belong in a controller, or in a service?
+- [ ] Am I filtering by an association or loading it? (`joins` vs `includes`)
+- [ ] Do I need records with zero children included? (`left_joins` not `joins`)
+- [ ] Am I filtering on a computed aggregate? (`having`, not `where`)
+- [ ] Is a condition leaking out of the model it belongs in? (`merge`)
 
 Move on to Lesson 3 once you can:
 
 1. Explain N+1 and fix it with `includes`
-2. Know when to use `joins` vs `includes`
+2. Know when to use `joins` vs `includes`, and when `eager_load` is right
 3. Write and call a service object from a controller
 4. Wrap multiple writes in a transaction with bang methods
 5. Chain scopes to build conditional queries
+6. Use `left_joins` + `group` + `select` to compute per-record aggregates in SQL
+7. Know when `WHERE` won't work and you need `HAVING` instead
+8. Apply another model's scope through a join with `merge`
 
 ---
 
@@ -875,6 +1181,186 @@ end
 ```
 
 Each `.count` runs a `COUNT(*)` in SQL — no records are loaded into Ruby memory.
+
+---
+
+### Exercise 5: Posts the current user has commented on
+
+```ruby
+# config/routes.rb
+resources :posts do
+  collection do
+    get :commented_on
+  end
+end
+```
+
+```ruby
+# app/controllers/api/v1/posts_controller.rb
+def commented_on
+  posts = Post.joins(:comments)
+              .where(comments: { user_id: current_user.id })
+              .distinct
+              .includes(:user)
+              .recent
+
+  render json: posts.map { |post|
+    {
+      id: post.id,
+      title: post.title,
+      status: post.status,
+      author: post.user.name
+    }
+  }
+end
+```
+
+`joins(:comments)` does an INNER JOIN — only posts that have at least one comment come through. `.where(comments: { user_id: current_user.id })` narrows that to comments by this user. `.distinct` collapses duplicate post rows when a user commented multiple times on the same post.
+
+`includes(:user)` is still needed — `joins` does not load the user into memory, and `post.user.name` in the render loop would fire N+1 without it.
+
+---
+
+### Exercise 6: Post feed with SQL-computed comment counts
+
+```ruby
+# config/routes.rb
+collection do
+  get :feed
+end
+```
+
+```ruby
+# app/controllers/api/v1/posts_controller.rb
+def feed
+  posts = Post.published
+              .left_joins(:comments)
+              .joins(:user)
+              .group('posts.id')
+              .select('posts.*, COUNT(comments.id) AS comment_count')
+              .recent
+
+  render json: posts.map { |post|
+    {
+      id: post.id,
+      title: post.title,
+      status: post.status,
+      author: post.user.name,
+      comment_count: post.comment_count
+    }
+  }
+end
+```
+
+`left_joins(:comments)` keeps posts with zero comments (they get `NULL` in comment columns; `COUNT(comments.id)` returns 0 for them). `joins(:user)` is an INNER JOIN — every post has a user, so this is safe and means `post.user` is available without a separate query (the user columns come back in `posts.*`... actually no — `joins` does `SELECT posts.*`, user columns aren't included).
+
+Wait — `joins(:user)` brings user columns through only if you select them. Since we `select('posts.*')`, user data is not in memory. We need `includes(:user)` for that:
+
+```ruby
+def feed
+  posts = Post.published
+              .left_joins(:comments)
+              .includes(:user)
+              .group('posts.id')
+              .select('posts.*, COUNT(comments.id) AS comment_count')
+              .recent
+
+  render json: posts.map { |post|
+    {
+      id: post.id,
+      title: post.title,
+      status: post.status,
+      author: post.user.name,
+      comment_count: post.comment_count
+    }
+  }
+end
+```
+
+`post.comment_count` works because `AS comment_count` names the computed column and Rails exposes it as a method on each returned object.
+
+---
+
+### Exercise 7: Popular posts
+
+```ruby
+# config/routes.rb
+collection do
+  get :popular
+end
+```
+
+```ruby
+# app/controllers/api/v1/posts_controller.rb
+def popular
+  min = (params[:min_comments] || 1).to_i
+
+  posts = Post.published
+              .left_joins(:comments)
+              .includes(:user)
+              .group('posts.id')
+              .having('COUNT(comments.id) >= ?', min)
+              .select('posts.*, COUNT(comments.id) AS comment_count')
+              .recent
+
+  render json: posts.map { |post|
+    {
+      id: post.id,
+      title: post.title,
+      author: post.user.name,
+      comment_count: post.comment_count
+    }
+  }
+end
+```
+
+`WHERE` can't reference `comment_count` because that value doesn't exist until after `GROUP BY` runs. `HAVING` operates on the already-bucketed result, so it can filter on the aggregate. The `?` placeholder handles the sanitization — always pass user input this way, never interpolate it directly into the string.
+
+---
+
+### Exercise 8: Posts by engaged users
+
+```ruby
+# app/models/user.rb
+scope :with_comments, -> { joins(:comments).distinct }
+```
+
+```ruby
+# config/routes.rb
+collection do
+  get :by_engaged_users
+end
+```
+
+```ruby
+# app/controllers/api/v1/posts_controller.rb
+def by_engaged_users
+  posts = Post.published
+              .joins(:user)
+              .merge(User.with_comments)
+              .includes(:user)
+              .recent
+
+  render json: posts.map { |post|
+    {
+      id: post.id,
+      title: post.title,
+      status: post.status,
+      author: post.user.name
+    }
+  }
+end
+```
+
+`joins(:user)` creates the bridge to the users table. `merge(User.with_comments)` then applies the `with_comments` scope — which itself joins users to comments — through that bridge. The final SQL joins three tables: posts → users → comments. The condition "user must have at least one comment" is defined in the User model and stays there; if the definition of "engaged" changes, you update `with_comments` in one place.
+
+`includes(:user)` is still needed for `post.user.name` — `joins` does not load the association into memory.
+
+To inspect the full generated SQL in the console:
+
+```ruby
+Post.published.joins(:user).merge(User.with_comments).to_sql
+```
 
 ---
 

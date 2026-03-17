@@ -69,17 +69,17 @@ Use this structure for any capacity estimation:
 ```
 1. Daily Active Users (DAU): e.g., 100M
 2. Requests per user per day: e.g., 10 reads, 1 write
-3. Requests per second:
-     Reads:  100M × 10 / 86,400 ≈ 12,000 RPS
-     Writes: 100M × 1  / 86,400 ≈ 1,200 WPS
-     Peak:   assume 2–3x average → ~3,600 WPS peak
+3. Queries per second:
+     Reads:  100M × 10 / 100,000 = 10,000 QPS
+     Writes: 100M × 1  / 100,000 = 1,000 WPS
+     Peak:   assume 2–3x average → ~3,000 WPS peak
 
 4. Storage per item: e.g., 1KB per post
 5. New storage per day: 100M × 1 write × 1KB = 100 GB/day
 6. Storage for 5 years: 100GB × 365 × 5 ≈ 180 TB
 
 7. Bandwidth:
-     Read bandwidth: 12,000 RPS × 1KB = 12 MB/s (negligible)
+     Read bandwidth: 12,000 QPS × 1KB = 12 MB/s (negligible)
      Write bandwidth: 1,200 WPS × 1KB = 1.2 MB/s
 ```
 
@@ -91,9 +91,9 @@ Use this structure for any capacity estimation:
 1 day  = 86,400 seconds ≈ 100,000 seconds (round up for easy math)
 1 year ≈ 31.5M seconds ≈ 30M seconds
 
-1M requests/day  = ~12 RPS
-10M requests/day = ~120 RPS
-1B requests/day  = ~12,000 RPS
+1M requests/day  = ~12 QPS
+10M requests/day = ~120 QPS
+1B requests/day  = ~12,000 QPS
 
 Rough read:write ratio for most consumer apps: 10:1 to 100:1
 ```
@@ -115,7 +115,7 @@ Rough read:write ratio for most consumer apps: 10:1 to 100:1
 
 ## Interview Signals
 
-- Round aggressively: "100M users, 10 actions/day, 86,400 seconds ≈ 100K, so ~10,000 RPS"
+- Round aggressively: "100M users, 10 actions/day, 100K seconds/day → 100M × 10 / 100K = 10,000 QPS"
 - State assumptions out loud: "I'll assume 10:1 read-to-write ratio"
 - Use these to justify architectural decisions: "At 50K writes/sec, a single Postgres instance won't cut it — we need sharding or Cassandra"
 - Mention peak vs average: "Average is 1,200 WPS but Black Friday peaks at 3–5x — so we design for ~5,000 WPS"

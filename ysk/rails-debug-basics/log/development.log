@@ -86,3 +86,53 @@ Processing by Rails::WelcomeController#index as HTML
 Completed 200 OK in 5ms (Views: 1.5ms | ActiveRecord: 0.0ms | Allocations: 6345)
 
 
+  [1m[36mPost Load (0.1ms)[0m  [1m[34mSELECT "posts".* FROM "posts" LEFT OUTER JOIN "comments" ON "comments"."post_id" = "posts"."id" /* loading for pp */ LIMIT ?[0m  [["LIMIT", 11]]
+  [1m[36mPost Load (0.2ms)[0m  [1m[34mSELECT "posts".* FROM "posts" LEFT OUTER JOIN "comments" ON "comments"."post_id" = "posts"."id" ORDER BY "posts"."id" ASC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mPost Load (0.3ms)[0m  [1m[34mSELECT "posts".* FROM "posts" LEFT OUTER JOIN "comments" ON "comments"."post_id" = "posts"."id" GROUP BY "posts"."id" /* loading for pp */ LIMIT ?[0m  [["LIMIT", 11]]
+  [1m[36mPost Load (0.1ms)[0m  [1m[34mSELECT "posts".* FROM "posts" INNER JOIN "comments" ON "comments"."post_id" = "posts"."id" GROUP BY "post"."id" /* loading for pp */ LIMIT ?[0m  [["LIMIT", 11]]
+  [1m[36mPost Load (0.3ms)[0m  [1m[34mSELECT "posts".* FROM "posts" INNER JOIN "comments" ON "comments"."post_id" = "posts"."id" /* loading for pp */ LIMIT ?[0m  [["LIMIT", 11]]
+  [1m[36mPost Load (0.3ms)[0m  [1m[34mSELECT "posts".* FROM "posts" LEFT OUTER JOIN "comments" ON "comments"."post_id" = "posts"."id" GROUP BY "post"."id" /* loading for pp */ LIMIT ?[0m  [["LIMIT", 11]]
+  [1m[36mPost Load (0.3ms)[0m  [1m[34mSELECT "posts".* FROM "posts" LEFT OUTER JOIN "comments" ON "comments"."post_id" = "posts"."id" /* loading for pp */ LIMIT ?[0m  [["LIMIT", 11]]
+  [1m[36mPost Load (0.2ms)[0m  [1m[34mSELECT "posts".* FROM "posts" LEFT OUTER JOIN "comments" ON "comments"."post_id" = "posts"."id" ORDER BY "posts"."id" ASC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mPost Load (0.1ms)[0m  [1m[34mSELECT "posts".* FROM "posts" LEFT OUTER JOIN "comments" ON "comments"."post_id" = "posts"."id" ORDER BY "posts"."id" ASC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mPost Load (0.2ms)[0m  [1m[34mSELECT "posts".* FROM "posts" LEFT OUTER JOIN "comments" ON "comments"."post_id" = "posts"."id" /* loading for pp */ LIMIT ?[0m  [["LIMIT", 11]]
+  [1m[36mPost Load (0.2ms)[0m  [1m[34mSELECT "posts".* FROM "posts" LEFT OUTER JOIN "comments" ON "comments"."post_id" = "posts"."id" ORDER BY "posts"."id" ASC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[35m (0.3ms)[0m  [1m[34m
+    SELECT posts.id, posts.title, comments.id AS comment_id
+    FROM posts
+    LEFT JOIN comments ON comments.post_id = posts.id
+    LIMIT 3
+  [0m
+  [1m[36mPost Load (5.4ms)[0m  [1m[34mSELECT "posts".* FROM "posts" LEFT OUTER JOIN "comments" ON "comments"."post_id" = "posts"."id" GROUP BY "posts"."id" /* loading for pp */ LIMIT ?[0m  [["LIMIT", 11]]
+  [1m[36mPost Load (0.1ms)[0m  [1m[34mSELECT "posts".* FROM "posts" LEFT OUTER JOIN "comments" ON "comments"."post_id" = "posts"."id" /* loading for pp */ LIMIT ?[0m  [["LIMIT", 11]]
+  [1m[36mPost Load (0.1ms)[0m  [1m[34mSELECT "posts".* FROM "posts" LEFT OUTER JOIN "comments" ON "comments"."post_id" = "posts"."id" ORDER BY "posts"."id" ASC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mPost Load (0.3ms)[0m  [1m[34mSELECT "posts".* FROM "posts" LEFT OUTER JOIN "comments" ON "comments"."post_id" = "posts"."id" GROUP BY "posts"."id" ORDER BY "posts"."id" ASC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mPost Load (0.4ms)[0m  [1m[34mSELECT "posts".* FROM "posts" WHERE "posts"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mUser Load (0.4ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mComment Create (1.2ms)[0m  [1m[32mINSERT INTO "comments" ("body", "post_id", "user_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["body", "Another comment"], ["post_id", 1], ["user_id", 1], ["created_at", "2026-03-13 00:56:22.658983"], ["updated_at", "2026-03-13 00:56:22.658983"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mPost Count (3.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "posts" LEFT OUTER JOIN "comments" ON "comments"."post_id" = "posts"."id" WHERE (posts.id = 1)[0m
+  [1m[36mPost Load (0.4ms)[0m  [1m[34mSELECT "posts".* FROM "posts" LEFT OUTER JOIN "comments" ON "comments"."post_id" = "posts"."id" WHERE (posts.id = 1) /* loading for pp */ LIMIT ?[0m  [["LIMIT", 11]]
+  [1m[36mPost Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) AS "count_all", "posts"."id" AS "posts_id" FROM "posts" LEFT OUTER JOIN "comments" ON "comments"."post_id" = "posts"."id" GROUP BY "posts"."id"[0m
+  [1m[36mPost Count (0.2ms)[0m  [1m[34mSELECT COUNT(*) AS "count_all", "posts"."id" AS "posts_id" FROM "posts" LEFT OUTER JOIN "comments" ON "comments"."post_id" = "posts"."id" WHERE (posts.id = 1) GROUP BY "posts"."id"[0m
+  [1m[36mPost Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "posts" LEFT OUTER JOIN "comments" ON "comments"."post_id" = "posts"."id" WHERE (posts.id = 1)[0m
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" ORDER BY "users"."id" ASC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mPost Load (0.2ms)[0m  [1m[34mSELECT "posts".* FROM "posts" WHERE "posts"."user_id" = ? /* loading for pp */ LIMIT ?[0m  [["user_id", 1], ["LIMIT", 11]]
+  [1m[36mPost Count (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "posts" WHERE "posts"."user_id" = ?[0m  [["user_id", 1]]
+  [1m[36mPost Load (0.3ms)[0m  [1m[34mSELECT "posts".* FROM "posts" WHERE "posts"."user_id" = ? AND "posts"."status" = ? /* loading for pp */ LIMIT ?[0m  [["user_id", 1], ["status", "published"], ["LIMIT", 11]]
+  [1m[36mPost Load (0.1ms)[0m  [1m[34mSELECT "posts".* FROM "posts" WHERE "posts"."user_id" = ? AND "posts"."status" = ? /* loading for pp */ LIMIT ?[0m  [["user_id", 1], ["status", "draft"], ["LIMIT", 11]]
+  [1m[36mPost Load (0.2ms)[0m  [1m[34mSELECT "posts".* FROM "posts" WHERE "posts"."user_id" = ?[0m  [["user_id", 1]]
+  [1m[36mPost Load (0.2ms)[0m  [1m[34mSELECT "posts".* FROM "posts" INNER JOIN "comments" ON "comments"."post_id" = "posts"."id" WHERE "posts"."user_id" = ? /* loading for pp */ LIMIT ?[0m  [["user_id", 1], ["LIMIT", 11]]
+  [1m[36mPost Count (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "posts" INNER JOIN "comments" ON "comments"."post_id" = "posts"."id" WHERE "posts"."user_id" = ?[0m  [["user_id", 1]]
+  [1m[36mPost Load (0.2ms)[0m  [1m[34mSELECT "posts".* FROM "posts" WHERE "posts"."user_id" = ?[0m  [["user_id", 1]]
+  [1m[36mPost Load (0.1ms)[0m  [1m[34mSELECT "posts".* FROM "posts" WHERE "posts"."user_id" = ?[0m  [["user_id", 1]]
+  [1m[36mPost Load (0.4ms)[0m  [1m[34mSELECT "posts".* FROM "posts" INNER JOIN "comments" ON "comments"."post_id" = "posts"."id" WHERE "posts"."user_id" = ? GROUP BY "posts"."id" /* loading for pp */ LIMIT ?[0m  [["user_id", 1], ["LIMIT", 11]]
+  [1m[36mPost Load (0.7ms)[0m  [1m[34mSELECT posts.*,COUNT(comment.id) as comment_count FROM "posts" INNER JOIN "comments" ON "comments"."post_id" = "posts"."id" WHERE "posts"."user_id" = ? GROUP BY "posts"."id" /* loading for pp */ LIMIT ?[0m  [["user_id", 1], ["LIMIT", 11]]
+  [1m[36mPost Load (0.4ms)[0m  [1m[34mSELECT posts.*,COUNT(comment.id) as comment_count FROM "posts" INNER JOIN "comments" ON "comments"."post_id" = "posts"."id" WHERE "posts"."user_id" = ? GROUP BY "posts"."id" /* loading for pp */ LIMIT ?[0m  [["user_id", 1], ["LIMIT", 11]]
+  [1m[36mPost Load (0.4ms)[0m  [1m[34mSELECT posts.*,COUNT(comments.id) as comment_count FROM "posts" INNER JOIN "comments" ON "comments"."post_id" = "posts"."id" WHERE "posts"."user_id" = ? GROUP BY "posts"."id" /* loading for pp */ LIMIT ?[0m  [["user_id", 1], ["LIMIT", 11]]
+  [1m[36mPost Load (0.4ms)[0m  [1m[34mSELECT posts.*,COUNT(comments.id) as comment_count FROM "posts" INNER JOIN "comments" ON "comments"."post_id" = "posts"."id" WHERE "posts"."user_id" = ? GROUP BY "posts"."id" /* loading for pp */ LIMIT ?[0m  [["user_id", 1], ["LIMIT", 11]]
+  [1m[36mPost Load (0.3ms)[0m  [1m[34mSELECT posts.*,COUNT(comments.id) as comment_count FROM "posts" INNER JOIN "comments" ON "comments"."post_id" = "posts"."id" WHERE "posts"."user_id" = ? GROUP BY "posts"."id" /* loading for pp */ LIMIT ?[0m  [["user_id", 1], ["LIMIT", 11]]
+  [1m[36mPost Load (0.4ms)[0m  [1m[34mSELECT posts.*,COUNT(comments.id) as comment_count FROM "posts" LEFT OUTER JOIN "comments" ON "comments"."post_id" = "posts"."id" WHERE "posts"."user_id" = ? GROUP BY "posts"."id" /* loading for pp */ LIMIT ?[0m  [["user_id", 1], ["LIMIT", 11]]
+  [1m[36mPost Load (0.3ms)[0m  [1m[34mSELECT posts.*,COUNT(comments.id) as comment_count FROM "posts" LEFT OUTER JOIN "comments" ON "comments"."post_id" = "posts"."id" WHERE "posts"."user_id" = ? GROUP BY "posts"."id" ORDER BY "posts"."id" ASC LIMIT ?[0m  [["user_id", 1], ["LIMIT", 1]]
+  [1m[36mPost Count (0.3ms)[0m  [1m[34mSELECT COUNT(*) FROM "posts" INNER JOIN "comments" ON "comments"."post_id" = "posts"."id" WHERE "posts"."user_id" = ?[0m  [["user_id", 1]]

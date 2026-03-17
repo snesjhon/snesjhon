@@ -12,6 +12,18 @@ Rails.application.routes.draw do
       #
       resources :posts, only: %i[index show create update destroy] do
         resources :comments, only: %i[index create destroy]
+        collection do
+          get :commented_on
+          get :feed
+          get :popular
+          get :by_engaged_users
+        end
+      end
+
+      resources :users do
+        member do
+          get :stats
+        end
       end
     end
   end

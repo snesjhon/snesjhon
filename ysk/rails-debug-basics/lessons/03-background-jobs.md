@@ -38,16 +38,19 @@ For interviews, you're expected to know both. ActiveJob for the Rails API; Sidek
 ## Setting Up (Lesson 3 additions)
 
 First, uncomment the Sidekiq gem in your Gemfile:
+
 ```ruby
 gem 'sidekiq', '~> 7.0'
 ```
 
 Add to `config/application.rb`:
+
 ```ruby
 config.active_job.queue_adapter = :sidekiq
 ```
 
 In development, you can use `:async` (in-process, no Redis) for quick testing:
+
 ```ruby
 # config/environments/development.rb
 config.active_job.queue_adapter = :async
@@ -74,6 +77,7 @@ end
 ```
 
 And to enqueue it:
+
 ```ruby
 CommentNotificationJob.perform_later(comment.id)
 ```
@@ -94,6 +98,7 @@ CommentNotificationJob.perform_later(comment.id)
 
 **Why?** Jobs are serialized to JSON and stored in Redis. ActiveRecord objects aren't JSON.
 Rails uses "GlobalID" to serialize them automatically, but:
+
 1. If the record is deleted between enqueue and execute, GlobalID deserialization raises
 2. The serialized object may be stale — the DB record has changed but the job has the old data
 3. It's a hidden coupling between job timing and record lifecycle
@@ -129,10 +134,12 @@ end
 ```
 
 **Rules of thumb:**
+
 - `retry_on` → transient errors that might resolve themselves (network, locks)
 - `discard_on` → permanent errors where retrying is pointless (record deleted, invalid state)
 
 **Idempotency** — design jobs so running them twice doesn't cause problems:
+
 ```ruby
 # Bad: sends 2 emails if the job runs twice
 user.send_welcome_email!
@@ -148,6 +155,7 @@ user.update!(welcome_email_sent_at: Time.current)
 ## Exercise 1: Build the CommentNotificationJob
 
 Create `app/jobs/comment_notification_job.rb` with:
+
 1. `queue_as :notifications`
 2. `discard_on ActiveRecord::RecordNotFound`
 3. `retry_on` for a transient error of your choice
@@ -156,6 +164,7 @@ Create `app/jobs/comment_notification_job.rb` with:
 Then wire it into your comments controller so that creating a comment enqueues the job.
 
 **Guiding questions:**
+
 1. Where in the comments controller `create` action should you call `perform_later` — before or after saving the comment? Why does order matter?
 2. Should the HTTP response wait for the job to finish before returning? Which method — `perform_later` or `perform_now` — achieves the non-blocking behavior you want?
 3. If the comment gets deleted before the job runs, what happens with `discard_on ActiveRecord::RecordNotFound` in place versus without it?
@@ -196,10 +205,12 @@ When a post is published (via your `PostPublishService` from Lesson 2), enqueue 
 that would notify all commenters on that post.
 
 **What to build:**
+
 - A `PostPublishNotificationJob` that accepts a `post_id`, re-fetches the post, finds all unique commenter IDs, and logs that it would notify them
 - An update to `PostPublishService` to enqueue this job after publishing
 
 **Guiding questions:**
+
 1. Should you enqueue the job inside the transaction or after it commits? What happens if you enqueue inside and the transaction rolls back — does the job still run?
 2. If the job runs and the post is not yet in `published` status (due to a race condition), how would you handle that gracefully inside `perform`?
 3. How do you get distinct commenter IDs without loading all comment objects into memory?
@@ -217,10 +228,12 @@ CommentNotificationJob.perform_now(comment.id)
 ```
 
 **When to use `perform_now`:**
+
 - Tests (so you don't need a real queue)
 - One-off rake tasks where you want to wait for completion
 
 **When NOT to use `perform_now` in a controller:**
+
 - Never. It blocks the HTTP request thread. It defeats the purpose of background jobs.
 
 ---
@@ -228,6 +241,7 @@ CommentNotificationJob.perform_now(comment.id)
 ## Background Jobs Interview Checklist
 
 When asked about background jobs in an interview:
+
 - [ ] Am I passing IDs, not objects?
 - [ ] Do I have `retry_on`/`discard_on` defined for likely errors?
 - [ ] Is my job idempotent (safe to run twice)?
@@ -236,6 +250,7 @@ When asked about background jobs in an interview:
 - [ ] What happens if the associated record is deleted before the job runs?
 
 **When asked "how would you design a notification system?":**
+
 1. "I'd create a background job so the HTTP request returns immediately"
 2. "The job would receive an ID — never the object itself"
 3. "I'd use retry_on for transient failures like SMTP timeouts"
@@ -243,6 +258,7 @@ When asked about background jobs in an interview:
 5. "I'd put notifications on a dedicated queue so they don't block other work"
 
 Move on to **Lesson 4** once you can:
+
 1. Write a job with correct ID serialization
 2. Add appropriate retry_on and discard_on
 3. Explain why to enqueue after (not inside) a transaction
@@ -271,6 +287,7 @@ end
 ```
 
 Comments controller `create` action:
+
 ```ruby
 def create
   comment = @post.comments.build(comment_params)
@@ -305,6 +322,7 @@ end
 ```
 
 Updated `PostPublishService#call`:
+
 ```ruby
 def call
   ActiveRecord::Base.transaction do

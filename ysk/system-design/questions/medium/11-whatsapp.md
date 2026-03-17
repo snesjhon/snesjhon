@@ -18,16 +18,16 @@ The second problem is **presence**: how does Alice know Bob is online right now?
 
 ```mermaid
 graph TB
-    Alice["Alice\n(WebSocket open)"]
-    Bob["Bob\n(may be offline)"]
+    Alice["Alice (WebSocket open)"]
+    Bob["Bob (may be offline)"]
 
-    ChatServer1["Chat Server 1\n(Alice connected here)"]
-    ChatServer2["Chat Server 2\n(Bob connected here\nor offline)"]
+    ChatServer1["Chat Server 1 (Alice connected here)"]
+    ChatServer2["Chat Server 2 (Bob connected here\nor offline)"]
 
-    Kafka["Kafka\nTopic: chat:{convId}"]
-    MsgDB[("Messages DB\nCassandra\nmsg_id, conv_id\nsender, content\nstatus, sent_at")]
-    PresenceService["Presence Service\nRedis: userId → {online, serverId, lastSeen}"]
-    OfflineQueue["Offline Queue\n(Kafka / persistent)\nholds msgs for offline users"]
+    Kafka["Kafka Topic: chat:{convId}"]
+    MsgDB[("Messages DB Cassandra msg_id, conv_id sender, content status, sent_at")]
+    PresenceService["Presence Service Redis: userId → {online, serverId, lastSeen}"]
+    OfflineQueue["Offline Queue (Kafka / persistent) holds msgs for offline users"]
     PushNotif["Push Notification\n(FCM / APNS)\nwake up offline user"]
 
     Alice -->|"Send message"| ChatServer1

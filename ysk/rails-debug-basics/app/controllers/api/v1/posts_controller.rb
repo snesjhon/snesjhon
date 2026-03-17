@@ -111,6 +111,71 @@ module Api
         render json: { error: 'unable to destroy record' }, status: :not_found
       end
 
+      def commented_on
+        posts = Post.joins(:comments).where({ comments: { user_id: current_user.id } })
+                    .includes(:user).distinct
+
+        render json: posts.map { |post|
+          {
+            body: post.body,
+            id: post.id,
+            title: post.title,
+            author_name: post.user.name,
+            status: post.status
+          }
+        }
+      end
+
+      def popular
+        min_param = params[:min_comments]
+        min_comments = min_param.nil? ? 1 : min_param.to_i
+
+        posts = Post.left_joins(:comments)
+                    .group('posts.id')
+                    .having('COUNT(comments.id) >= ?', min_comments)
+                    .select('posts.*,COUNT(comments.id ) as comment_count')
+                    .includes(:user)
+
+        render json: posts.map { |post|
+          {
+            id: post.id,
+            title: post.title,
+            author_name: post.user.name,
+            comment_count: post.comment_count
+          }
+        }
+      end
+
+      def feed
+        published_posts = Post.left_join(:comments)
+                              .group('posts.id')
+                              .published
+                              .includes(:user)
+                              .select('posts.*, COUNT(comment.id) as comment_count')
+
+        render json: published_posts.map { |post|
+          {
+            id: post.id,
+            title: post.title,
+            author_name: post.user.name,
+            commnet_count: post.comment_count
+          }
+        }
+      end
+
+      def by_engaged_users
+        commented_posts = Post.published.joins(:user).includes(:user).merge(User.with_comments).recent
+
+        render json: commented_posts.map { |post|
+          {
+            id: post.id,
+            status: post.status,
+            author: post.user.name,
+            title: post.title
+          }
+        }
+      end
+
       private
 
       # Lesson 1, Exercise 2 (part 2): Define strong params.
