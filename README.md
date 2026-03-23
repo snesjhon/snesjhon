@@ -25,20 +25,11 @@
 
 ## Current Projects
 
-- 1001MediaList
-- AlgoViz
-- AlgoJit
+- [dsa-for-humans](https://github.com/snesjhon/dsa-for-humans)
 
-## Data Structures & Algorithms Journey
+## For Humans Series
 
-I'm Building strong mental models through daily practice and creating visual learning tools.
-
-**Active Practice**
-
-- Daily LeetCode problems with pattern recognition
-- Generating study guides that break down problems into core mental models
-- Building **AlgoViz** - Visual algorithm simulator to see concepts in action
-- Building **AlgoJit** - Spaced repetition system for DSA retention
+During this time I'm investing developing my mental model. Through this I'm creating this platform to develop (using AI) multiple platforms to help me become a better Engineer. Through DSA-for-humans and (upcoming) SystemDesign-for-Humans, I believe I can help my community become stronger.
 
 **Approach:** Each study guide distills problems into strong analogies and mental models. The goal is deep understanding over rote memorization.
 
