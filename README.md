@@ -25,7 +25,8 @@
 
 ## Current Projects
 
-- [dsa-for-humans](https://github.com/snesjhon/dsa-for-humans)
+- [DSA for Humans](https://github.com/snesjhon/for-humans/tree/main/apps/dsa-for-humans)
+- [System Design for Humans](https://github.com/snesjhon/for-humans/tree/main/apps/system-design-for-humans)
 
 ## For Humans Series
 

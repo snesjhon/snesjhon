@@ -1,0 +1,7 @@
+I think my initial idea for humans is that I am not the greatest mathematician and I am not the greatest system thinker right now and the idea being that at some point this is not great for my interviewing prospects. Whenever I do get a feature interview, I am stuck in this place where I don't know, I can't show them how I think.
+
+Therefore, these leak code questions and the system design questions are things that are keeping me back., So so therefore, one of the best things to come out of AI is this innovation behind it just iterating, iterating, iterating different kinds of Of analogies, not platforms, but rather different kinds of ways of thinking that helps me reach the conclusion of how to actually think about certain problems.
+
+And I think that's a big revelation for me because it's rather I think it makes more sense for this thing to be created and therefore I can use the same platform and also push it to my community so that I'm able to help people like myself who are just not passing these interviews because it's either for whatever reason, there are people who are more prone to passing these interviews.
+
+But I think if we use AI for this purpose, I think we're in this breakthrough era. 
