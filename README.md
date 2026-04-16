@@ -25,14 +25,7 @@
 
 ## Current Projects
 
-- [DSA for Humans](https://github.com/snesjhon/for-humans/tree/main/apps/dsa-for-humans)
-- [System Design for Humans](https://github.com/snesjhon/for-humans/tree/main/apps/system-design-for-humans)
-
-## For Humans Series
-
-During this time I'm investing developing my mental model. Through this I'm creating this platform to develop (using AI) multiple platforms to help me become a better Engineer. Through DSA-for-humans and (upcoming) SystemDesign-for-Humans, I believe I can help my community become stronger.
-
-**Approach:** Each study guide distills problems into strong analogies and mental models. The goal is deep understanding over rote memorization.
+- [lazyhire](https://github.com/snesjhon/lazyhire) - Use Claude to help you build a resume/cover letter
 
 ---
 
