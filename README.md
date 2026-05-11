@@ -1,16 +1,6 @@
-<div align="center">
+<p align="center"><img src="./lib/logo.svg" alt="snesjhon" width="578"/></p>
 
-<pre>
-██████  ██   ██ ██████  ██████      ██ ██   ██  ██████  ██   ██
-██      ███  ██ ██      ██          ██ ██   ██ ██    ██ ███  ██
-██████  ██ █ ██ ██████  ██████      ██ ███████ ██    ██ ██ █ ██
-    ██  ██  ███ ██          ██ ██   ██ ██   ██ ██    ██ ██  ███
-██████  ██   ██ ██████  ██████  █████  ██   ██  ██████  ██   ██
-</pre>
-
-</div>
-
-# Hello, I'm Jhonatan 👾
+# Hello, I'm Jhonatan
 
 📍 **Sacramento** | 💾 **Software & AI Engineer** | ⌨️ **NVIM Enthusiast**
 
@@ -21,11 +11,10 @@
 ![JavaScript](https://img.shields.io/badge/-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
 ![NeoVim](https://img.shields.io/badge/-NeoVim-D3E4DB?style=flat-square&logo=neovim&logoColor=black)
 
-> Just a kid from Oakland, running around believing in fairy tales
-
 ## Current Projects
 
 - [lazyhire](https://github.com/snesjhon/lazyhire) - Use Claude to help you build a resume/cover letter
+- [thinkdeep](https://github.com/snesjhon/thinkdeep) - Sr Engineer guide to interviews
 
 ---
 
