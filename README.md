@@ -7,12 +7,15 @@
 ## Current Projects
 
 - [lazyhire](https://github.com/snesjhon/lazyhire) - Use Claude to help you build a resume/cover letter
-- [thinkdeep](https://github.com/snesjhon/thinkdeep) - Sr Engineer guide to interviews
+- [thinkdeep](https://github.com/snesjhon/thinkdeep) - My guide to learning the fundamentals
 
-## Find me
+## More About Me
 
-- [Porfolio](https://snesjhon.com)
-- [World](https://snesjhon.world)
+- [Porfolio](https://snesjhon.com) - It looks like my github, but shows a bit more.
+- [World](https://snesjhon.world) - All thing snesjhon
+- [Recommendations](https://snesjhon.world/recommendations) - Evergreen list of recommended resources that I’ve found helpful.
+
+## Current Interests
 
 ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
 ![React](https://img.shields.io/badge/-React-61DAFB?style=flat-square&logo=react&logoColor=black)
